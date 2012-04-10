@@ -1,8 +1,10 @@
 {
-    "name": "application-name"
+    "name": "battle-arena"
   , "version": "0.0.1"
   , "private": true
   , "dependencies": {
+  		"node": "0.6.14",
+  		"npm":  "1.1.16",
       "express": "2.5.8"
     , "jade": ">= 0.0.1"
   }
