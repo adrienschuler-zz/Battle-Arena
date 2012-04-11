@@ -1,5 +1,5 @@
-#wrapper
-	#header(data-role="header")
+#wrapper(data-role='page')
+	#header(data-role='header')
 		a(href='/') BATTLE ARENA
 			#nav
 				a(href='/logout', class='nav-logout')
@@ -7,9 +7,9 @@
 				a(href='/profile', class='nav-profile')
 				a(href='/search', class='nav-search')
 	
-	#content(data-role="content")
+	#content(data-role='content')
 		h2 Login
-		
+
 		form(action='#', method='post')
 			input(type='text', name='user[login]', placeholder='Username')
 			br
@@ -19,5 +19,5 @@
 			br
 			a(href='/register', class='center') Register
 	
-	#footer(data-role="footer")
+	#footer(data-role='footer')
 		p Footer
