@@ -1,6 +1,26 @@
-!!!
+!!! 5
 html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body!= body
+	head
+		meta(charset='utf-8')
+		title= title
+	
+		meta(name='apple-mobile-web-app-capable', content='yes')
+		meta(name='apple-mobile-web-app-status-bar-style', content='black')
+		meta(name='viewport', content='initial-scale=1.0, user-scalable=no')
+
+		link(rel='stylesheet', href='/stylesheets/jquery.mobile-1.0.1.css')
+		link(rel='stylesheet', href='/stylesheets/add2home.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
+
+		script(src='javascripts/modernizr-2.5.3.js')
+		script(src='javascripts/jquery-1.6.4.min.js')
+		script(src='javascripts/jquery.mobile-1.0.1.js')
+		script(src='javascripts/add2home.js')
+	
+	#wrapper
+		#header(data-role="header")
+			p BATTLE ARENA
+		#content(data-role="content")
+			body!= body
+		#footer(data-role="footer")
+			p Footer
