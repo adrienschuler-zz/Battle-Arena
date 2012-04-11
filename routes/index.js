@@ -16,3 +16,9 @@ exports.register = function(req, res){
 		title: 'BATTLE ARENA - Register' 
 	});
 };
+
+exports.chatroom = function(req, res){
+  res.render('chatroom', { 
+		title: 'BATTLE ARENA - Chatroom' 
+	});
+};

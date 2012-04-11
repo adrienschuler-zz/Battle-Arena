@@ -1,7 +1,11 @@
 #wrapper
 	#header(data-role="header")
-		h1 
 		a(href='/') BATTLE ARENA
+			#nav
+				a(href='/logout', class='nav-logout')
+				a(href='/rankings', class='nav-ranking')
+				a(href='/profile', class='nav-profile')
+				a(href='/search', class='nav-search')
 	
 	#content(data-role="content")
 		h2 Register
