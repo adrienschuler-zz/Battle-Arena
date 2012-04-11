@@ -1,4 +1,18 @@
-p Welcome to BATTLE ARENA
-
-a(href='/login') Login
-a(href='/register') Register
+#wrapper
+	#header(data-role="header")
+		h1 
+		a(href='/') BATTLE ARENA
+	
+	#content(data-role="content")
+		h2 Login
+		form(action='#', method='post')
+			input(type='text', name='user[login]', placeholder='Username')
+			br
+			input(type='password', name='user[password]', placeholder='Password')
+			br
+			input(type='submit', name='submit', value='Log in')
+			br
+			a(href='/register', class='center') Register
+	
+	#footer(data-role="footer")
+		p Footer
