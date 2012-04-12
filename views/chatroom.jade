@@ -10,7 +10,13 @@
 	#content(data-role='content')
 		h2 Chatroom
 
-
+		#chatroom
+			.left
+				div(class='tchat-container ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
+				input(type='text', name='send', placeholder='Text', id='tchat-input')
+				input(type='submit', value='send', data-role='none', id='tchat-send', class='ui-body-c ui-corner-all ui-shadow')
+			.right
+				div(class='tchat-side ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
 
 	#footer(data-role='footer')
 		p Footer

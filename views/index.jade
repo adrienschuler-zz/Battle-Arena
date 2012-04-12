@@ -1,21 +1,16 @@
 #wrapper(data-role='page')
 	#header(data-role='header')
-		a(href='/') BATTLE ARENA
-			#nav
-				a(href='/logout', class='nav-logout')
-				a(href='/rankings', class='nav-ranking')
-				a(href='/profile', class='nav-profile')
-				a(href='/search', class='nav-search')
+		a(href='/', data-direction='reverse') BATTLE ARENA
 	
 	#content(data-role='content')
 		h2 Login
 
-		form(action='#', method='post')
+		form(action='#', method='post', id='login')
 			input(type='text', name='user[login]', placeholder='Username')
 			br
 			input(type='password', name='user[password]', placeholder='Password')
 			br
-			input(type='submit', name='submit', value='Log in')
+			input(type='submit', name='submit', value='Log in', class='submit')
 			br
 			a(href='/register', class='center') Register
 	

@@ -78,3 +78,46 @@ html.no-touch input.ui-input-text {
 	width: 300px;
 	margin: 0 auto;
 }
+
+#chatroom {
+	width: 80%;
+	height: 300px;
+	margin: 0 auto;
+}
+#chatroom .left {
+	width: 70%;
+	height: 99%;
+	margin-right: 1%;
+}
+#chatroom .right {
+	width: 29%;
+	height: 99%;
+}
+#chatroom .left,
+#chatroom .right {
+	display: inline-block;
+}
+.tchat-container {
+	width: 100%;
+	height: 85%;
+	float: left;
+}
+#tchat-input {
+	margin-top: 2px;
+	width: 86%;
+	height: 15%;
+	float: left;
+	display: inline-block;
+}
+#tchat-send {
+	margin-top: 2px;
+	display: inline-block;
+	width: 9%;
+	height: 18%;
+	float: right;
+}
+.tchat-side {
+	float: right;
+	width: 100%;
+	height: 100%;
+}
