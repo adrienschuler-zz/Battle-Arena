@@ -5,14 +5,15 @@
 	#content(data-role='content')
 		h2 Login
 
-		form(action='#', method='post', id='login')
-			input(type='text', name='user[login]', placeholder='Username')
+		form(action='/users/login', method='post', id='login')
+			input(type='text', name='user[login]', placeholder='Username', class='login', id='login')
 			br
-			input(type='password', name='user[password]', placeholder='Password')
+			input(type='password', name='user[password]', placeholder='Password', id='password')
 			br
 			input(type='submit', name='submit', value='Log in', class='submit')
-			br
-			a(href='/register', class='center') Register
+
+		br
+		a(href='/users/signup', class='center') Signup
 	
 	#footer(data-role='footer')
 		p Footer

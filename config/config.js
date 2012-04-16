@@ -2,10 +2,9 @@
  *  Load dependencies
  */
 
-const express   = require('express');
-		// , expose 		= require('express-expose')
+const express   = require('express')
+		, mongoose 	= require('mongoose');
 		// , stylus 		= require('stylus')
-		// , mongoose 	= require('mongoose');
 
 /**
  *  Exports
@@ -15,9 +14,9 @@ module.exports = function(app) {
 
 	//  Setup DB Connection
 
-	// var dblink = process.env.MONGOHQ_URL || 'mongodb://localhost/blogsample';
+	var dblink = process.env.MONGOHQ_URL || 'mongodb://localhost/battle_arena';
 
-	// const db  = mongoose.createConnection(dblink);
+	const db  = mongoose.createConnection(dblink);
 
 	//  Compile Hack for Stylus
 
@@ -54,13 +53,13 @@ module.exports = function(app) {
 
 	//  Save reference to database connection
 	
-	// app.configure(function () {
-	// 	app.set('db', { 
-	// 			'main': db
-	// 		, 'posts': db.model('BlogPost')
-	// 	})
-	// 	app.set('version', '0.1.6');
-	// });
+	app.configure(function () {
+		app.set('db', { 
+				'main': db
+			, 'User': db.model('User')
+		})
+		app.set('version', '0.0.1');
+	});
 	 
 	
 	return app;
