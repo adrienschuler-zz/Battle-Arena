@@ -1,0 +1,62 @@
+#wrapper(data-role='page', data-url='/game')
+	#header(data-role='header')
+		a(href='/') BATTLE ARENA
+
+			#nav
+				a(href='/session/destroy', class='nav-logout')			
+				a(href='/user/rankings', class='nav-ranking')
+				a(href='/user/profile', class='nav-profile')
+				a(href='/game/search', class='nav-search')
+						
+	#content(data-role='content')
+			
+		h2 Chatroom
+
+		#chatroom  	
+			.left
+				div(class='tchat-container ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
+				input(type='text', name='send', placeholder='Text', id='tchat-input')
+				a(data-role='button', data-inline='true', data-mini='true', id='tchat-send') Send
+			.right
+				div(class='tchat-side ui-input-text ui-body-c ui-corner-all ui-shadow-inset')	  	
+
+	#footer(data-role='footer', data-position='fixed')
+		p Footer
+
+// script(src='/socket.io/socket.io.js')
+script
+	console.log('omg1');
+	$(document).bind('pageinit', function() {
+
+		var socket = io.connect('http://localhost:5000/game');
+		var tchat_container = $('.tchat-container');
+		var tchat_input = $('#tchat-input');
+
+		console.log(tchat_container);
+		console.log(tchat_input);
+
+		socket.on('join', function (user) {
+			tchat_container.append('<div class="">' + user.login + ' joined the room</div>');
+		});
+
+		socket.on('message', function(message) {
+			tchat_container.append('<div class="">' + message + '</div>');
+		});
+
+		socket.on('disconnect', function(message) {
+			tchat_container.append('<div class="">' + message + '</div>');
+		});
+
+		tchat_input.keyup(function(e) {
+			if (e.which === 13) {
+				e.preventDefault();
+				tchat_input.val('');
+				socket.emit('message', tchat_input.val());
+			}
+		});
+
+	//	$('#tchat-send').click(function() {
+	//		now.distribute($('#tchat-input').val());
+	//	});
+
+	});

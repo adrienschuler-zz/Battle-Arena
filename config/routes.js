@@ -1,24 +1,34 @@
-module.exports = function(app, everyone) {
+/**
+ * Routes
+ */
 
-	var user 			= require('../app/controllers/users_controller')(app, everyone);
-	var chatroom 	= require('../app/controllers/chatrooms_controller')(app, everyone);
-	
-	//  Load database and pass it down to the controllers
-	
-	// var db = app.set('db');
+module.exports = function(app, io) {
 
-	//  Load Root
-	
-	app.get('/', user.login); // *Root
-	
-	//  Load User Controller + Routes
-	
-	app.get('/users/login', user.login);
-	app.post('/users/login', user.login);
+	// Controllers
+	var session = require('../app/controllers/session_controller')(app, io)
+		, user 		= require('../app/controllers/user_controller')(app)
+		, game 		= require('../app/controllers/game_controller')(app, io);
 
-	app.get('/users/signup', user.signup);
-	app.post('/users/signup', user.signup);
+	
+	// Root
+	app.get('/', function(req, res) {
+		if (req.session.user) {
+			res.redirect('/game');
+		} else {
+			res.redirect('/user/login');
+		}
+	});
+	
+	// Session
+	app.post('/session/create', session.create);
+	app.get('/session/destroy', session.destroy);
 
-	app.get('/chatrooms/home', chatroom.home);
+	// User
+	app.get('/user/login', user.login);
+	app.get('/user/signup', user.signup);
+	app.post('/user/create', user.create);
+
+	// Game
+	app.get('/game', game.index);
 
 };

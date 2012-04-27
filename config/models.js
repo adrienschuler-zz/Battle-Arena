@@ -1,10 +1,11 @@
-// const mongoose = require('mongoose');
+/**
+ * Load dependencies
+ */
 
-// // require('express-mongoose');  
+const mongoose = require('mongoose');
 
+module.exports = function() {
 
-// module.exports = function() {
-	
-// 	mongoose.model('User', require('../app/models/user'));
+  mongoose.model('User', require('../app/models/user'));
 
-// }
+};

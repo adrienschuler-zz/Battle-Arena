@@ -1,14 +1,11 @@
 /**
- *  Load dependencies
+ * Config
  */
 
 const express   = require('express')
 		, mongoose 	= require('mongoose');
 		// , stylus 		= require('stylus')
 
-/**
- *  Exports
- */
 
 module.exports = function(app) {
 
@@ -31,10 +28,11 @@ module.exports = function(app) {
 	app.configure(function() {
 		this
 			.use(express.logger('\033[90m:method\033[0m \033[36m:url\033[0m \033[90m:response-time ms\033[0m'))
+			.dynamicHelpers({ messages: require('express-messages') })
 			.use(express.cookieParser())
 			.use(express.bodyParser())
 			.use(express.errorHandler({dumpException: true, showStack: true}))
-			.use(express.session({ secret: 'feFke9@$eGsje'}));
+			.use(express.session({ secret: '$eCr3t!'}));
 	});
 
 	//  Add template engine

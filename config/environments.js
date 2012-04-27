@@ -1,7 +1,10 @@
+/**
+ * Environments
+ */
+
 module.exports = function(app) {
  
 	var port = process.env.PORT || 3000;
- 
 
 	app.configure('local', function () {
 		this
@@ -9,7 +12,6 @@ module.exports = function(app) {
 			.set('port', port)
 			.set('ENV','local');
 	}); 
-
 	
 	app.configure('production', function () {
 		this
@@ -18,6 +20,5 @@ module.exports = function(app) {
 			.set('ENV','production');
 	});
 
-
-	return app	
+	return app;
 };

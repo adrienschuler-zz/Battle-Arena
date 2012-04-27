@@ -9,16 +9,23 @@ html
 		meta(name='viewport', content='initial-scale=1.0, user-scalable=no')
 
 		link(rel='stylesheet', href='http://fonts.googleapis.com/css?family=Lobster+Two')
-		link(rel='stylesheet', href='/stylesheets/jquery.mobile-1.0.1.min.css')
-		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(rel='stylesheet', href='http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.css')
 		link(rel='stylesheet', href='/stylesheets/add2home.min.css')
+		link(rel='stylesheet', href='/stylesheets/style.css')
 
 		script(src='/javascripts/modernizr-2.5.3.js')
-		// script(src='javascripts/jquery-1.6.4.min.js')
-		script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js')
-		script(src='/javascripts/jquery.mobile-1.0.1.min.js')
+		// script(src='javascripts/jquery-1.7.1.min.js')
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+		script(src='http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js')
 		script(src='/javascripts/add2home.min.js')
-		script(src='/nowjs/now.js')
+		script(src='/socket.io/socket.io.js')
 		script(src='/javascripts/client.js')
-	
+
+		script
+			$(document).bind('mobileinit', function() {
+				$.extend($.mobile, { // overriding jQuery Mobile defaults
+						pushStateEnabled: false
+					, ajaxEnabled: false
+				});
+			});
 	body!= body

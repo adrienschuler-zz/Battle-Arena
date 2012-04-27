@@ -1,47 +1,49 @@
-var path = require('path');
-
-try {
-	require.paths = require.paths.unshift(__dirname + '/../node_modules');
-} catch(e) {
-	process.env.NODE_PATH = path.join(__dirname, '/../node_modules') + ':' + process.env.NODE_PATH;
-}
-
-require('./lib/exceptions');
+/**
+ *  Boot
+ */
 
 if (!process.env.NODE_ENV) process.env.NODE_ENV = 'local';
 
+require('./lib/exceptions');
 
-var express				= require('express')
-	, nowjs 				= require('now')
-	, mongoose 			= require('mongoose')	
-	// , stylus 				= require('stylus')
+const express				= require('express')
+	  , mongoose    	= require('mongoose')
+	  , sio 					= require('socket.io')
+//  	, stylus      	= require('stylus')
 
-	// , models 				= require('./config/models')
+		, models 				= require('./config/models')
+		, config 				= require('./config/config')
+		, routes 				= require('./config/routes')
+		, environments 	= require('./config/environments')
+		, errors 				= require('./config/errors')
 
-	, User = require('./app/models/user')
+		, app 					= express.createServer();
 
-	, config 				= require('./config/config')
-	, routes 				= require('./config/routes')
-	, environments 	= require('./config/environments')
-	, errors 				= require('./config/errors');
 
-var app = express.createServer();
+// Load Mongoose Models	
+models(app);
 
+// Load Expressjs config
 config(app);
+
+// Load Environmental Settings
 environments(app);
 
-var port = process.env.PORT || 3000;
+// Attach socket.io server
+var io = sio.listen(app);
 
-app.listen(port);
+// Load routes config
+routes(app, io);
 
-var everyone = nowjs.initialize(app);
-
-routes(app, everyone);
+// Load error routes + pages
 errors(app);
 
+// Run server
+app.listen(process.env.PORT || 3000);
+
 console.log('\x1b[36mBattle Arena\x1b[90m v%s\x1b[0m running as \x1b[1m%s\x1b[0m on http://%s:%d',
-	app.set('version'),
-	app.set('env'),
-	app.set('host'),
-	app.address().port
+  app.set('version'),
+  app.set('env'),
+  app.set('host'),
+  app.address().port
 );

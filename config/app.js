@@ -1,22 +1,18 @@
 /**
- * Load dependencies
+ * App
  */
- 
-const express 			= require('express')
-		// , nowjs 				= require('now')
-		// , stylus 				= require('stylus')
-		// , mongoose 			= require('mongoose')
 
-		// , models 				= require('./models')
+const express				= require('express')
+	  , mongoose    	= require('mongoose')
+	  , io 						= require('sockect.io')
+//  	, stylus      	= require('stylus')
+
+		, models 				= require('./models')
 		, config 				= require('./config')
 		, routes 				= require('./routes')
 		, environments 	= require('./environments')
-		, errors 				= require('./errors');
+		, errors 				= require('./errors'); 
 
-
-/**
- * Exports
- */
 
 module.exports = function() {
 
@@ -26,7 +22,7 @@ module.exports = function() {
 	
 	//  Load Mongoose Models
 	
-	// models(app);
+	models(app);
 	
 	//  Load Expressjs config
 	
@@ -38,13 +34,11 @@ module.exports = function() {
 
 	//  Load routes config
 	
-	// var everyone = nowjs.initialize(app);
-
-	// routes(app, everyone);
+	routes(app);
 	
 	//  Load error routes + pages
 	
-	// errors(app);
+	errors(app);
 	
 	
 	return app;
