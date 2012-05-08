@@ -2,12 +2,12 @@
  * Game controller
  */
 
-const parseCookie = require('connect').utils.parseCookie;
-const Session = require('connect').middleware.session.Session;
-
 var controller = {}
 	, app
-	, io;
+	, io
+	, connect = require('connect')
+	, ParseCookie = connect.utils.parseCookie
+	, Session = connect.middleware.session.Session;
 	// , db;
 
 
@@ -35,7 +35,7 @@ controller.index = function(req, res) {
 
 	io.set('authorization', function(data, accept) {
 		if (data.headers.cookie) {
-			data.cookie = parseCookie(data.headers.cookie);
+			data.cookie = ParseCookie(data.headers.cookie);
 			data.sessionID = data.cookie['express.sid'];
 			data.sessionStore = sessionStore;
 
