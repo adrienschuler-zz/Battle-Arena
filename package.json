@@ -7,10 +7,11 @@
     , "npm":  "1.1.9"
   }
   , "dependencies": {
-      "express": "2.5.8"
-    , "express-messages": "0.0.2"
-    , "jade": ">= 0.0.1"
-    , "mongoose": "2.5.14"
-    , "socket.io": "0.9.6"
+      "express":          ">= 2.5.8"
+    , "express-messages": ">= 0.0.2"
+    , "jade":             ">= 0.0.1"
+    , "connect":          ">= 2.2.2"
+    , "mongoose":         ">= 2.5.14"
+    , "socket.io":        ">= 0.9.6"
   }
 }
