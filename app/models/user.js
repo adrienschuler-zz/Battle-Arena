@@ -6,9 +6,11 @@ var mongoose 	= require('mongoose')
 
 var User = module.exports = new Schema({
 		is_active     	: { type: Boolean, default: true }
-	,	login         	: { type: String, required: true, index: { unique: true } }
-	, email          	: { type: String, required: true, index: { unique: true } }
-	, password_hash   : { type: String, required: true }
+	// ,	username        : { type: String, required: true, index: { unique: true } }
+	,	username        : { type: String }
+	// , email          	: { type: String, required: true, index: { unique: true } }
+	, email          	: { type: String }
+	, password_hash   : { type: String }
 	, ip_addresses    : { type: String }
 	, devices         : { type: String }
 	, created  				: { type: Date, default: Date.now }

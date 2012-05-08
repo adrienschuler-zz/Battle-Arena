@@ -8,7 +8,7 @@
 		!=messages()
 
 		form(action='/session/create', method='post', id='login')
-			input(type='text', name='user[login]', placeholder='Username', class='login', id='login')
+			input(type='text', name='user[username]', placeholder='Username', class='username', id='username')
 			br
 			input(type='password', name='user[password]', placeholder='Password', id='password')
 			br
@@ -21,7 +21,6 @@
 		p Footer
 
 script
-	console.log('login1');
 	$(document).bind('pageinit', function() {
-		console.log('login2');
+
 	});

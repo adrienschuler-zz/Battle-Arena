@@ -10,7 +10,7 @@
 		form(action='/user/create', method='post', id='signup')
 			input(type='email', name='user[email]', placeholder='Email', id='email')
 			br
-			input(type='text', name='user[login]', placeholder='Username', id='login')
+			input(type='text', name='user[username]', placeholder='Username', id='username')
 			br
 			input(type='password', name='user[password]', placeholder='Password', id='password')
 			br
@@ -20,7 +20,6 @@
 		p Footer
 
 script
-	console.log('1');
 	$(document).bind('pageinit', function() {
-		console.log('2');
+
 	});

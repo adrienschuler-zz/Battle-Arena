@@ -8,7 +8,7 @@ module.exports = function(app) {
 
 	app.configure('local', function () {
 		this
-			.set('host', 'localhost')
+			.set('host', '192.168.0.11')
 			.set('port', port)
 			.set('ENV','local');
 	}); 

@@ -26,18 +26,16 @@ controller.signup = function(req, res) {
 // POST
 controller.create = function(req, res) {
 	var u = req.body.user || null;
-	if (u && u.login) {
+	if (u && u.username) {
 		console.log(u);
 
 		var User = new db.User({
-				login: u.login
+				username: u.username
 			, email: u.email
 			, password: u.password
 		}).save(function(error, success) {
 			
-			if (error) {
-				console.log(error);				
-			}
+			if (error) console.log(error);
 
 			if (success) {
 				console.log(success);

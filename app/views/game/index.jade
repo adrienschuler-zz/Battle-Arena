@@ -1,4 +1,4 @@
-#wrapper(data-role='page', data-url='/game')
+#wrapper(data-role='page', data-url='/game', class='initialize game')
 	#header(data-role='header')
 		a(href='/') BATTLE ARENA
 
@@ -22,41 +22,3 @@
 
 	#footer(data-role='footer', data-position='fixed')
 		p Footer
-
-// script(src='/socket.io/socket.io.js')
-script
-	console.log('omg1');
-	$(document).bind('pageinit', function() {
-
-		var socket = io.connect('http://localhost:5000/game');
-		var tchat_container = $('.tchat-container');
-		var tchat_input = $('#tchat-input');
-
-		console.log(tchat_container);
-		console.log(tchat_input);
-
-		socket.on('join', function (user) {
-			tchat_container.append('<div class="">' + user.login + ' joined the room</div>');
-		});
-
-		socket.on('message', function(message) {
-			tchat_container.append('<div class="">' + message + '</div>');
-		});
-
-		socket.on('disconnect', function(message) {
-			tchat_container.append('<div class="">' + message + '</div>');
-		});
-
-		tchat_input.keyup(function(e) {
-			if (e.which === 13) {
-				e.preventDefault();
-				tchat_input.val('');
-				socket.emit('message', tchat_input.val());
-			}
-		});
-
-	//	$('#tchat-send').click(function() {
-	//		now.distribute($('#tchat-input').val());
-	//	});
-
-	});

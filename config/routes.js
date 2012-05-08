@@ -2,13 +2,21 @@
  * Routes
  */
 
-module.exports = function(app, io) {
+module.exports = function(app, io, sessionStore) {
 
 	// Controllers
 	var session = require('../app/controllers/session_controller')(app, io)
 		, user 		= require('../app/controllers/user_controller')(app)
-		, game 		= require('../app/controllers/game_controller')(app, io);
+		, game 		= require('../app/controllers/game_controller')(app, io, sessionStore);
 
+
+	function checkSession(req, res, next) {
+		if (req.session.user) {
+			next();
+		} else {
+			res.redirect('/user/login');
+		}
+	}
 	
 	// Root
 	app.get('/', function(req, res) {
@@ -29,6 +37,7 @@ module.exports = function(app, io) {
 	app.post('/user/create', user.create);
 
 	// Game
-	app.get('/game', game.index);
+	app.get('/game', [checkSession], game.index);
+	
 
 };

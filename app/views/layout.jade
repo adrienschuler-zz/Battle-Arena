@@ -15,17 +15,39 @@ html
 
 		script(src='/javascripts/modernizr-2.5.3.js')
 		// script(src='javascripts/jquery-1.7.1.min.js')
-		script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js')
+		script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
 		script(src='http://code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js')
 		script(src='/javascripts/add2home.min.js')
 		script(src='/socket.io/socket.io.js')
-		script(src='/javascripts/client.js')
+		// script(src='/javascripts/client.js')
 
 		script
-			$(document).bind('mobileinit', function() {
-				$.extend($.mobile, { // overriding jQuery Mobile defaults
-						pushStateEnabled: false
-					, ajaxEnabled: false
+			// $.extend($.mobile, { // overriding jQuery Mobile defaults
+			// 	ajaxEnabled: false
+			// });
+			$(document).bind('pageinit', function() {
+				console.log('pageinit');
+				$('.initialize').live('pageshow', function() {
+					console.log('initialize');
+					
+					if ($('.game')) {
+						console.log('.game!');
+						var tchat_container = $('.tchat-container');
+						var tchat_input = $('#tchat-input');
+						var tchat_side = $('.tchat-side');
+
+						var socket = io
+							.connect('http://192.168.0.11:5000/game')
+							.of('/game')
+							.on('connect', function() {
+								
+							}).on('updatechat', function(msg) {
+								tchat_container.append('<div class="">' + msg + '</div>');
+							}).on('userjoin', function(username) {
+								tchat_side.append('<div>' + username + '</div>');
+						});
+					}
 				});
 			});
+
 	body!= body

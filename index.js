@@ -9,7 +9,8 @@ require('./lib/exceptions');
 const express				= require('express')
 	  , mongoose    	= require('mongoose')
 	  , sio 					= require('socket.io')
-//  	, stylus      	= require('stylus')
+
+		, sessionStore 	= new express.session.MemoryStore({ reapInterval: 60000 * 10 })
 
 		, models 				= require('./config/models')
 		, config 				= require('./config/config')
@@ -24,7 +25,7 @@ const express				= require('express')
 models(app);
 
 // Load Expressjs config
-config(app);
+config(app, sessionStore);
 
 // Load Environmental Settings
 environments(app);
@@ -33,7 +34,7 @@ environments(app);
 var io = sio.listen(app);
 
 // Load routes config
-routes(app, io);
+routes(app, io, sessionStore);
 
 // Load error routes + pages
 errors(app);

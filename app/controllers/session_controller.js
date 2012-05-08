@@ -1,7 +1,8 @@
 var controller = {}
 	, app
 	, db
-	, io;
+	, io
+	, sessionStore;
 
 module.exports = function (_app, _io) {
 	app = _app;
@@ -17,33 +18,27 @@ controller.create = function(req, res) {
 	var UserModel = db.main.model('User');
 	var User = new UserModel();
 
-	if (u && u.login) {
-		console.log(u);
-
+	if (u && u.username) {
 		db.User.find({ 
-				login: u.login
+				username: u.username
 			, password_hash: User.encryptPassword(u.password)
-		}, function(error, success) {
+		}, function(error, data) {
 
-			if (error) {
-				console.log(error);
-			}
+			if (error) console.log(error);
 
-			if (success[0] && success[0].login) {
+			if (data[0] && data[0].username) {
 				req.session.user = {
-						_id: success[0]._id
-					, login: success[0].login
-					, email: success[0].email
-					// , entered: false
+						_id: data[0]._id
+					, username: data[0].username
+					, email: data[0].email
 				};
+
 				res.redirect('/game');
 			} else {
 				req.flash('error', 'User not found.');
 				res.redirect('/user/login');
 			}
-
 		});
-
 	} else {
 		req.flash('error', 'Fill the fucking fields...');
 		res.redirect('/user/login');
