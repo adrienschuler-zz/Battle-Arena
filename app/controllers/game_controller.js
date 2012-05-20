@@ -26,7 +26,7 @@ function _time() {
 			m = d.getMinutes(),
 			h = h.toString().length > 1 ? h : '0' + h,
 			m = m.toString().length > 1 ? m : '0' + m;
-	return '[' + h + ':' + m + '] ';
+	return '<span class="time">[' + h + ':' + m + ']</span> ';
 }
 
 
@@ -66,17 +66,37 @@ console.log('A socket with sessionID ' + hs.sessionID + ' connected!');
 				});
 			}, 60 * 1000);
 
-			socket.emit('updatechat', _time() + 'Welcome ' + hs.session.user.username);
+			socket.emit(
+				'updatechat', 
+				_time() + '<span class="srv-msg">Welcome</span> <span class="username">' + hs.session.user.username + '</span> !'
+			);
 
-			chat.emit('userjoin', req.session.user.username);
+			chat.emit(
+				'userjoin', 
+				'<span class="username">' + req.session.user.username + '</span>'
+			);
 
-			socket.broadcast.emit('updatechat', _time() + hs.session.user.username + ' entered the chat');
+			socket.broadcast.emit(
+				'updatechat', 
+				_time() + '<span class="username">' + hs.session.user.username + '</span> <span class="srv-msg">entered the chat.</span>'
+			);
+
+			socket.on('message', function(msg) {
+console.log(msg);
+				chat.emit(
+					'updatechat',
+					_time() + ' <span class="username">' + hs.session.user.username + '</span> : <span class="">' + msg + '</span>'
+				)
+			});
 
 			socket.on('disconnect', function() {
-				socket.broadcast.emit('updatechat', hs.session.user.username + ' disconnected.');
 				clearInterval(intervalID);
+				socket.broadcast.emit(
+					'updatechat', 
+					_time() + '<span class="username">' + hs.session.user.username + '</span> <span class="srv-msg">disconnected.</span>'
+				);
 
-console.log('A socket with sessionID ' + hs.sessionID + ' disconnected!');
+console.log('A socket with sessionID ' + hs.sessionID + ' disconnected !');
 			});
 
 		});

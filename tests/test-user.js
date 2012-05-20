@@ -1,7 +1,7 @@
-var Browser 	= require('zombie')
-	, assert 		= require('assert')
-	, mongoose 	= require('mongoose')
-	, browser 	= new Browser()
+var browser		= require('zombie')
+	, assert		= require('assert')
+	, mongoose	= require('mongoose')
+	, browser		= new Browser()
 	, login 		= Math.round((new Date().valueOf() * Math.random())) + '';
 
 // var dblink = process.env.MONGOHQ_URL || 'mongodb://localhost/battle_arena';

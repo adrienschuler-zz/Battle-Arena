@@ -42,10 +42,20 @@ html
 							.on('connect', function() {
 								
 							}).on('updatechat', function(msg) {
-								tchat_container.append('<div class="">' + msg + '</div>');
+								tchat_container.append('<div>' + msg + '</div>');
+								tchat_container.animate({ 
+									scrollTop: 99999 // TODO
+								}, 1500);
 							}).on('userjoin', function(username) {
 								tchat_side.append('<div>' + username + '</div>');
 						});
+							tchat_input.bind('keyup', function(key) {
+								if (key.keyCode === 13) {
+									key.preventDefault();
+									socket.emit('message', tchat_input.val());
+									tchat_input.val('');
+								}
+							});
 					}
 				});
 			});

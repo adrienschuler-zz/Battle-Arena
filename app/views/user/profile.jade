@@ -1,0 +1,47 @@
+#wrapper(data-role='page', data-url='/user/profile', class='')
+	#header(data-role='header')
+		a(href='/') BATTLE ARENA
+			#nav
+				a(href='/session/destroy', class='nav-logout')			
+				a(href='/user/rankings', class='nav-ranking')
+				a(href='/user/profile', class='nav-profile')
+				a(href='/game/search', class='nav-search')
+
+	#content(data-role='content')
+		h2 Profile
+		#profile
+			div.row
+				div.avatar
+					div
+						div.level 19
+				.stats
+					ul
+						li 10 
+							span(class='red') Strength
+						li 10 
+							span(class='yellow') Agility
+						li 10 
+							span(class='brown') Stamina
+						li 10 
+							span(class='blue') Intellect
+			div.row
+				.bars
+					div(class='life progress')
+						div(class='bar', style='width: 100%')
+					div(class='mana progress')
+						div(class='bar', style='width: 100%')
+					div(class='xp progress')
+						div(class='bar', style='width: 100%')
+				.spells
+					div
+						img(src='/images/game/icons/1.png')
+					div
+						img(src='/images/game/icons/2.png')
+					div
+						img(src='/images/game/icons/3.png')
+					div
+						img(src='/images/game/icons/4.png')
+					div
+						img(src='/images/game/icons/5.png')
+					div
+						img(src='/images/game/icons/6.png')

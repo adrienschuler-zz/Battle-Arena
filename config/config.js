@@ -9,7 +9,9 @@ const express   = require('express')
 module.exports = function(app, sessionStore) {
 
 	//  Setup DB Connection
-	var dblink = process.env.MONGOLAB_URI || 'mongodb://192.168.0.11/battle_arena';
+	// var dblink = process.env.MONGOLAB_URI || 'mongodb://192.168.0.11/battle_arena';
+	var dblink = process.env.MONGOLAB_URI || 'mongodb://localhost/battle_arena';
+	// var dblink = process.env.MONGOLAB_URI || 'mongodb://10.50.127.202/battle_arena';
 	const db  = mongoose.createConnection(dblink);
 
 

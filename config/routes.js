@@ -34,6 +34,7 @@ module.exports = function(app, io, sessionStore) {
 	// User
 	app.get('/user/login', user.login);
 	app.get('/user/signup', user.signup);
+	app.get('/user/profile', [checkSession], user.profile);
 	app.post('/user/create', user.create);
 
 	// Game

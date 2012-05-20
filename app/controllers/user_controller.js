@@ -12,14 +12,21 @@ module.exports = function (_app) {
 // GET
 controller.login = function(req, res) {
 	res.render('user/login', { 
-		title: 'Login - BATTLE ARENA'
+		title: 'BATTLE ARENA - Login'
 	});
 };
 
 // GET
 controller.signup = function(req, res) {
-  res.render('user/signup', {
-		title: 'Register - BATTLE ARENA' 
+	res.render('user/signup', {
+		title: 'BATTLE ARENA - Register' 
+	});
+};
+
+// GET
+controller.profile = function(req, res) {
+	res.render('user/profile', {
+		title: 'BATTLE ARENA - profile' 
 	});
 };
 

@@ -5,10 +5,10 @@
 if (!process.env.NODE_ENV) process.env.NODE_ENV = 'local';
 
 require('./lib/exceptions');
-
+ 
 const express				= require('express')
-	  , mongoose    	= require('mongoose')
-	  , sio 					= require('socket.io')
+		//, mongoose			= require('mongoose')
+		, sio 					= require('socket.io')
 
 		, sessionStore 	= new express.session.MemoryStore({ reapInterval: 60000 * 10 })
 
@@ -49,8 +49,8 @@ errors(app);
 app.listen(process.env.PORT || 3000);
 
 console.log('\x1b[36mBattle Arena\x1b[90m v%s\x1b[0m running as \x1b[1m%s\x1b[0m on http://%s:%d',
-  app.set('version'),
-  app.set('env'),
-  app.set('host'),
-  app.address().port
+	app.set('version'),
+	app.set('env'),
+	app.set('host'),
+	app.address().port
 );
