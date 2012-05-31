@@ -1,0 +1,27 @@
+var mocha			= require('mocha')
+	, assert		= require('assert')
+	// , mongoose	= require('mongoose')
+	// , db 				= mongoose.createConnection('mongodb://localhost/battle_arena')
+
+	, login 		= Math.round((new Date().valueOf() * Math.random())) + '';
+
+
+//mongoose.model('User', require('../app/models/user'));
+
+
+describe('Users', function() {
+	it('Should registers a new user', function() {
+
+		// var UserModel = db.main.model('User');
+		// var User = new UserModel();
+		
+		// var u = new User({
+		// 		login: login
+		// 	, password: login
+		// });
+
+		assert.equal(true, true);
+	});
+	
+});
+

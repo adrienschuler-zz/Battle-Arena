@@ -1,3 +1,5 @@
+* { padding: 0; margin: 0; }
+
 /*body {
 	background-color: #eee;
 }
@@ -303,4 +305,17 @@ div::-webkit-scrollbar-thumb:vertical {
 }
 #chatroom .username {
 	font-style: italic;
+}
+
+#profile ul {
+	list-style-type: none;
+}
+#profile .stats a {
+	font-size: 22px;
+}
+#profile .stats span {
+	margin-left: 5px;
+}
+h2 {
+	margin-bottom: 20px;
 }

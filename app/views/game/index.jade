@@ -19,3 +19,31 @@
 				a(data-role='button', data-inline='true', data-mini='true', id='tchat-send') Send
 			.right
 				div(class='tchat-side ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
+
+script
+	var tchat_container = $('.tchat-container');
+	var tchat_input = $('#tchat-input');
+	var tchat_side = $('.tchat-side');
+
+	var socket = io
+		.connect()
+		.of('/game')
+		.on('connect', function() {
+			
+		}).on('updatechat', function(msg) {
+			tchat_container.append('<div>' + msg + '</div>');
+			tchat_container.animate({ 
+				scrollTop: 99999 // TODO
+			}, 500);
+		}).on('userjoin', function(username) {
+			tchat_side.append('<div>' + username + '</div>');
+	});
+	
+	tchat_input.bind('keyup', function(key) {
+		console.log('keyup');
+		if (key.keyCode === 13) {
+			key.preventDefault();
+			socket.emit('message', tchat_input.val());
+			tchat_input.val('');
+		}
+	});

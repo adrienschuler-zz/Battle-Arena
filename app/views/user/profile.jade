@@ -15,14 +15,23 @@
 					div
 						div.level 19
 				.stats
+					p 10 points de caractéristiques restant
 					ul
-						li 10 
+						li 
+							a(href='', title='Augmenter cette caractéristique') + 
+							=10
 							span(class='red') Strength
-						li 10 
+						li
+							a(href='', title='Augmenter cette caractéristique') + 
+							=10 
 							span(class='yellow') Agility
-						li 10 
+						li
+							a(href='', title='Augmenter cette caractéristique') + 
+							=10 
 							span(class='brown') Stamina
-						li 10 
+						li
+							a(href='', title='Augmenter cette caractéristique') + 
+							=10 
 							span(class='blue') Intellect
 			div.row
 				.bars
@@ -45,3 +54,7 @@
 						img(src='/images/game/icons/5.png')
 					div
 						img(src='/images/game/icons/6.png')
+
+
+script
+	console.log($('.stats a'));

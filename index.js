@@ -33,7 +33,8 @@ environments(app);
 // Attach socket.io server
 var io = sio.listen(app);
 
-// Heroku restrictions (WebSockets aren't supported yet)
+// Heroku socket.io restrictions to xhr-polling
+// (WebSockets aren't supported yet)
 io.configure(function() { 
 	io.set('transports', ['xhr-polling']);
 	io.set('polling duration', 10);

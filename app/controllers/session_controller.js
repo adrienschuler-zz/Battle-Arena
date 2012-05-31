@@ -40,7 +40,7 @@ controller.create = function(req, res) {
 			}
 		});
 	} else {
-		req.flash('error', 'Fill the fucking fields...');
+		req.flash('error', 'Fill the required fields...');
 		res.redirect('/user/login');
 	}
 

@@ -20,9 +20,6 @@ module.exports = function(grunt) {
 				'app/**/*.js'
 			]
 		},
-		qunit: {
-			files: ['tests/**/*.html']
-		},
 		concat: {
 			dist: {
 				src: ['<banner:meta.banner>', '<file_strip_banner:lib/<%= pkg.name %>.js>'],
@@ -58,10 +55,16 @@ module.exports = function(grunt) {
 				jQuery: true
 			}
 		},
-		uglify: {}
+		uglify: {},
+		mocha: {
+			index: ['specs/index.html']
+		},
 	});
 
+	// mocha module
+	grunt.loadNpmTasks('grunt-mocha');
+	
 	// Default task.
-	grunt.registerTask('default', 'lint qunit concat min');
+	grunt.registerTask('default', 'mocha concat min');
 
 };

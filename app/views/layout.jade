@@ -22,16 +22,15 @@ html
 		// script(src='/javascripts/client.js')
 
 		script
-			// $.extend($.mobile, { // overriding jQuery Mobile defaults
-			// 	ajaxEnabled: false
-			// });
-			$(document).bind('pageinit', function() {
+			$.extend($.mobile, { // overriding jQuery Mobile defaults
+				ajaxEnabled: false
+			});
+			/*$(document).bind('pageinit', function() {
 				console.log('pageinit');
 				$('.initialize').live('pageshow', function() {
 					console.log('initialize');
 					
 					if ($('.game')) {
-						console.log('.game!');
 						var tchat_container = $('.tchat-container');
 						var tchat_input = $('#tchat-input');
 						var tchat_side = $('.tchat-side');
@@ -58,6 +57,6 @@ html
 							});
 					}
 				});
-			});
+			});*/
 
 	body!= body

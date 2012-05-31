@@ -41,5 +41,8 @@ User.pre('remove', function(next) {
 
 
 User.methods.encryptPassword = function(password) {
-	return crypto.createHash('sha1').update(password).digest('hex');
+	return crypto
+		.createHash('sha1')
+		.update(password)
+		.digest('hex');
 };
