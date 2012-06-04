@@ -3,7 +3,7 @@
 		a(href='/') BATTLE ARENA
 
 			#nav
-				a(href='/session/destroy', class='nav-logout')			
+				a(href='/user/logout', class='nav-logout')			
 				a(href='/user/rankings', class='nav-ranking')
 				a(href='/user/profile', class='nav-profile')
 				a(href='/game/search', class='nav-search')
@@ -11,6 +11,8 @@
 	#content(data-role='content')
 			
 		h2 Chatroom
+
+		!=messages()
 
 		#chatroom  	
 			.left
@@ -24,6 +26,7 @@ script
 	var tchat_container = $('.tchat-container');
 	var tchat_input = $('#tchat-input');
 	var tchat_side = $('.tchat-side');
+	var tchat_send = $('#tchat-send');
 
 	var socket = io
 		.connect()
@@ -40,10 +43,14 @@ script
 	});
 	
 	tchat_input.bind('keyup', function(key) {
-		console.log('keyup');
 		if (key.keyCode === 13) {
 			key.preventDefault();
 			socket.emit('message', tchat_input.val());
 			tchat_input.val('');
 		}
+	});
+
+	tchat_send.bind('click', function() {
+		socket.emit('message', tchat_input.val());
+		tchat_input.val('');
 	});

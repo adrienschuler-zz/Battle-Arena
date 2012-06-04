@@ -7,7 +7,6 @@ if (!process.env.NODE_ENV) process.env.NODE_ENV = 'local';
 require('./lib/exceptions');
  
 const express				= require('express')
-		//, mongoose			= require('mongoose')
 		, sio 					= require('socket.io')
 
 		, sessionStore 	= new express.session.MemoryStore({ reapInterval: 60000 * 10 })
@@ -22,7 +21,7 @@ const express				= require('express')
 
 
 // Load Mongoose Models	
-models(app);
+models();
 
 // Load Expressjs config
 config(app, sessionStore);

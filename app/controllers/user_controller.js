@@ -1,10 +1,15 @@
 var controller = {}
 	, app
-	, db;
+	, db
+	, UserModel
+	, User;
+
 
 module.exports = function (_app) {
-	app = _app;
-	db = app.set('db');
+	app 			= _app;
+	db 				= app.set('db');
+	UserModel = db.main.model('User');
+	User 			= new UserModel();
 	return controller;
 };
 
@@ -32,27 +37,43 @@ controller.profile = function(req, res) {
 
 // POST
 controller.create = function(req, res) {
-	var u = req.body.user || null;
-	if (u && u.username) {
-		console.log(u);
+	User.create(req.body.user, function(user) {
+		if (user) {
+			req.flash('success', 'Your account has been successfully created.');
+			req.session.user = user;
+			res.redirect('/game');
+		} else {
+			req.flash('error', 'Fill the required fields...');
+			res.redirect('/user/signup');
+		}
+	});
+};
 
-		var User = new db.User({
-				username: u.username
-			, email: u.email
-			, password: u.password
-		}).save(function(error, success) {
-			
-			if (error) console.log(error);
-
-			if (success) {
-				console.log(success);
-				req.session.user = User;
+// POST
+controller.authenticate = function(req, res) {
+	var user = req.body.user;
+	if (user && user.username && user.password) {
+		UserModel.find({ 
+				username: user.username
+			, password_hash: User.encryptPassword(user.password)
+		}, function(error, data) {
+			if (error || !data.length) {
+				console.error(error);
+				req.flash('error', 'User not found.');
+				res.redirect('/user/login');
+			} else {
+				req.session.user = data[0];
 				res.redirect('/game');
 			}
-
 		});
 	} else {
 		req.flash('error', 'Fill the required fields...');
-		res.redirect('/user/signup');
+		res.redirect('/user/login');
 	}
+};
+
+// GET
+controller.logout = function(req, res) {
+	delete req.session.user;
+	res.redirect('/');
 };

@@ -7,7 +7,7 @@
 
 		!=messages()
 
-		form(action='/session/create', method='post', id='login')
+		form(action='/user/authenticate', method='post', id='login')
 			input(type='text', name='user[username]', placeholder='Username', class='username', id='username')
 			br
 			input(type='password', name='user[password]', placeholder='Password', id='password')

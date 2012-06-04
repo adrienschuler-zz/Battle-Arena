@@ -22,41 +22,9 @@ html
 		// script(src='/javascripts/client.js')
 
 		script
+			// TODO: move to external file
 			$.extend($.mobile, { // overriding jQuery Mobile defaults
 				ajaxEnabled: false
 			});
-			/*$(document).bind('pageinit', function() {
-				console.log('pageinit');
-				$('.initialize').live('pageshow', function() {
-					console.log('initialize');
-					
-					if ($('.game')) {
-						var tchat_container = $('.tchat-container');
-						var tchat_input = $('#tchat-input');
-						var tchat_side = $('.tchat-side');
-
-						var socket = io
-							.connect()
-							.of('/game')
-							.on('connect', function() {
-								
-							}).on('updatechat', function(msg) {
-								tchat_container.append('<div>' + msg + '</div>');
-								tchat_container.animate({ 
-									scrollTop: 99999 // TODO
-								}, 1500);
-							}).on('userjoin', function(username) {
-								tchat_side.append('<div>' + username + '</div>');
-						});
-							tchat_input.bind('keyup', function(key) {
-								if (key.keyCode === 13) {
-									key.preventDefault();
-									socket.emit('message', tchat_input.val());
-									tchat_input.val('');
-								}
-							});
-					}
-				});
-			});*/
 
 	body!= body

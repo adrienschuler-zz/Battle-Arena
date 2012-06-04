@@ -27,15 +27,14 @@ module.exports = function(app, io, sessionStore) {
 		}
 	});
 	
-	// Session
-	app.post('/session/create', session.create);
-	app.get('/session/destroy', session.destroy);
-
 	// User
 	app.get('/user/login', user.login);
 	app.get('/user/signup', user.signup);
+	app.get('/user/logout', user.logout);
 	app.get('/user/profile', [checkSession], user.profile);
+	
 	app.post('/user/create', user.create);
+	app.post('/user/authenticate', user.authenticate);
 
 	// Game
 	app.get('/game', [checkSession], game.index);

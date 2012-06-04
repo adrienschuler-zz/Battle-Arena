@@ -145,16 +145,22 @@ html.no-touch input.ui-input-text {
 }
 #messages ul {
 	list-style-type: none;
-}
-#messages ul.error {
 	padding: 8px 35px 8px 14px;
-	border: 1px solid #EED3D7;
-	color: #B94A48;
+	margin-bottom: 10px;
 	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
-	background-color: #F2DEDE;
 	-webkit-border-radius: .6em;
 	-moz-border-radius: .6em;
 	border-radius: .6em;
+}
+#messages ul.error {
+	border: 1px solid #EED3D7;
+	color: #B94A48;
+	background-color: #F2DEDE;
+}
+#messages ul.success {
+	border: 1px solid #B2DDA2;
+	color: #468847;
+	background-color: #DFF0D8;
 }
 
 #profile {

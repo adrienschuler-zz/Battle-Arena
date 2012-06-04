@@ -85,7 +85,7 @@ console.log('A socket with sessionID ' + hs.sessionID + ' connected!');
 console.log(msg);
 				chat.emit(
 					'updatechat',
-					_time() + ' <span class="username">' + hs.session.user.username + '</span> : <span class="">' + msg + '</span>'
+					_time() + ' <span class="username">' + hs.session.user.username + '</span> : <span class="user-msg">' + msg + '</span>'
 				)
 			});
 
