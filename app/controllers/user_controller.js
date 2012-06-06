@@ -6,10 +6,14 @@ var controller = {}
 
 
 module.exports = function (_app) {
-	app 			= _app;
-	db 				= app.set('db');
-	UserModel = db.main.model('User');
-	User 			= new UserModel();
+	app 						= _app;
+	db 							= app.set('db');
+	UserModel 			= db.main.model('User');
+	CharacterModel 	= db.main.model('Character');
+	SpellModel 			= db.main.model('Spell');
+	User 						= new UserModel();
+	Character 			= new CharacterModel();
+	Spell 					= new SpellModel();
 	return controller;
 };
 
@@ -30,14 +34,15 @@ controller.signup = function(req, res) {
 
 // GET
 controller.profile = function(req, res) {
+//	res.expose(req.session.user, 'user');
 	res.render('user/profile', {
-		title: 'BATTLE ARENA - profile' 
+		title: 'BATTLE ARENA - profile'
 	});
 };
 
 // POST
 controller.create = function(req, res) {
-	User.create(req.body.user, function(user) {
+	User.create(req.body.user, Character, Spell, function(user) {
 		if (user) {
 			req.flash('success', 'Your account has been successfully created.');
 			req.session.user = user;

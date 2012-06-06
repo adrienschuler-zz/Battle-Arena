@@ -2,11 +2,13 @@ var mongoose 	= require('mongoose')
 	, crypto 		= require('crypto')
 	, $ 				= require('underscore')
 	, Schema 		= mongoose.Schema
-	, ObjectId 	= Schema.ObjectId;
+	, Character = require('./character')
+	, Spell 		= require('./spell');
 
 
 var User = module.exports = new Schema({
-		is_active				: { type: Boolean, default: true }
+		characters 			: [Character]
+	,	is_active				: { type: Boolean, default: true }
 	// ,	username        : { type: String, required: true, index: { unique: true } }
 	,	username				: { type: String }
 	// , email          	: { type: String, required: true, index: { unique: true } }
@@ -49,13 +51,18 @@ User.methods.encryptPassword = function(password) {
 	return crypto
 		.createHash('sha1')
 		.update(password)
-		.digest('hex');
+		.digest('hex');character
 };
 
 
-User.methods.create = function(user, callback) {
+User.methods.create = function(user, character, spell, callback) {
 	if ($.isObject(user)) {
 		$.extend(this, user);
+		var c = character.create();
+		for (var i = 0; i < 6; i++) {
+			c.spells.push(spell.create());
+		}
+		this.characters.push(c);
 		this.save(function(error, success) {
 			if (error) {
 				console.error(error);
@@ -63,6 +70,7 @@ User.methods.create = function(user, callback) {
 			}
 			callback(success);
 		});
+
 	} else {
 		callback(false);
 	}

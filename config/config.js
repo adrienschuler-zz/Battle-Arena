@@ -49,8 +49,10 @@ module.exports = function(app, sessionStore) {
 	//  Save reference to database connection
 	app.configure(function() {
 		app.set('db', { 
-				'main': db
-			, 'User': db.model('User')
+				'main': 			db
+			, 'User': 			db.model('User')
+			, 'Character': 	db.model('Character')
+			, 'Spell': 			db.model('Spell')
 		})
 		app.set('version', '0.0.1');
 	});

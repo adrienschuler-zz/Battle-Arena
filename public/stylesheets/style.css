@@ -164,15 +164,16 @@ html.no-touch input.ui-input-text {
 }
 
 #profile {
+	width: 60%;
 	margin: 0 auto;
 }
 div.row {
-
+	
 }
 div.avatar {
 	position: relative;
-	width: 100px;
-	height: 100px;
+	width: 125px;
+	height: 125px;
 	border: 1px solid black;
 	float: left;
 }
@@ -184,18 +185,24 @@ div.level {
 }
 div.stats {
 	width: 50%;
-	float: left;
+	float: right;
 }
 div.bars {
 	width: 50%;
 	float: left;
 }
+div.bars div {
+
+}
 div.spells {
 	width: 50%;
+	float: left;
 }
 div.spells div {
+	cursor: pointer;
 	display: inline-block;
 	float: left;
+	margin: 1px 5px;
 }
 
 .red {
@@ -212,8 +219,8 @@ div.spells div {
 }
 
 .progress {
-	height: 18px;
-	margin-bottom: 5px;
+	height: 25px;
+	margin: 10px 5px 10px 0px;
 	overflow: hidden;
 	background-color: #F7F7F7;
 	background-image: -moz-linear-gradient(top, whiteSmoke, #F9F9F9);
@@ -234,7 +241,7 @@ div.spells div {
 
 .progress .bar {
 	width: 0;
-	height: 18px;
+	height: 25px;
 	font-size: 12px;
 	color: white;
 	text-align: center;
@@ -324,4 +331,8 @@ div::-webkit-scrollbar-thumb:vertical {
 }
 h2 {
 	margin-bottom: 20px;
+}
+.break {
+	display: block;
+ 	clear: both;
 }

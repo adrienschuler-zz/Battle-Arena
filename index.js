@@ -8,6 +8,7 @@ require('./lib/exceptions');
  
 const express				= require('express')
 		, sio 					= require('socket.io')
+		, expose 				= require('express-expose')
 
 		, sessionStore 	= new express.session.MemoryStore({ reapInterval: 60000 * 10 })
 
