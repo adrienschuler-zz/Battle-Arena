@@ -33,7 +33,9 @@ module.exports = function(app, sessionStore) {
 					return req.session.user;
 				}
 				,	character: function(req, res) {
-					return req.session.user.characters[0];
+					return req.session.user && req.session.user.characters[0]
+						? req.session.user.characters[0] 
+						: null;
 				}
 			})
 			.use(express.errorHandler({
