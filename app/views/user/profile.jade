@@ -9,55 +9,53 @@
 
 	#content(data-role='content')
 		h2 Profile
+
 		#profile
 			div.row
+
 				div.avatar
 					div
 						div.level 19
+
 				.stats
-					p 10 points de caractéristiques restant
+					p=character.skill_points
+						span points de caractéristiques
 					ul
 						li 
 							a(href='', title='Augmenter cette caractéristique') + 
-							=10
+							=character.strength
 							span(class='red') Strength
 						li
 							a(href='', title='Augmenter cette caractéristique') + 
-							=10 
+							=character.agility
 							span(class='yellow') Agility
 						li
 							a(href='', title='Augmenter cette caractéristique') + 
-							=10 
+							=character.stamina
 							span(class='brown') Stamina
 						li
 							a(href='', title='Augmenter cette caractéristique') + 
-							=10 
+							=character.intellect
 							span(class='blue') Intellect
+			
 			div.row
+				
 				.bars
 					div(class='life progress')
 						div(class='bar', style='width: 100%')
+							=character.hitpoints
 					div(class='mana progress')
 						div(class='bar', style='width: 100%')
+							=character.manapoints
 					div(class='xp progress')
-						div(class='bar', style='width: 100%')
-				.spells
-					div
-						img(src='/images/game/icons/1.png')
-					div
-						img(src='/images/game/icons/2.png')
-					div
-						img(src='/images/game/icons/3.png')
-					span.break
-					div
-						img(src='/images/game/icons/4.png')
-					div
-						img(src='/images/game/icons/5.png')
-					div
-						img(src='/images/game/icons/6.png')
+						div(class='bar', style="width: #{character.experience}%")
+							=character.experience
 
+				.spells
+					- each spell, i in character.spells
+						- if (i == 3)
+							span.break
+						div
+							img(src="/images/game/icons/#{spell.thumbnail}.png")
 
 script
-	// console.log(user);
-	// console.log(characters);
-	// console.log(spells);

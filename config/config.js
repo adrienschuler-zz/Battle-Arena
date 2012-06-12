@@ -23,8 +23,18 @@ module.exports = function(app, sessionStore) {
 			.use(express.logger(
 				'\033[90m:method\033[0m \033[36m:url\033[0m \033[90m:response-time ms\033[0m'
 			))
+			// Helpers
 			.dynamicHelpers({ 
-				messages: require('express-messages') 
+					messages: require('express-messages')
+				,	session: function(req, res) {
+					return req.session;
+				}
+				,	user: function(req, res) {
+					return req.session.user;
+				}
+				,	character: function(req, res) {
+					return req.session.user.characters[0];
+				}
 			})
 			.use(express.errorHandler({
 				dumpException: true, 
@@ -33,7 +43,6 @@ module.exports = function(app, sessionStore) {
 			.use(express.session({ 
 				secret: '$eCr3t!', 
 				key: 'express.sid',
-				// store: new express.session.MemoryStore({ reapInterval: 60000 * 10 })
 				store: sessionStore
 			}));
 	});

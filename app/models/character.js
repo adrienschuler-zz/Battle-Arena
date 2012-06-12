@@ -6,7 +6,6 @@ var mongoose 	= require('mongoose')
 
 var Character = module.exports = new Schema({
 		avatar				: { type: String, default: "" }
-	,	spells 				: [Spell]
 	, skill_points	: { type: Number, default: 10 }
 	, hitpoints			: { type: Number, default: 90 }
 	, manapoints		: { type: Number, default: 90 }
@@ -14,8 +13,10 @@ var Character = module.exports = new Schema({
 	, strength 			: { type: Number, default: 10 }
 	, agility 			: { type: Number, default: 10 }
 	, stamina				: { type: Number, default: 10 }
+	, intellect			: { type: Number, default: 10 }
 	, accuracy			: { type: Number, default: 10 }
 	, armor					: { type: Number, default: 10 }
+	,	spells 				: [Spell]
 	, created 			: { type: Date, default: Date.now }
 	, updated 			: { type: Date, default: Date.now } 
 });

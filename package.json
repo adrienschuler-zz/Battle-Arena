@@ -8,6 +8,7 @@
 	}
 	, "dependencies": {
 			"express":					">= 2.5.8"
+		,	"express-expose":		"0.2.2"
 		, "express-messages":	">= 0.0.2"
 		, "jade":							">= 0.0.1"
 		, "connect":					">= 2.2.2"

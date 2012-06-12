@@ -34,7 +34,7 @@ controller.signup = function(req, res) {
 
 // GET
 controller.profile = function(req, res) {
-//	res.expose(req.session.user, 'user');
+	// res.expose(req.session.user, 'user');
 	res.render('user/profile', {
 		title: 'BATTLE ARENA - profile'
 	});
@@ -67,7 +67,9 @@ controller.authenticate = function(req, res) {
 				req.flash('error', 'User not found.');
 				res.redirect('/user/login');
 			} else {
+console.log(data);
 				req.session.user = data[0];
+console.log(req.session.user);
 				res.redirect('/game');
 			}
 		});

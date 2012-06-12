@@ -7,15 +7,15 @@ var mongoose 	= require('mongoose')
 
 
 var User = module.exports = new Schema({
-		characters 			: [Character]
-	,	is_active				: { type: Boolean, default: true }
+		is_active				: { type: Boolean, default: true }
 	// ,	username        : { type: String, required: true, index: { unique: true } }
-	,	username				: { type: String }
+	,	username				: { type: String } // TODO unique/required
 	// , email          	: { type: String, required: true, index: { unique: true } }
-	, email 					: { type: String }
+	, email 					: { type: String } // TODO unique/required
 	, password_hash 	: { type: String }
 	, ip_addresses		: { type: String }
 	, devices					: { type: String }
+	, characters 			: [Character]
 	, created 				: { type: Date, default: Date.now }
 	, updated 				: { type: Date, default: Date.now } 
 });

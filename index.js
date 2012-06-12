@@ -12,6 +12,7 @@ const express				= require('express')
 
 		, sessionStore 	= new express.session.MemoryStore({ reapInterval: 60000 * 10 })
 
+		, sockets 			= require('./app/sockets')
 		, models 				= require('./config/models')
 		, config 				= require('./config/config')
 		, routes 				= require('./config/routes')
@@ -41,10 +42,13 @@ io.configure(function() {
 });
 
 // Load routes config
-routes(app, io, sessionStore);
+routes(app);
 
 // Load error routes + pages
 errors(app);
+
+// SIO
+sockets(app, io, sessionStore);
 
 // Run server
 app.listen(process.env.PORT || 3000);

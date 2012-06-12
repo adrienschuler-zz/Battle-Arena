@@ -2,11 +2,11 @@
  * Routes
  */
 
-module.exports = function(app, io, sessionStore) {
+module.exports = function(app) {
 
 	// Controllers
 	var user 		= require('../app/controllers/user_controller')(app)
-		, game 		= require('../app/controllers/game_controller')(app, io, sessionStore);
+		, game 		= require('../app/controllers/game_controller')(app);
 
 
 	function checkSession(req, res, next) {
