@@ -11,7 +11,6 @@ module.exports = function(app, sessionStore) {
 	//  Setup DB Connection
 	// var dblink = process.env.MONGOLAB_URI || 'mongodb://192.168.0.11/battle_arena';
 	var dblink = process.env.MONGOLAB_URI || 'mongodb://localhost/battle_arena';
-	// var dblink = process.env.MONGOLAB_URI || 'mongodb://10.50.127.202/battle_arena';
 	const db = mongoose.createConnection(dblink);
 
 
@@ -33,16 +32,17 @@ module.exports = function(app, sessionStore) {
 					return req.session.user;
 				}
 				,	character: function(req, res) {
-					return req.session.user && req.session.user.characters[0]
-						? req.session.user.characters[0] 
-						: null;
+					return req.session.character;
+				}
+				,	spells: function(req, res) {
+					return req.session.spells;
 				}
 			})
 			.use(express.errorHandler({
 				dumpException: true, 
 				showStack: true
 			}))
-			.use(express.session({ 
+			.use(express.session({ // TODO: switch to mongodb session store
 				secret: '$eCr3t!', 
 				key: 'express.sid',
 				store: sessionStore
@@ -67,7 +67,6 @@ module.exports = function(app, sessionStore) {
 		})
 		app.set('version', '0.0.1');
 	});
-	 
 	
 	return app;
 };

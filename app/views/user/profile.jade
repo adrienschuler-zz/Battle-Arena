@@ -8,7 +8,7 @@
 				a(href='/game/search', class='nav-search')
 
 	#content(data-role='content')
-		h2 Profile
+		h2=user.username
 
 		#profile
 			div.row
@@ -52,10 +52,8 @@
 							=character.experience
 
 				.spells
-					- each spell, i in character.spells
+					- each spell, i in spells
 						- if (i == 3)
 							span.break
 						div
-							img(src="/images/game/icons/#{spell.thumbnail}.png")
-
-script
+							img(src="/images/spells/#{spell.thumbnail}.png")

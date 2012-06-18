@@ -10,10 +10,10 @@ const express				= require('express')
 		, sio 					= require('socket.io')
 		, expose 				= require('express-expose')
 
-		, sessionStore 	= new express.session.MemoryStore({ reapInterval: 60000 * 10 })
+		, sessionStore 	= new express.session.MemoryStore({ reapInterval: 60000 * 10 }) // TODO: switch to mongodb session store
 
 		, sockets 			= require('./app/sockets')
-		, models 				= require('./config/models')
+		, models 				= require('./app/models/models')
 		, config 				= require('./config/config')
 		, routes 				= require('./config/routes')
 		, environments 	= require('./config/environments')
@@ -47,7 +47,7 @@ routes(app);
 // Load error routes + pages
 errors(app);
 
-// SIO
+// Socket IO
 sockets(app, io, sessionStore);
 
 // Run server

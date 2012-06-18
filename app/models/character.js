@@ -1,7 +1,6 @@
 var mongoose 	= require('mongoose')
 	, $ 				= require('underscore')
-	, Schema 		= mongoose.Schema
-	, Spell 		= require('./spell');
+	, Schema 		= mongoose.Schema;
 
 
 var Character = module.exports = new Schema({
@@ -16,36 +15,25 @@ var Character = module.exports = new Schema({
 	, intellect			: { type: Number, default: 10 }
 	, accuracy			: { type: Number, default: 10 }
 	, armor					: { type: Number, default: 10 }
-	,	spells 				: [Spell]
+	,	_spells 				: [{ type: Schema.ObjectId, ref: 'Spell' }]
 	, created 			: { type: Date, default: Date.now }
 	, updated 			: { type: Date, default: Date.now } 
 });
 
 
 Character.pre('init', function(next) {
-	console.log('initializing...');
+	console.log('Initializing character...');
 	next();
 });
 
 
 Character.pre('save', function(next) {
-	console.log('Saving...');
+	console.log('Saving character...');
 	next();
 });
 
 
 Character.pre('remove', function(next) {
-	console.log('removing...');
+	console.log('Removing character...');
 	next();
 });
-
-Character.methods.create = function() {
-	// this.save(function(error, success) {
-	// 	if (error) {
-	// 			console.error(error);
-	// 			return null;
-	// 		}
-	// 		return success;
-	// });
-	return this;
-};

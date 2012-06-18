@@ -9,7 +9,7 @@ module.exports = function(app) {
 		, game 		= require('../app/controllers/game_controller')(app);
 
 
-	function checkSession(req, res, next) {
+	function checkAuthentication(req, res, next) {
 		if (req.session.user) {
 			next();
 		} else {
@@ -30,13 +30,14 @@ module.exports = function(app) {
 	app.get('/user/login', user.login);
 	app.get('/user/signup', user.signup);
 	app.get('/user/logout', user.logout);
-	app.get('/user/profile', [checkSession], user.profile);
+	app.get('/user/profile', [checkAuthentication], user.profile);
+	app.get('/user/rankings', [checkAuthentication], user.rankings);
 	
 	app.post('/user/create', user.create);
 	app.post('/user/authenticate', user.authenticate);
 
 	// Game
-	app.get('/game', [checkSession], game.index);
+	app.get('/game', [checkAuthentication], game.index);
 	
 
 };
