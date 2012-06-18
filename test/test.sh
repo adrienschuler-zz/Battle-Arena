@@ -1,0 +1,1 @@
+coffee -c test.coffee; mocha test.js

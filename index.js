@@ -13,7 +13,7 @@ const express				= require('express')
 		, sessionStore 	= new express.session.MemoryStore({ reapInterval: 60000 * 10 }) // TODO: switch to mongodb session store
 
 		, sockets 			= require('./app/sockets')
-		, models 				= require('./app/models/models')
+		, models 				= require('./config/models')
 		, config 				= require('./config/config')
 		, routes 				= require('./config/routes')
 		, environments 	= require('./config/environments')
