@@ -30,7 +30,6 @@
 }
 
 #content {
-	width: 50%;
 	margin: 0 auto;
 }
 #content h2 {
@@ -171,10 +170,14 @@ html.no-touch input.ui-input-text {
 	color: #468847;
 	background-color: #DFF0D8;
 }
-
 #profile {
-	width: 60%;
 	margin: 0 auto;
+	width: 100%;
+}
+@media screen and (max-device-width:480px) {
+	#profile {
+		width: 50%;
+	}
 }
 div.row {
 	

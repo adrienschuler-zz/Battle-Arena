@@ -14,11 +14,10 @@ function _time() {
 }
 
 
-module.exports = function(_app, _io, _sessionStore) {
+module.exports = function(_app, _io, MongoStore) {
 
 	var app = _app
 		, io 	= _io
-		, sessionStore = _sessionStore
 		, connected_users = [];
 
 
@@ -26,9 +25,9 @@ module.exports = function(_app, _io, _sessionStore) {
 		if (data.headers.cookie) {
 			data.cookie = ParseCookie(data.headers.cookie);
 			data.sessionID = data.cookie['express.sid'];
-			data.sessionStore = sessionStore;
+			data.sessionStore = MongoStore;
 
-			sessionStore.get(data.sessionID, function (err, session) {
+			MongoStore.get(data.sessionID, function (err, session) {
 				if (err || !session) {
 					accept('Error', false);
 				} else {
@@ -126,7 +125,7 @@ console.log(fighters);
 			socket.on('fightaccepted', function(fighters) {
 				console.log('fightaccepted');
 				console.log(fighters);
-				
+
 			});
 
 			// fight refused

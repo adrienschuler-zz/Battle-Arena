@@ -6,7 +6,7 @@ const express   = require('express')
 		, mongoose 	= require('mongoose');
 
 
-module.exports = function(app, sessionStore) {
+module.exports = function(app, MongoStore) {
 
 	//  Setup DB Connection
 	// var dblink = process.env.MONGOLAB_URI || 'mongodb://192.168.0.11/battle_arena';
@@ -42,10 +42,22 @@ module.exports = function(app, sessionStore) {
 				dumpException: true, 
 				showStack: true
 			}))
-			.use(express.session({ // TODO: switch to mongodb session store
+			.use(express.session({
 				secret: '$eCr3t!', 
 				key: 'express.sid',
-				store: sessionStore
+				store: MongoStore
+				// maxAge: new Date(Date.now() + 3600000),
+				// store: 	new MongoStore({
+				// 	db: 'battle_arena',
+				// 	// db: 'heroku_app3888338',
+				// 	host: 'localhost',
+				// 	// host: '',
+				// 	// port: 6646,  // optional, default: 27017
+				// 	// port: 31867,
+				// 	// username: 'admin', // optional
+				// 	// password: 'secret', // optional
+				// 	// collection: 'mySessions' // optional, default: sessions
+				// })
 			}));
 	});
 
