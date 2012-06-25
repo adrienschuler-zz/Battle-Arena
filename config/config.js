@@ -29,13 +29,13 @@ module.exports = function(app, MongoStore) {
 					return req.session;
 				}
 				,	user: function(req, res) {
-					return req.session.user;
+					return req.session.user || null;
 				}
 				,	character: function(req, res) {
-					return req.session.character;
+					return req.session.character || null;
 				}
 				,	spells: function(req, res) {
-					return req.session.spells;
+					return req.session.spells || null;
 				}
 			})
 			.use(express.errorHandler({
