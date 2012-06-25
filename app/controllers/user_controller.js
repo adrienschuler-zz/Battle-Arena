@@ -1,15 +1,21 @@
-var controller = {}
-	, app
+/**
+ * User controller
+ */
+
+var	mongoose		= require('mongoose')
+	,	$						= require('underscore')
+	, controller	= {}
 	, db
 	, UserModel
-	, User;
+	, CharacterModel
+	, SpellModel
+	, User
+	, Character
+	, Spell;
 
-
-var mongoose 	= require('mongoose');
 
 module.exports = function (_app) {
-	app 						= _app;
-	db 							= app.set('db');
+	db 							= _app.set('db');
 	UserModel 			= db.main.model('User');
 	CharacterModel 	= db.main.model('Character');
 	SpellModel 			= db.main.model('Spell');
@@ -27,6 +33,7 @@ controller.login = function(req, res) {
 	});
 };
 
+
 // GET
 controller.signup = function(req, res) {
 	res.render('user/signup', {
@@ -34,12 +41,59 @@ controller.signup = function(req, res) {
 	});
 };
 
+
 // GET
 controller.profile = function(req, res) {
 	res.render('user/profile', {
 		title: 'BATTLE ARENA - profile'
 	});
 };
+
+
+// GET
+controller.spells = function(req, res) {
+	console.log(req.params.id);
+	SpellModel
+		.find(function(error, s) {
+			if (error) console.log(error);
+			if (!s) {
+				req.flash('error', "An error occured while retrieving this spell.");
+				res.redirect('/user/profile');
+			} else {
+				res.render('user/spells', {
+						title: 'BATTLE ARENA - Spells'
+					, all_spells: s
+					, current_id: req.params.id
+				});
+			}
+	});
+};
+
+
+// GET
+controller.rankings = function(req, res) {
+	var datas = [];
+	UserModel.find({
+		is_active: 1
+	})
+	.populate('_characters')
+	.run(function(error, users) {
+		if (error) console.error(error);
+
+		$.each(users, function(user) {
+			datas.push({
+					username: user.username
+				, experience: user.character.experience
+			});
+		});
+
+		res.render('user/rankings', { 
+				title: 'BATTLE ARENA - Rankings'
+			, datas: datas
+		});
+	});
+};
+
 
 // POST
 controller.create = function(req, res) {
@@ -79,17 +133,13 @@ controller.authenticate = function(req, res) {
 	}
 };
 
+
 // GET
 controller.logout = function(req, res) {
 	delete req.session.user;
+	delete req.session.character;
+	delete req.session.spells;
 	res.redirect('/');
-};
-
-// GET
-controller.rankings = function(req, res) {
-	res.render('user/rankings', { 
-		title: 'BATTLE ARENA - Rankings'
-	});
 };
 
 
@@ -104,7 +154,7 @@ function authenticate(req, username, password, callback) {
 				return callback(false);
 			} else {
 				CharacterModel.findOne({
-					_id: user_data._characters[0]
+					_id: user_data.character
 				})
 				.populate('_spells')
 				.run(function(error, character_data) {

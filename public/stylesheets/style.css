@@ -23,9 +23,15 @@
 #nav {
 	float: right;
 }
+#nav a {
+	color: red;
+	text-align: center;
+	font-size: 22px;
+}
 
 #content {
-
+	width: 50%;
+	margin: 0 auto;
 }
 #content h2 {
 	text-align: center;
@@ -88,7 +94,7 @@ html.no-touch input.ui-input-text {
 }
 
 #chatroom {
-	width: 80%;
+	width: 100%;
 	height: 300px;
 	margin: 0 auto;
 }
@@ -338,4 +344,18 @@ h2 {
 .break {
 	display: block;
  	clear: both;
+}
+
+.rankings-page {
+	text-align: center;
+}
+.rankings-page table {
+	margin: 0 auto;
+}
+.rankings-page th,
+.rankings-page td {
+	padding: 5px;
+}
+.spells-page {
+	text-align: center;
 }

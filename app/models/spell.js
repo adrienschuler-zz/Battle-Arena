@@ -5,7 +5,7 @@ var mongoose 	= require('mongoose')
 
 var Spell = module.exports = new Schema({
 		name						: { type: String, default: "default name" }
-	,	description 		: { type: String, default: "default description" }
+	,	_description 		: { type: String, default: "default description" }
 	,	thumbnail 			: { type: String, default: "1" }
 	,	is_default 			: { type: Boolean }
 	, damage					: { type: Number }
@@ -13,11 +13,28 @@ var Spell = module.exports = new Schema({
 	, accuracy				: { type: Number, default: 5 }
 	,	round_of_effect	: { type: Number, default: 0 }
 	, round_duration 	: { type: Number, default: 0 }
-	, mana_cost 			: { type: Number, default: 10 }
+	, mana_cost 			: { type: Number, default: 0 }
 	// , effects 				: [{}]
 	, created 				: { type: Date, default: Date.now }
 	, updated 				: { type: Date, default: Date.now }
 });
+
+
+Spell.virtual('description')
+	.get(function() { 
+		var _this 		= this
+			,	new_desc 	= _this._description
+			, matches 	= new_desc.match(/\{((.*?))\}/g);
+		$.each(matches, function(match) {
+			var match = match.replace(/{|}/g, '');
+			if (_this[match]) {
+				new_desc = new_desc
+					.replace(match, _this[match])
+					.replace(/{|}/g, '');
+			}
+		});
+		return new_desc;
+	});
 
 
 Spell.pre('init', function(next) {
@@ -46,4 +63,16 @@ Spell.methods.getDefaults = function(spell, callback) {
 		}
 		return callback(spell_ids);
 	});
+};
+
+Spell.methods.parseDescription = function(spell) {
+	var new_desc = spell.description;
+	var matches = spell.description.match(/\{((.*?))\}/g);
+	$.each(matches, function(match) {
+		var match = match.replace(/{|}/g, '');
+		if (spell[match]) {
+			new_desc = new_desc.replace(match, spell[match]).replace(/{|}/g, '');
+		}
+	});
+	return new_desc;
 };

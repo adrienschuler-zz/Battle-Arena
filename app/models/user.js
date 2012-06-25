@@ -29,6 +29,10 @@ User.virtual('password')
 	.get(function() { return this._password; });
 
 
+User.virtual('character')
+	.get(function() { return this._characters[0]; }); // Characters currently capped to 1
+
+
 User.pre('init', function(next) {
 	console.log('Initializing user...');
 	next();
@@ -64,9 +68,9 @@ User.methods.create = function(_user, _spell, _character, callback) {
 		$.extend(_this, _user);
 
 		spell.getDefaults(_spell, function(default_spells) {
-			for (var i = 0; i < default_spells.length; i++) {
-				character._spells.push(default_spells[i]);
-			}
+			$.each(default_spells, function(s) {
+				character.spells.push(s);
+			});
 
 			character.save(function(error, c) {
 				_this._characters.push(c._id);

@@ -6,7 +6,7 @@
 				a(href='/user/logout', class='nav-logout', data-rel='dialog')
 				a(href='/user/rankings', class='nav-ranking')
 				a(href='/user/profile', class='nav-profile')
-				a(href='/game/search', class='nav-search')
+				a(href='#', class='nav-search')
 						
 	#content(data-role='content')
 			
@@ -29,22 +29,53 @@ script
 	var socket = io
 		.connect()
 		.of('/game')
-		.on('connect', function() {
-			
+
+
+		// connect
+		.on('connect', function() {			
 			socket.emit('userjoin', "#{session.user.username}");
 
+		// updatechat
 		}).on('updatechat', function(msg) {
 			tchat_container.append('<div>' + msg + '</div>');
 			tchat_container.animate({ 
 				scrollTop: 99999 // TODO
 			}, 500);
 
+		// updateusers
 		}).on('updateusers', function(users) {
-			console.log(users);
 			tchat_side.html('');
-			for (var i = 0; i < users.length; i++) {
-				tchat_side.append('<div>' + users[i] + '</div>');
-			}
+			$.each(users, function(key, user) {
+				tchat_side.append('<div>' + user.username + '</div>');
+			});
+
+		// opponents availabe 
+		}).on('opponentsavailable', function(opponents) {
+			//$.mobile.loading( 'show', { text: 'Waiting for ' + opponents.username + ' response...' });
+			//$.mobile.showPageLoadingMsg();
+			$.mobile.showPageLoadingMsg('a', 'Waiting for ' + opponents.username + ' response...', true);
+
+		// fight proposition
+		}).on('fightproposition', function(fighters) {
+			$('<div>').simpledialog2({
+				mode: 'button',
+				headerText: 'Confirmation',
+				buttonPrompt: '<div style="padding:10px"><p>' + fighters[0].username + ' wants to fight against you !</p></div>',
+				buttons : {
+					"Let's fight !": {
+						click: function () {
+							socket.emit('fightaccepted', fighters);
+						}
+					},
+					'Refuse': { 
+						icon: "delete", 
+						theme: "c",
+						click: function() {
+							socket.emit('fightrefused', fighters);
+						}
+					}
+				}
+			});
 		});
 	
 	tchat_input.bind('keyup', function(key) {
@@ -57,4 +88,8 @@ script
 
 	$('.nav-logout').bind('click', function() {
 		socket.disconnect();
+	});
+
+	$('.nav-search').bind('click', function() {
+		socket.emit('searchopponent');
 	});

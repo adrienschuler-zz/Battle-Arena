@@ -1,4 +1,5 @@
 var connect 		= require('connect')
+	, $						= require('underscore')
 	, ParseCookie = connect.utils.parseCookie
 	, Session 		= connect.middleware.session.Session;
 
@@ -18,7 +19,7 @@ module.exports = function(_app, _io, _sessionStore) {
 	var app = _app
 		, io 	= _io
 		, sessionStore = _sessionStore
-		, users = [];
+		, connected_users = [];
 
 
 	io.set('authorization', function(data, accept) {
@@ -58,16 +59,22 @@ module.exports = function(_app, _io, _sessionStore) {
 				_time() + '<span class="srv-msg">Welcome</span> <span class="username">' + hs.session.user.username + '</span> !'
 			);
 
+			// updatechat
 			socket.broadcast.emit(
 				'updatechat', 
 				_time() + '<span class="username">' + hs.session.user.username + '</span> <span class="srv-msg">entered the chat.</span>'
 			);
 
+			// userjoin
 			socket.on('userjoin', function(user) {
-				users.push(user);
-				chat.emit('updateusers', users);
+				connected_users.push({
+					id: socket.id,
+					username: user
+				});
+				chat.emit('updateusers', connected_users);
 			});
 
+			// message
 			socket.on('message', function(msg) {
 				chat.emit(
 					'updatechat',
@@ -75,17 +82,17 @@ module.exports = function(_app, _io, _sessionStore) {
 				)
 			});
 
+			// disconnect
 			socket.on('disconnect', function() {
 				clearInterval(intervalID);
 
-				for (var i = 0; i < users.length; i++) {
-					if (users[i] == hs.session.user.username) {
-						users.splice(i, 1);
-						break;
+				$.each(connected_users, function(u, i) {
+					if (u.username === hs.session.user.username) {
+						connected_users.splice(i, 1);
 					}
-				}
+				});
 
-				chat.emit('updateusers', users);
+				chat.emit('updateusers', connected_users);
 
 				socket.broadcast.emit(
 					'updatechat', 
@@ -93,6 +100,40 @@ module.exports = function(_app, _io, _sessionStore) {
 				);
 			});
 
-		});
+			// search opponent
+			socket.on('searchopponent', function() {
+				var available = [];
+				$.each(connected_users, function(u) {
+					if (u.username !== hs.session.user.username) {
+						available.push(u);
+					}
+				});
 
+				var fighters = [{
+						id: socket.id,
+						username: hs.session.user.username
+					}, {
+						id: available[0].id,
+						username: available[0].username
+					}
+				];
+console.log(fighters);
+				this.emit('opponentsavailable', available[0]);
+				io.of('/game').sockets[available[0].id].emit('fightproposition', fighters);
+			});
+
+			// fight accepted
+			socket.on('fightaccepted', function(fighters) {
+				console.log('fightaccepted');
+				console.log(fighters);
+				
+			});
+
+			// fight refused
+			socket.on('fightrefused', function(fighters) {
+				console.log('fightrefused');
+				console.log(fighters);
+			});
+
+		});
 };
