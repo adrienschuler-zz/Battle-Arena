@@ -17,12 +17,7 @@ const express				= require('express')
 
 			// Redis store
 		, RedisStore 		= require('connect-redis')(express)
-  	, sessionStore 	= new RedisStore({ redisClient: redis })
-
-  		// Socket.io store
-  	// ,	sioStore 			= process.env.REDISTOGO_URL 
-  	// 	? new sio.RedisStore()
-  	// 	: new sio.RedisStore
+		, sessionStore 	= new RedisStore({ redisClient: redis })
 
 		,	sockets 			= require('./app/sockets')
 		, models 				= require('./config/models')
@@ -31,7 +26,7 @@ const express				= require('express')
 		, environments 	= require('./config/environments')
 		, errors 				= require('./config/errors')
 		, init 					= require('./config/init')
- 		, app 					= express.createServer();
+		, app 					= express.createServer();
 
 
 // Initialize Redis
@@ -53,7 +48,7 @@ io.configure(function() {
 	io.set('transports', ['xhr-polling']); // Heroku socket.io restrictions to xhr-polling (WebSockets aren't supported yet)
 	io.set('polling duration', 10);
 	io.set('authorization', true); // necessary ?
-	io.set('store', sessionStore);
+	// io.set('store', sessionStore);
 	io.set('log level', 3);
 	io.enable('browser client minification');
 	io.enable('browser client etag');
