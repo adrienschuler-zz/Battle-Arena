@@ -10,9 +10,9 @@ require('./lib/exceptions');
 const express				= require('express')
 		, sio 					= require('socket.io')
 		, expose 				= require('express-expose')
-		, redis 				= require('redis')
-		, RedisStore 		= require('connect-redis')(express)
-  	, sessionStore 	= new RedisStore;
+		, redis 				= require('redis');
+		// , RedisStore 		= require('connect-redis')(express)
+  // 	, sessionStore 	= new RedisStore;
 		// , redis 				= process.env.REDISTOGO_URL ? require('redis-url').connect(process.env.REDISTOGO_URL) : require('redis')
 		
 		if (process.env.REDISTOGOURL) {
@@ -30,8 +30,13 @@ const	sockets 			= require('./app/sockets')
 		, routes 				= require('./config/routes')
 		, environments 	= require('./config/environments')
 		, errors 				= require('./config/errors')
-		, init 					= require('./config/init')
-		, app 					= express.createServer();
+		, init 					= require('./config/init');
+		// , app 					= express.createServer();
+		
+
+const RedisStore 		= require('connect-redis')(express)
+  	, sessionStore 	= new RedisStore
+ 		, app 					= express.createServer();
 
 
 init(client);
