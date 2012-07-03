@@ -8,7 +8,7 @@ require('./lib/exceptions');
 
 const express				= require('express')
 		, sio 					= require('socket.io')
-		, expose 				= require('express-expose');
+		, expose 				= require('express-expose')
 		// , redis 				= require('redis');
 		// , RedisStore 		= require('connect-redis')(express)
   // 	, sessionStore 	= new RedisStore;
