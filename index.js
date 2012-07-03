@@ -2,7 +2,6 @@
  *  Boot
  */
 
-console.log(process.env.REDISTOGO_URL);
 if (!process.env.NODE_ENV) process.env.NODE_ENV = 'local';
 
 require('./lib/exceptions');
@@ -13,18 +12,19 @@ const express				= require('express')
 		// , redis 				= require('redis');
 		// , RedisStore 		= require('connect-redis')(express)
   // 	, sessionStore 	= new RedisStore;
-		// , redis 				= process.env.REDISTOGO_URL ? require('redis-url').connect(process.env.REDISTOGO_URL) : require('redis')
+		, client 				= process.env.REDISTOGO_URL ? require('redis-url').connect(process.env.REDISTOGO_URL) : require('redis').createClient();
 		
-		if (process.env.REDISTOGOURL) {
-			var rtg = require('url').parse(process.env.REDISTOGOURL);
-			console.log(rtg.port);
-			console.log(rtg.hostname);
-			console.log(rtg.auth.split(":")[1]);
-			var client = require('redis').createClient(rtg.port, rtg.hostname);
-			client.auth(rtg.auth.split(":")[1]);
-		} else {
-			var client = require('redis').createClient();
-		}
+		// if (process.env.REDISTOGOURL) {
+			// var rtg = require('url').parse(process.env.REDISTOGOURL);
+			// console.log(rtg.port);
+			// console.log(rtg.hostname);
+			// console.log(rtg.auth.split(":")[1]);
+			// var client = require('redis-url').createClient(rtg.port, rtg.hostname);
+			// client.auth(rtg.auth.split(":")[1]);
+
+		// } else {
+		// 	var client = redis.createClient();
+		// }
 
 const	sockets 			= require('./app/sockets')
 		, models 				= require('./config/models')
