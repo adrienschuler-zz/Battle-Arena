@@ -9,7 +9,7 @@ require('./lib/exceptions');
 const express				= require('express')
 		, sio 					= require('socket.io')
 		, expose 				= require('express-expose')
-		, redis 				= require('redis')
+		, redis 				= process.env.REDISTOGO_URL ? require('redis-url').connect(process.env.REDISTOGO_URL) : require('redis')
 		, RedisStore 		= require('connect-redis')(express)
   	, sessionStore 	= new RedisStore
 
