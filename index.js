@@ -2,6 +2,7 @@
  *  Boot
  */
 
+console.log(process.env.REDISTOGO_URL);
 if (!process.env.NODE_ENV) process.env.NODE_ENV = 'local';
 
 require('./lib/exceptions');
@@ -10,7 +11,7 @@ const express				= require('express')
 		, sio 					= require('socket.io')
 		, expose 				= require('express-expose')
 		// , redis 				= process.env.REDISTOGO_URL ? require('redis-url').connect(process.env.REDISTOGO_URL) : require('redis')
-		, redis 				= require('redis-url').connect()
+		, redis 				= require('redis-url').connect(process.env.REDISTOGO_URL)
 		, RedisStore 		= require('connect-redis')(express)
   	, sessionStore 	= new RedisStore
 
