@@ -11,10 +11,8 @@ const express				= require('express')
 		, expose 				= require('express-expose')
 		, redis 				= require('redis')
 		, RedisStore 		= require('connect-redis')(express)
-		// , mongoStore 		= require('connect-mongo')(express)
   	, sessionStore 	= new RedisStore
 
-		// , sessionStore 	= new express.session.MemoryStore({ reapInterval: 60000 * 10 })
 		, sockets 			= require('./app/sockets')
 		, models 				= require('./config/models')
 		, config 				= require('./config/config')
