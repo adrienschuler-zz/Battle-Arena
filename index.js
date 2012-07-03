@@ -17,8 +17,7 @@ const express				= require('express')
 		
 		if (process.env.REDISTOGOURL) {
 			var rtg = require('url').parse(process.env.REDISTOGOURL);
-			console.log(rtg);
-			var client = redis.createClient(rtg.port, rtg.hostname);
+			var client = require('redis').createClient(rtg.port, rtg.hostname);
 			client.auth(rtg.auth.split(":")[1]);
 		} else {
 			var client = redis.createClient();
