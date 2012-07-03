@@ -5,7 +5,6 @@
 var	mongoose		= require('mongoose')
 	,	$						= require('underscore')
 	, controller	= {}
-	, client
 	, db
 	, UserModel
 	, CharacterModel
@@ -15,8 +14,7 @@ var	mongoose		= require('mongoose')
 	, Spell;
 
 
-module.exports = function (_app, _client) {
-	client 					= _client;
+module.exports = function (_app) {
 	db 							= _app.set('db');
 	UserModel 			= db.main.model('User');
 	CharacterModel 	= db.main.model('Character');

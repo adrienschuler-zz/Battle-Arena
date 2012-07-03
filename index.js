@@ -9,66 +9,38 @@ require('./lib/exceptions');
 const express				= require('express')
 		, sio 					= require('socket.io')
 		, expose 				= require('express-expose')
-		// , redis 				= require('redis');
-		// , RedisStore 		= require('connect-redis')(express)
-  // 	, sessionStore 	= new RedisStore;
-		, client 				= process.env.REDISTOGO_URL ? require('redis-url').connect(process.env.REDISTOGO_URL) : require('redis').createClient();
-		
-		// if (process.env.REDISTOGOURL) {
-			// var rtg = require('url').parse(process.env.REDISTOGOURL);
-			// console.log(rtg.port);
-			// console.log(rtg.hostname);
-			// console.log(rtg.auth.split(":")[1]);
-			// var client = require('redis-url').createClient(rtg.port, rtg.hostname);
-			// client.auth(rtg.auth.split(":")[1]);
 
-		// } else {
-		// 	var client = redis.createClient();
-		// }
+			// Redis
+		, redis 				= process.env.REDISTOGO_URL 
+			? require('redis-url').connect(process.env.REDISTOGO_URL) 
+			: require('redis').createClient()
 
-const	sockets 			= require('./app/sockets')
+			// Redis store
+		, RedisStore 		= require('connect-redis')(express)
+  	, sessionStore 	= new RedisStore
+
+  		// Socket.io store
+  	// ,	sioStore 			= process.env.REDISTOGO_URL 
+  	// 	? new sio.RedisStore()
+  	// 	: new sio.RedisStore
+
+		,	sockets 			= require('./app/sockets')
 		, models 				= require('./config/models')
 		, config 				= require('./config/config')
 		, routes 				= require('./config/routes')
 		, environments 	= require('./config/environments')
 		, errors 				= require('./config/errors')
-		, init 					= require('./config/init');
-		// , app 					= express.createServer();
-		
-
-const RedisStore 		= require('connect-redis')(express)
-  	, sessionStore 	= new RedisStore
+		, init 					= require('./config/init')
  		, app 					= express.createServer();
 
 
-init(client);
-
-
-// if (process.env.NODE_ENV === 'local') {
-// 	var db = {
-// 		db: 'battle_arena',
-// 		host: 'localhost'
-// 	};
-// } else {
-// 	var fs 	= require('fs'),
-// 			env = JSON.parse(fs.readFileSync('./config/credentials.json', 'utf-8'));
-// 	var db 	= {
-// 		db: env.MONGOLAB_DB,
-// 		host: env.MONGOLAB_HOST,
-// 		port: parseInt(env.MONGOLAB_PORT),
-// 		username: env.MONGOLAB_USERNAME,
-// 		password: env.MONGOLAB_PASSWORD
-// 	};
-// }
-
-// var MongoStore = new mongoStore(db);
-
+// Initialize Redis
+init(redis);
 
 // Load Mongoose Models	
 models();
 
 // Load Expressjs config
-// config(app, sessionStore);
 config(app, sessionStore);
 
 // Load Environmental Settings
@@ -81,7 +53,7 @@ io.configure(function() {
 	io.set('transports', ['xhr-polling']); // Heroku socket.io restrictions to xhr-polling (WebSockets aren't supported yet)
 	io.set('polling duration', 10);
 	io.set('authorization', true); // necessary ?
-	io.set('store', new sio.RedisStore);
+	io.set('store', new sio.RedisStore({ client: redis }));
 	io.set('log level', 3);
 	io.enable('browser client minification');
 	io.enable('browser client etag');
@@ -89,13 +61,12 @@ io.configure(function() {
 });
 
 // Load routes config
-routes(app, client);
+routes(app);
 
 // Load error routes + pages
 errors(app);
 
 // Socket IO
-// sockets(app, io, sessionStore);
 sockets(app, io, sessionStore);
 
 // Run server
