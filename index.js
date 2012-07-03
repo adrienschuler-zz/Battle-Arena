@@ -10,12 +10,21 @@ require('./lib/exceptions');
 const express				= require('express')
 		, sio 					= require('socket.io')
 		, expose 				= require('express-expose')
-		// , redis 				= process.env.REDISTOGO_URL ? require('redis-url').connect(process.env.REDISTOGO_URL) : require('redis')
-		, redis 				= require('redis-url').connect(process.env.REDISTOGO_URL)
+		, redis 				= require('redis')
 		, RedisStore 		= require('connect-redis')(express)
-  	, sessionStore 	= new RedisStore
+  	, sessionStore 	= new RedisStore;
+		// , redis 				= process.env.REDISTOGO_URL ? require('redis-url').connect(process.env.REDISTOGO_URL) : require('redis')
+		
+		if (process.env.REDISTOGOURL) {
+			var rtg = require('url').parse(process.env.REDISTOGOURL);
+			console.log(rtg);
+			var client = redis.createClient(rtg.port, rtg.hostname);
+			client.auth(rtg.auth.split(":")[1]);
+		} else {
+			var client = redis.createClient();
+		}
 
-		, sockets 			= require('./app/sockets')
+const	sockets 			= require('./app/sockets')
 		, models 				= require('./config/models')
 		, config 				= require('./config/config')
 		, routes 				= require('./config/routes')
@@ -25,7 +34,6 @@ const express				= require('express')
 		, app 					= express.createServer();
 
 
-var client = redis.createClient();
 init(client);
 
 
