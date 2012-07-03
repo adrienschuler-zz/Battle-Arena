@@ -6,7 +6,7 @@ const express   = require('express')
 		, mongoose 	= require('mongoose');
 
 
-module.exports = function(app, MongoStore) {
+module.exports = function(app, sessionStore) {
 
 	//  Setup DB Connection
 	// var dblink = process.env.MONGOLAB_URI || 'mongodb://192.168.0.11/battle_arena';
@@ -44,8 +44,8 @@ module.exports = function(app, MongoStore) {
 			}))
 			.use(express.session({
 				secret: '$eCr3t!', 
-				key: 'express.sid',
-				store: MongoStore
+				// key: 'express.sid',
+				store: sessionStore
 				// maxAge: new Date(Date.now() + 3600000),
 				// store: 	new MongoStore({
 				// 	db: 'battle_arena',

@@ -10,10 +10,10 @@ function checkAuthentication(req, res, next) {
 	}
 }
 
-module.exports = function(app) {
+module.exports = function(app, client) {
 
 	// Controllers
-	var user 			= require('../app/controllers/user_controller')(app)
+	var user 			= require('../app/controllers/user_controller')(app, client)
 		, game 			= require('../app/controllers/game_controller')(app)
 		, character	= require('../app/controllers/character_controller')(app);
 	
@@ -32,7 +32,8 @@ module.exports = function(app) {
 	app.post('/user/authenticate', user.authenticate);
 
 	// Game
-	app.get('/game', [checkAuthentication], game.index);
+	app.get('/tchat', [checkAuthentication], game.index);
+	app.get('/game/:id?', [checkAuthentication], game.game);
 
 	// Character
 	app.post('/character/upstat/:stat?', [checkAuthentication], character.upstat);

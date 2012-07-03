@@ -17,18 +17,13 @@ html
 		link(rel='stylesheet', href='/stylesheets/style.css')
 
 		script(src='/javascripts/modernizr-2.5.3.js')
-		// script(src='javascripts/jquery-1.7.1.min.js')
 		script(src='//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js')
 		script(src='//code.jquery.com/mobile/1.1.0/jquery.mobile-1.1.0.min.js')
+		script(src='//ajax.microsoft.com/ajax/jquery.templates/beta1/jquery.tmpl.min.js')
+		script(src='https://raw.github.com/documentcloud/underscore/master/underscore-min.js')
 		script(src='/javascripts/jquery.mobile.simpledialog2.min.js')
 		script(src='/javascripts/add2home.min.js')
 		script(src='/socket.io/socket.io.js')
-		// script(src='/javascripts/client.js')
-
-		script
-			// TODO: move to external file
-			$.extend($.mobile, { // overriding jQuery Mobile defaults
-				ajaxEnabled: false
-			});
+		script(src='/javascripts/client.js')
 
 	body!= body

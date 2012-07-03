@@ -1,11 +1,5 @@
 #wrapper(data-role='page', data-url='/user/profile', class='')
-	#header(data-role='header')
-		a(href='/') BATTLE ARENA
-			#nav
-				a(href='/user/logout', class='nav-logout')
-				a(href='/user/rankings', class='nav-ranking')
-				a(href='/user/profile', class='nav-profile')//= character.skill_points > 0 ? character.skill_points : ''
-				a(href='/game/search', class='nav-search')
+	include ../partials/header
 
 	#content(data-role='content')
 		h2= user.username
@@ -16,7 +10,7 @@
 				div.avatar
 					img(src='/images/avatars/default.jpeg')
 					div
-						div.level 19
+						div.level 1
 
 				.stats
 					p
@@ -58,8 +52,8 @@
 						- if (i == 3)
 							span.break
 						div
-							a(href="/user/spells/#{spell._id}")
-								img(src="/images/spells/#{spell.thumbnail}.png")
+							a(href='/user/spells/#{spell._id}')
+								img(src='/images/spells/#{spell.thumbnail}.png')
 
 
 script

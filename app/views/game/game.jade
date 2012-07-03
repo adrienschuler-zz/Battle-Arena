@@ -1,0 +1,58 @@
+#wrapper(data-role='page', data-url='/game', class='')
+	#content(data-role='content')
+		#game
+
+			#opponent
+
+				.bars
+					div(class='life progress')
+						div(class='bar', style='width: 100%')
+							=character.hitpoints + (character.stamina * 5)
+					div(class='mana progress')
+						div(class='bar', style='width: 100%')
+							=character.manapoints + (character.intellect * 5)
+
+				div.avatar
+					img(src='/images/avatars/default.jpeg', width='65', height='65')
+					div
+						div.level 1
+
+
+			#chatroom
+				div(class='tchat-container ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
+
+			div.row
+				
+				div.avatar
+					img(src='/images/avatars/default.jpeg', width='65', height='65')
+					div
+						div.level 1
+
+				.bars
+					div(class='life progress')
+						div(class='bar', style='width: 100%')
+							=character.hitpoints + (character.stamina * 5)
+					div(class='mana progress')
+						div(class='bar', style='width: 100%')
+							=character.manapoints + (character.intellect * 5)
+
+				.spells
+					- each spell, i in spells
+						- if (i == 3)
+							span.break
+						div
+							a(href='/user/spells/#{spell._id}')
+								img(src='/images/spells/#{spell.thumbnail}.png')
+
+
+script
+
+	var socket = io
+		.connect()
+		.of('/game')
+		.on('connect', function() {
+			
+		})
+		.on('opponentdata', function(opponent) {
+			console.log(opponent);
+		});

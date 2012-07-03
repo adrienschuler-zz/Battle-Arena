@@ -1,12 +1,5 @@
-#wrapper(data-role='page', data-url='/game', class='initialize game')
-	#header(data-role='header')
-		a(href='/') BATTLE ARENA
-
-			#nav
-				a(href='/user/logout', class='nav-logout', data-rel='dialog')
-				a(href='/user/rankings', class='nav-ranking')
-				a(href='/user/profile', class='nav-profile')
-				a(href='#', class='nav-search')
+#wrapper(data-role='page', data-url='/tchat', class='initialize game')
+	include ../partials/header
 						
 	#content(data-role='content')
 			
@@ -14,82 +7,42 @@
 
 		!=messages()
 
-		#chatroom  	
+		#chatroom
 			.left
 				div(class='tchat-container ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
 				input(type='text', name='send', placeholder='Text', id='tchat-input')
 			.right
 				div(class='tchat-side ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
 
-script
-	var tchat_container = $('.tchat-container');
-	var tchat_input = $('#tchat-input');
-	var tchat_side = $('.tchat-side');
+script(id='welcomeTemplate', type='text/x-jquery-tmpl')
+	| <div>
+	| 	<span class="time">${time}</span> 
+	| 	<span class="srv-msg">Welcome</span> 
+	| 	<span class="username">${username}</span> !
+	| </div>
 
-	var socket = io
-		.connect()
-		.of('/game')
+script(id='userJoinTemplate', type='text/x-jquery-tmpl')
+	| <div>
+	| 	<span class="time">${time}</span> 
+	| 	<span class="username">${username}</span> 
+	| 	<span class="srv-msg">entered the chat.</span>
+	| </div>
 
+script(id='messageTemplate', type='text/x-jquery-tmpl')
+	|	<div>
+	| 	<span class="time">${time}</span> 
+	| 	<span class="username">${username}</span> :
+	| 	<span>${message}</span>
+	| </div>
 
-		// connect
-		.on('connect', function() {			
-			socket.emit('userjoin', "#{session.user.username}");
+script(id='disconnectTemplate', type='text/x-jquery-tmpl')
+	| <div>
+	| 	<span class="time">${time}</span> 
+	| 	<span class="username">${username}</span> 
+	| 	<span class="srv-msg">disconnected.</span>
+	| </div>
 
-		// updatechat
-		}).on('updatechat', function(msg) {
-			tchat_container.append('<div>' + msg + '</div>');
-			tchat_container.animate({ 
-				scrollTop: 99999 // TODO
-			}, 500);
+script(id='activeUsersTemplate', type='text/x-jquery-tmpl')
+	| <div>${username}</div>
 
-		// updateusers
-		}).on('updateusers', function(users) {
-			tchat_side.html('');
-			$.each(users, function(key, user) {
-				tchat_side.append('<div>' + user.username + '</div>');
-			});
-
-		// opponents availabe 
-		}).on('opponentsavailable', function(opponents) {
-			//$.mobile.loading( 'show', { text: 'Waiting for ' + opponents.username + ' response...' });
-			//$.mobile.showPageLoadingMsg();
-			$.mobile.showPageLoadingMsg('a', 'Waiting for ' + opponents.username + ' response...', true);
-
-		// fight proposition
-		}).on('fightproposition', function(fighters) {
-			$('<div>').simpledialog2({
-				mode: 'button',
-				headerText: 'Confirmation',
-				buttonPrompt: '<div style="padding:10px"><p>' + fighters[0].username + ' wants to fight against you !</p></div>',
-				buttons : {
-					"Let's fight !": {
-						click: function () {
-							socket.emit('fightaccepted', fighters);
-						}
-					},
-					'Refuse': { 
-						icon: "delete", 
-						theme: "c",
-						click: function() {
-							socket.emit('fightrefused', fighters);
-						}
-					}
-				}
-			});
-		});
-	
-	tchat_input.bind('keyup', function(key) {
-		if (key.keyCode === 13) {
-			key.preventDefault();
-			socket.emit('message', tchat_input.val());
-			tchat_input.val('');
-		}
-	});
-
-	$('.nav-logout').bind('click', function() {
-		socket.disconnect();
-	});
-
-	$('.nav-search').bind('click', function() {
-		socket.emit('searchopponent');
-	});
+script(src='/javascripts/game.js')

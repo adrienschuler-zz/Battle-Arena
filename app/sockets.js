@@ -1,124 +1,98 @@
 var connect 		= require('connect')
+	, crypto 			= require('crypto')
 	, $						= require('underscore')
-	, ParseCookie = connect.utils.parseCookie
-	, Session 		= connect.middleware.session.Session;
+	, ParseCookie = connect.utils.parseCookie;
 
 
-function _time() {
-	var d = new Date(), 
-			h = d.getHours(), 
-			m = d.getMinutes(),
-			h = h.toString().length > 1 ? h : '0' + h,
-			m = m.toString().length > 1 ? m : '0' + m;
-	return '<span class="time">[' + h + ':' + m + ']</span> ';
-}
-
-
-module.exports = function(_app, _io, MongoStore) {
-
+module.exports = function(_app, _io, sessionStore) {
 	var app = _app
 		, io 	= _io
-		, connected_users = [];
+		, connected_users = []
+		, games = [];
 
 
-	io.set('authorization', function(data, accept) {
-		if (data.headers.cookie) {
-			data.cookie = ParseCookie(data.headers.cookie);
-			data.sessionID = data.cookie['express.sid'];
-			data.sessionStore = MongoStore;
+	io.set('authorization', function(hsData, accept) {
+		if (hsData.headers.cookie) {
+			var	cookie = require('connect').utils.parseCookie(hsData.headers.cookie), 
+					sid = cookie['connect.sid'];
 
-			MongoStore.get(data.sessionID, function (err, session) {
-				if (err || !session) {
-					accept('Error', false);
-				} else {
-					data.session = new Session(data, session);
-					accept(null, true);
+			sessionStore.load(sid, function(err, session) {
+				if(err || !session) {
+					console.error(err);
+					return accept('Error retrieving session!', false);
 				}
+				hsData.session = session;
+				return accept(null, true);
 			});
 		} else {
 			return accept('No cookie transmitted.', false);
 		}
 	});
 
-	var chat = io
-		.of('/game')
+	var tchat = io
+		.of('/tchat')
 		.on('connection', function(socket) {
+			var hs = socket.handshake,
+					session = hs.session;
 
-			var hs = socket.handshake;
-
-			var intervalID = setInterval(function() {
-				hs.session.reload(function() { 
-					hs.session.touch().save();
-				});
-			}, 60 * 1000);
-
-
-			socket.emit(
-				'updatechat', 
-				_time() + '<span class="srv-msg">Welcome</span> <span class="username">' + hs.session.user.username + '</span> !'
-			);
-
-			// updatechat
-			socket.broadcast.emit(
-				'updatechat', 
-				_time() + '<span class="username">' + hs.session.user.username + '</span> <span class="srv-msg">entered the chat.</span>'
-			);
-
-			// userjoin
-			socket.on('userjoin', function(user) {
-				connected_users.push({
-					id: socket.id,
-					username: user
-				});
-				chat.emit('updateusers', connected_users);
+			connected_users.push({
+				id: socket.id,
+				username: session.user.username
 			});
 
-			// message
+			tchat.emit('updateusers', connected_users);
+
+			socket.emit('welcome', { 
+				username: session.user.username 
+			});
+
+			socket.broadcast.emit('userjoin', { 
+				username: session.user.username 
+			});
+
+			// message event
 			socket.on('message', function(msg) {
-				chat.emit(
-					'updatechat',
-					_time() + ' <span class="username">' + hs.session.user.username + '</span> : <span class="user-msg">' + msg + '</span>'
-				)
+				tchat.emit('message', { 
+					username: session.user.username, 
+					message: msg 
+				});
 			});
 
-			// disconnect
+			// disconnect event
 			socket.on('disconnect', function() {
-				clearInterval(intervalID);
-
+				var disconnected_user = session.user.username;
 				$.each(connected_users, function(u, i) {
-					if (u.username === hs.session.user.username) {
+					if (u.username === disconnected_user) {
 						connected_users.splice(i, 1);
 					}
 				});
 
-				chat.emit('updateusers', connected_users);
+				socket.broadcast.emit('disconnect', {
+					username: disconnected_user
+				});
 
-				socket.broadcast.emit(
-					'updatechat', 
-					_time() + '<span class="username">' + hs.session.user.username + '</span> <span class="srv-msg">disconnected.</span>'
-				);
+				tchat.emit('updateusers', connected_users);
 			});
 
-			// search opponent
+			// search opponent event
 			socket.on('searchopponent', function() {
 				var available = [];
 				$.each(connected_users, function(u) {
-					if (u.username !== hs.session.user.username) {
+					if (u.username !== session.user.username) {
 						available.push(u);
 					}
 				});
 
 				var fighters = [{
 						id: socket.id,
-						username: hs.session.user.username
-					}, {
-						id: available[0].id,
-						username: available[0].username
-					}
-				];
+						username: session.user.username
+					}];
+				fighters.push(available[0]);
+
 console.log(fighters);
+
 				this.emit('opponentsavailable', available[0]);
-				io.of('/game').sockets[available[0].id].emit('fightproposition', fighters);
+				io.of('/tchat').sockets[available[0].id].emit('fightproposition', fighters);
 			});
 
 			// fight accepted
@@ -126,6 +100,19 @@ console.log(fighters);
 				console.log('fightaccepted');
 				console.log(fighters);
 
+				var hash = crypto.createHash('sha1').update(fighters[0].id + fighters[1].id).digest('hex');
+
+				$.each(fighters, function(fighter) {
+					io.of('/tchat')
+						.sockets[fighter.id]
+						.emit('redirect', hash);
+
+					io.of('/tchat')
+						.sockets[fighter.id]
+						// .broadcast.to('/game/' + hash);
+						.broadcast.to('/game');
+				});
+				
 			});
 
 			// fight refused
@@ -135,4 +122,21 @@ console.log(fighters);
 			});
 
 		});
+
+	var game = io
+		.of('/game')
+		.on('connection', function(socket) {
+
+			var hs = socket.handshake,
+					session = hs.session;
+
+			socket.broadcast.emit('opponentdata', {
+				username: session.user.username,
+				hitpoints: session.character.hitpoints,
+				manapoints: session.character.manapoints,
+				level: 1,
+				avatar: session.character.avatar
+			});
+
+	});
 };

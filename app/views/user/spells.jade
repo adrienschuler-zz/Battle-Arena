@@ -8,13 +8,7 @@ style
 	}
 
 #wrapper(data-role='page', data-url='/user/spells', class='')
-	#header(data-role='header')
-		a(href='/') BATTLE ARENA
-			#nav
-				a(href='/user/logout', class='nav-logout')			
-				a(href='/user/rankings', class='nav-ranking')
-				a(href='/user/profile', class='nav-profile')
-				a(href='/game/search', class='nav-search')
+	include ../partials/header
 
 	#content(data-role='content', class='spells-page')
 		h2 Spells

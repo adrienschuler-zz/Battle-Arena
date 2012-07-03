@@ -5,6 +5,7 @@
 var	mongoose		= require('mongoose')
 	,	$						= require('underscore')
 	, controller	= {}
+	, client
 	, db
 	, UserModel
 	, CharacterModel
@@ -14,7 +15,8 @@ var	mongoose		= require('mongoose')
 	, Spell;
 
 
-module.exports = function (_app) {
+module.exports = function (_app, _client) {
+	client 					= _client;
 	db 							= _app.set('db');
 	UserModel 			= db.main.model('User');
 	CharacterModel 	= db.main.model('Character');
@@ -97,23 +99,33 @@ controller.rankings = function(req, res) {
 
 // POST
 controller.create = function(req, res) {
-	User.create(req.body.user, SpellModel, CharacterModel, function(user) {
-		if (user) {
-			authenticate(req, user.username, user.password, function(success) {
-				if (success) {
-					req.flash('success', 'Your account has been successfully created.');
-					res.redirect('/game');
-				} else {
-					req.flash('error', 'An error occurred during the authentication process, retry later.');
-					res.redirect('/user/signup');
-				}
-			});
-		} else {
-			req.flash('error', 'Fill the required fields...');
-			res.redirect('/user/signup');
-		}
-	});
+	var user = req.body.user;
+	if (user.username && user.password) {
+		UserModel.findOne({ username: user.username }, function(error, user_data) {
+			if (error || user_data) {
+				console.error(error);
+				req.flash('error', 'This username is not availabe.');
+				res.redirect('/user/signup');
+			} else {
+				User.create(req.body.user, SpellModel, CharacterModel, function(user) {
+					authenticate(req, user.username, user.password, function(success) {
+						if (success) {
+							req.flash('success', 'Your account has been successfully created.');
+							res.redirect('/tchat');
+						} else {
+							req.flash('error', 'An error occurred during the authentication process, retry later.');
+							res.redirect('/user/signup');
+						}
+					});
+				});
+			}
+		});
+	} else {
+		req.flash('error', 'Fill the required fields...');
+		res.redirect('/user/signup');
+	}
 };
+
 
 // POST
 controller.authenticate = function(req, res) {
@@ -121,7 +133,7 @@ controller.authenticate = function(req, res) {
 	if (user && user.username && user.password) {
 		authenticate(req, user.username, user.password, function(success) {
 			if (success) {
-				res.redirect('/game');
+				res.redirect('/tchat');
 			} else {
 				req.flash('error', 'User not found.');
 				res.redirect('/user/login');
@@ -143,30 +155,31 @@ controller.logout = function(req, res) {
 };
 
 
+// authenticate function
 function authenticate(req, username, password, callback) {
 	UserModel.findOne({ 
-				username: username
-			, password_hash: User.encryptPassword(password)
-		})
-		.run(function(error, user_data) {
-			if (error || !user_data) {
-				console.error(error);
-				return callback(false);
-			} else {
-				CharacterModel.findOne({
-					_id: user_data.character
-				})
-				.populate('_spells')
-				.run(function(error, character_data) {
-					if (error) {
-						console.error(error);
-						return callback(false);
-					}
-					req.session.user = user_data;
-					req.session.character = character_data;
-					req.session.spells = character_data._spells;
-					return callback(true);
-				});
-			}
+			username: username
+		, password_hash: User.encryptPassword(password)
+	})
+	.run(function(error, user_data) {
+		if (error || !user_data) {
+			console.error(error);
+			return callback(false);
+		} else {
+			CharacterModel.findOne({
+				_id: user_data.character
+			})
+			.populate('_spells')
+			.run(function(error, character_data) {
+				if (error) {
+					console.error(error);
+					return callback(false);
+				}
+				req.session.user = user_data;
+				req.session.character = character_data;
+				req.session.spells = character_data._spells;
+				return callback(true);
+			});
+		}
 	});
 }

@@ -20,5 +20,11 @@ controller.index = function(req, res) {
 		title: 'BATTLE ARENA', 
 		username: req.session.user.username
 	});
+};
 
+// GET
+controller.game = function(req, res) {
+	res.render('game/game', {
+		title: 'BATTLE ARENA'
+	});
 };
