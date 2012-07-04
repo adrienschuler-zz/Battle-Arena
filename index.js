@@ -48,7 +48,7 @@ io.configure(function() {
 	io.set('transports', ['xhr-polling']); // Heroku socket.io restrictions to xhr-polling (WebSockets aren't supported yet)
 	io.set('polling duration', 10);
 	io.set('authorization', true); // necessary ?
-	io.set('store', sessionStore);
+	// io.set('store', sessionStore);
 	io.set('log level', 3);
 	io.enable('browser client minification');
 	io.enable('browser client etag');
