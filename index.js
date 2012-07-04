@@ -17,7 +17,7 @@ const express				= require('express')
 
 			// Redis store
 		, RedisStore 		= require('connect-redis')(express)
-		, sessionStore 	= new RedisStore({ redisClient: redis })
+		, sessionStore 	= new RedisStore({ client: redis })
 
 		,	sockets 			= require('./app/sockets')
 		, models 				= require('./config/models')
