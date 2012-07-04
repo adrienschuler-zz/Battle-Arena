@@ -46,18 +46,6 @@ module.exports = function(app, sessionStore) {
 				secret: '$eCr3t!', 
 				// key: 'express.sid',
 				store: sessionStore
-				// maxAge: new Date(Date.now() + 3600000),
-				// store: 	new MongoStore({
-				// 	db: 'battle_arena',
-				// 	// db: 'heroku_app3888338',
-				// 	host: 'localhost',
-				// 	// host: '',
-				// 	// port: 6646,  // optional, default: 27017
-				// 	// port: 31867,
-				// 	// username: 'admin', // optional
-				// 	// password: 'secret', // optional
-				// 	// collection: 'mySessions' // optional, default: sessions
-				// })
 			}));
 	});
 
