@@ -38,6 +38,8 @@ controller.upstat = function(req, res) {
 
 		CharacterModel.update({ _id: character._id }, update, null, function(e, s) {
 			if (e) console.error(e);
+			character.skill_points = update.skill_points;
+			character[stat] = update[stat];
 			res.json(true);
 		});
 

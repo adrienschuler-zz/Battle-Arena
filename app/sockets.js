@@ -33,22 +33,26 @@ module.exports = function(_app, _io, sessionStore) {
 		.of('/tchat')
 		.on('connection', function(socket) {
 			var hs = socket.handshake,
-					session = hs.session;
+					session = hs.session,
+					current_user = { 
+						socketID: socket.id,
+						userID: session.user._id,
+						username: session.user.username
+			};
 
-			connected_users.push({
-				id: socket.id,
-				username: session.user.username
-			});
+			var intervalID = setInterval(function() {
+				session.reload(function() { 
+					session.touch().save();
+				});
+			}, 60 * 1000);
+
+			connected_users.push(current_user);
 
 			tchat.emit('updateusers', connected_users);
 
-			socket.emit('welcome', { 
-				username: session.user.username 
-			});
+			socket.emit('welcome', current_user);
 
-			socket.broadcast.emit('userjoin', { 
-				username: session.user.username 
-			});
+			socket.broadcast.emit('userjoin', { username: session.user.username });
 
 			// message event
 			socket.on('message', function(msg) {
@@ -60,6 +64,8 @@ module.exports = function(_app, _io, sessionStore) {
 
 			// disconnect event
 			socket.on('disconnect', function() {
+				clearInterval(intervalID);
+
 				var disconnected_user = session.user.username;
 				$.each(connected_users, function(u, i) {
 					if (u.username === disconnected_user) {
@@ -84,32 +90,35 @@ module.exports = function(_app, _io, sessionStore) {
 				});
 
 				var fighters = [{
-						id: socket.id,
+						socketID: socket.id,
+						userID: session.user._id,
 						username: session.user.username
 					}];
+					
 				fighters.push(available[0]);
 
 console.log(fighters);
 
 				this.emit('opponentsavailable', available[0]);
-				io.of('/tchat').sockets[available[0].id].emit('fightproposition', fighters);
+				io.of('/tchat')
+					.sockets[available[0].socketID]
+					.emit('fightproposition', fighters);
 			});
 
 			// fight accepted
 			socket.on('fightaccepted', function(fighters) {
-				console.log('fightaccepted');
-				console.log(fighters);
+console.log('fightaccepted');
+console.log(fighters);
 
-				var hash = crypto.createHash('sha1').update(fighters[0].id + fighters[1].id).digest('hex');
+				var hash = 'u1=' + fighters[0].userID + '&u2=' + fighters[1].userID;
 
 				$.each(fighters, function(fighter) {
 					io.of('/tchat')
-						.sockets[fighter.id]
+						.sockets[fighter.socketID]
 						.emit('redirect', hash);
 
 					io.of('/tchat')
-						.sockets[fighter.id]
-						// .broadcast.to('/game/' + hash);
+						.sockets[fighter.socketID]
 						.broadcast.to('/game');
 				});
 				
@@ -117,26 +126,56 @@ console.log(fighters);
 
 			// fight refused
 			socket.on('fightrefused', function(fighters) {
-				console.log('fightrefused');
-				console.log(fighters);
+console.log('fightrefused');
+console.log(fighters);
 			});
 
 		});
+
+
+	var fighters = [],
+			game_turn = 0,
+			player_turn = 0;
+
 
 	var game = io
 		.of('/game')
 		.on('connection', function(socket) {
 
-			var hs = socket.handshake,
+			var hs = socket.handshake,	
 					session = hs.session;
 
-			socket.broadcast.emit('opponentdata', {
-				username: session.user.username,
-				hitpoints: session.character.hitpoints,
-				manapoints: session.character.manapoints,
-				level: 1,
-				avatar: session.character.avatar
+
+			socket.on('join', function(fighter) {
+				fighter.socketID = socket.id;
+				fighters.push(fighter);
+
+				if (fighters.length === 2) {
+					console.log(fighters);
+					game.emit('joinsuccess', fighters);
+
+					io.of('/game')
+						.sockets[fighters[0].socketID]
+						.emit('play');
+
+					io.of('/game')
+						.sockets[fighters[1].socketID]
+						.emit('wait');
+
+					// $.each(fighters, function(f) {
+					// 	console.log(f);
+					// 	console.log(f.agility);
+					// 	if (f.agility > first) {
+					// 		first = f;
+					// 	}
+					// });
+
+				}
 			});
 
+			socket.on('launchspell', function(spell) {
+				console.log(spell);
+				socket.broadcast.emit('attack', spell);
+			});
 	});
 };

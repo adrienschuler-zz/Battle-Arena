@@ -33,7 +33,7 @@ module.exports = function(app) {
 
 	// Game
 	app.get('/tchat', [checkAuthentication], game.index);
-	app.get('/game/:id?', [checkAuthentication], game.game);
+	app.get('/game', [checkAuthentication], game.game);
 
 	// Character
 	app.post('/character/upstat/:stat?', [checkAuthentication], character.upstat);

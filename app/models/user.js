@@ -59,22 +59,23 @@ User.methods.encryptPassword = function(password) {
 };
 
 
-User.methods.create = function(_user, _spell, _character, callback) {
-	var _this = this;
-	var character = new _character();
-	var spell = new _spell();
-	
-	if ($.isObject(_user)) {
-		$.extend(_this, _user);
+User.methods.create = function(_user, UserModel, SpellModel, CharacterModel, callback) {
+	var user = new UserModel(_user);
+	var character = new CharacterModel();
+	var spell = new SpellModel();
 
-		spell.getDefaults(_spell, function(default_spells) {
+console.log(user);
+
+	if ($.isObject(user)) {
+
+		spell.getDefaults(SpellModel, function(default_spells) {
 			$.each(default_spells, function(s) {
 				character.spells.push(s);
 			});
 
 			character.save(function(error, c) {
-				_this._characters.push(c._id);
-				_this.save(function(error, success) {
+				user._characters.push(c._id);
+				user.save(function(error, success) {
 					if (error) {
 						console.error(error);
 						callback(false);

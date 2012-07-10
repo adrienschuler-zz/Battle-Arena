@@ -8,7 +8,7 @@
 			div.row
 
 				div.avatar
-					img(src='/images/avatars/default.jpeg')
+					img(src="/images/avatars/#{character.avatar}")
 					div
 						div.level 1
 
@@ -39,10 +39,10 @@
 				.bars
 					div(class='life progress')
 						div(class='bar', style='width: 100%')
-							=character.hitpoints + (character.stamina * 5)
+							=character.hitpoints()
 					div(class='mana progress')
 						div(class='bar', style='width: 100%')
-							=character.manapoints + (character.intellect * 5)
+							=character.manapoints()
 					div(class='xp progress')
 						div(class='bar', style="width: #{character.experience}%")
 							=character.experience
@@ -89,10 +89,10 @@ script
 								$($stat).html(parseInt($($stat).html()) + 1);
 								$($skill_points).html($($skill_points).html() - 1);
 								if (stat == 'stamina') {
-									$($life).html(#{character.hitpoints} + ((parseInt($($stat).html()) * 5)));
+									$($life).html(parseInt($($life).html()) + 5);
 								}
 								if (stat == 'intellect') {
-									$($mana).html(#{character.manapoints} + ((parseInt($($stat).html()) * 5)));
+									$($mana).html(parseInt($($mana).html()) + 5);
 								}
 							}
 						});

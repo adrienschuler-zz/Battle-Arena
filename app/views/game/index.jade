@@ -37,12 +37,21 @@ script(id='messageTemplate', type='text/x-jquery-tmpl')
 
 script(id='disconnectTemplate', type='text/x-jquery-tmpl')
 	| <div>
-	| 	<span class="time">${time}</span> 
+	| 	<span class="time">${time}</span>
 	| 	<span class="username">${username}</span> 
 	| 	<span class="srv-msg">disconnected.</span>
 	| </div>
 
 script(id='activeUsersTemplate', type='text/x-jquery-tmpl')
-	| <div>${username}</div>
+	| <div>
+	|	{{if me}}
+	| 	<span class="me">${username}</span>
+	| {{else}}
+	|		<a href="#" data-socket-id="${socketId}">${username}</a>
+	|	{{/if}}
+	|	</div>
 
-script(src='/javascripts/game.js')
+script
+	var username = "#{user.username}";
+
+script(src='/javascripts/tchat.js')

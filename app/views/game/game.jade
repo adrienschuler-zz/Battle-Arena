@@ -4,55 +4,80 @@
 
 			#opponent
 
+				div
+					div(class='right')
+						=opponent.username
+					div.avatar
+						img(src="/images/avatars/#{opponent.character.avatar}", width='65', height='65')
+						div
+							div.level 1
 				.bars
 					div(class='life progress')
 						div(class='bar', style='width: 100%')
-							=character.hitpoints + (character.stamina * 5)
+							=opponent.character.hitpoints
 					div(class='mana progress')
 						div(class='bar', style='width: 100%')
-							=character.manapoints + (character.intellect * 5)
-
-				div.avatar
-					img(src='/images/avatars/default.jpeg', width='65', height='65')
-					div
-						div.level 1
+							=opponent.character.manapoints
 
 
 			#chatroom
 				div(class='tchat-container ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
 
-			div.row
-				
-				div.avatar
-					img(src='/images/avatars/default.jpeg', width='65', height='65')
+			#me 
+				div.row
+					
 					div
-						div.level 1
+						=user.username
 
-				.bars
-					div(class='life progress')
-						div(class='bar', style='width: 100%')
-							=character.hitpoints + (character.stamina * 5)
-					div(class='mana progress')
-						div(class='bar', style='width: 100%')
-							=character.manapoints + (character.intellect * 5)
-
-				.spells
-					- each spell, i in spells
-						- if (i == 3)
-							span.break
+					div.avatar
+						img(src="/images/avatars/#{character.avatar}", width='65', height='65')
 						div
-							a(href='/user/spells/#{spell._id}')
-								img(src='/images/spells/#{spell.thumbnail}.png')
+							div.level 1
+
+					.bars
+						div(class='life progress')
+							div(class='bar', style='width: 100%')
+								=character.hitpoints()
+						div(class='mana progress')
+							div(class='bar', style='width: 100%')
+								=character.manapoints()
+
+					.spells
+						- each spell, i in spells
+							- if (i == 3)
+								span.break
+							div
+								a(href='#', data-spell-id='#{spell._id}', class='spell')
+									img(src='/images/spells/#{spell.thumbnail}.png')
 
 
-script
+script(id='welcomeTemplate', type='text/x-jquery-tmpl')
+	| <div>
+	| 	<span class="time">${time}</span> 
+	| 	<span class="srv-msg">User</span> 
+	| 	<span class="username">${username}</span> 
+	|		<span class="srv-msg">joined the game.</span>
+	| </div>
 
-	var socket = io
-		.connect()
-		.of('/game')
-		.on('connect', function() {
-			
-		})
-		.on('opponentdata', function(opponent) {
-			console.log(opponent);
-		});
+script(id='playTemplate', type='text/x-jquery-tmpl')
+	| <div>
+	| 	<span class="time">${time}</span> 
+	|		<span class="srv-msg">This is your turn.</span>
+	| </div>
+
+script 
+	var player = {
+		username: "#{user.username}",
+		strength: "#{character.strength}",
+		agility: "#{character.agility}",
+		stamina: "#{character.stamina}",
+		intellect: "#{character.intellect}",
+		accuracy: "#{character.accuracy}",
+		armor: "#{character.armor}",
+		hitpoints: "#{character.hitpoints()}",
+		manapoints: "#{character.manapoints()}"
+	};
+
+	var spells = !{JSON.stringify(spells)};
+
+script(src='/javascripts/game.js')

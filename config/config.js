@@ -22,6 +22,16 @@ module.exports = function(app, sessionStore) {
 			.use(express.logger(
 				'\033[90m:method\033[0m \033[36m:url\033[0m \033[90m:response-time ms\033[0m'
 			))
+			.use(express.errorHandler({
+				dumpException: true, 
+				showStack: true
+			}))
+			.use(express.session({
+				secret: '$eCr3t!', 
+				// key: 'express.sid',
+				store: sessionStore
+			}))
+
 			// Helpers
 			.dynamicHelpers({ 
 					messages: require('express-messages')
@@ -32,21 +42,24 @@ module.exports = function(app, sessionStore) {
 					return req.session.user || null;
 				}
 				,	character: function(req, res) {
-					return req.session.character || null;
+					if (!req.session.character) return null;
+					
+					character = req.session.character;
+
+					character.hitpoints = function() {
+						return 50 + (character.stamina * 5)
+					};
+
+					character.manapoints = function() {
+						return 50 + (character.intellect * 5);
+					};
+
+					return character;
 				}
 				,	spells: function(req, res) {
 					return req.session.spells || null;
 				}
-			})
-			.use(express.errorHandler({
-				dumpException: true, 
-				showStack: true
-			}))
-			.use(express.session({
-				secret: '$eCr3t!', 
-				// key: 'express.sid',
-				store: sessionStore
-			}));
+			});
 	});
 
 	//  Add template engine

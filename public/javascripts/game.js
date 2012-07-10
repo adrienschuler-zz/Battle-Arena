@@ -1,80 +1,82 @@
 $(function() {
 	var tchat_container = $('.tchat-container');
-	var tchat_input = $('#tchat-input');
-	var tchat_side = $('.tchat-side');
+	var life_bar = $('#me .bar')[0];
+	var max_life = $(life_bar).html();
+	var mana_bar = $('#me .bar')[1];
+	var max_mana = $(mana_bar).html();
+
+	var opponent_life_bar = $('#opponent .bar')[0];
+	var opponent_mana_bar = $('#opponent .bar')[1];
+
 	var welcomeTmpl = $('#welcomeTemplate');
-	var userJoinTmpl = $('#userJoinTemplate');
-	var messageTmpl = $('#messageTemplate');
-	var disconnectTmpl = $('#disconnectTemplate');
-	var activeUsersTmpl = $('#activeUsersTemplate');
+	var playTmpl = $('#playTemplate');
+
+	var opponent = null;
 
 	var socket = io
-		.connect()
-		.of('/tchat')
-		.on('connect', function() {
+	.connect()
+	.of('/game')
+	.on('connect', function() {
 
-		})
-		.on('welcome', function(data) {
-			render(welcomeTmpl, tchat_container, data);
-		})
-		.on('userjoin', function(data) {
-			render(userJoinTmpl, tchat_container, data);
-		})
-		.on('disconnect', function(data) {
-			render(disconnectTmpl, tchat_container, data);
-		})
-		.on('message', function(data) {
-			render(messageTmpl, tchat_container, data);
-			tchat_container.animate({ 
-				scrollTop: 99999
-			}, 500);
-		})
-		.on('updateusers', function(data) {
-			tchat_side.html('');
-			render(activeUsersTmpl, tchat_side, data);
-		})
-		.on('opponentsavailable', function(opponents) {
-			$.mobile.showPageLoadingMsg('a', 'Waiting for ' + opponents.username + ' response...', true);
-		})
-		.on('fightproposition', function(fighters) {
-			$('<div>').simpledialog2({
+		socket.emit('join', player);
+
+	})
+	.on('joinsuccess', function(fighters) {
+		opponent = fighters[0].username === player.username ? fighters[1] : fighters[0];
+		render(welcomeTmpl, tchat_container, opponent.username);
+	})
+	.on('wait', function() {
+		$.mobile.showPageLoadingMsg('a', 'Waiting for ' + opponent.username + ' turn...', true);
+		// render(playTmpl, tchat_container);
+	})
+	.on('play', function() {
+		render(playTmpl, tchat_container);
+	})
+	.on('attack', function(spell) {
+		console.log(spell);
+
+		// attacked side
+		if (spell.damage) {
+			$(life_bar).width((parseFloat(life_bar.style.width) - (spell.damage * 100 / max_life)) + '%');
+			$(life_bar).html($(life_bar).html() - spell.damage);
+			$(opponent_mana_bar).width((parseFloat(opponent_mana_bar.style.width) - (spell.mana_cost * 100 / opponent.manapoints)) + '%');
+		}
+
+	});
+
+
+	$('.spell').bind('click', function() {
+		var spell_id = $($(this)).data('spell-id');
+		var spell = findSpellById(spells, spell_id);
+		if (!spell.description) getSpellDescription(spell);
+
+		$('<div>').simpledialog2({
 				mode: 'button',
 				headerText: 'Confirmation',
-				buttonPrompt: '<div style="padding:10px"><p>' + fighters[0].username + ' wants to fight against you !</p></div>',
+				buttonPrompt: '<div style="padding:10px;"><p>Launch this spell "'+ spell.name + '" ?</p><center><img src="/images/spells/'+spell.thumbnail+'.png"></center><p>'+spell.description+'</p></div>',
 				buttons : {
-					"Let's fight !": {
-						click: function () {
-							socket.emit('fightaccepted', fighters);
+					'Yes !': {
+						click: function() {
+							socket.emit('launchspell', spell);
+
+							// attacker side
+							if (spell.damage) {
+								console.log(opponent);
+								$(opponent_life_bar).width((parseFloat(opponent_life_bar.style.width) - (spell.damage * 100 / opponent.hitpoints)) + '%');
+								$(mana_bar).width((parseFloat(mana_bar.style.width) - (spell.mana_cost * 100 / max_mana)) + '%');
+								$(mana_bar).html($(mana_bar).html() - spell.mana_cost);
+							}
+
 						}
 					},
-					'Refuse': { 
+					'No': { 
 						icon: "delete", 
 						theme: "c",
-						click: function() {
-							socket.emit('fightrefused', fighters);
-						}
+						click: function() {}
 					}
 				}
 			});
-		})
-		.on('redirect', function(hash) {
-			$(document).attr('location', '/game?' + hash);
-		});
 
-	tchat_input.bind('keyup', function(key) {
-		if (key.keyCode === 13) {
-			key.preventDefault();
-			socket.emit('message', tchat_input.val());
-			tchat_input.val('');
-		}
-	});
-
-	$('.nav-logout').bind('click', function() {
-		socket.disconnect();
-	});
-
-	$('.nav-search').bind('click', function() {
-		socket.emit('searchopponent');
 	});
 
 });

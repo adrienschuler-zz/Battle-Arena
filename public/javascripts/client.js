@@ -23,3 +23,27 @@ $(function() {
 	});
 
 });
+
+
+function findSpellById(spells, id) {
+	for (var i = 0, l = spells.length - 1; i < l; i++) {
+		if (spells[i]["_id"] === id) {
+			return spells[i];
+		}
+	}
+};
+
+function getSpellDescription(spell) {
+		var new_desc 	= spell._description
+			, matches 	= new_desc.match(/\{((.*?))\}/g);
+		$.each(matches, function(key, match) {
+			var match = match.replace(/{|}/g, '');
+			if (spell[match]) {
+				new_desc = new_desc
+					.replace(match, spell[match])
+					.replace(/{|}/g, '');
+			}
+		});
+		spell.description = new_desc;
+		delete spell._description;
+}

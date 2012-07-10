@@ -105,7 +105,7 @@ controller.create = function(req, res) {
 				req.flash('error', 'This username is not availabe.');
 				res.redirect('/user/signup');
 			} else {
-				User.create(req.body.user, SpellModel, CharacterModel, function(user) {
+				User.create(req.body.user, UserModel, SpellModel, CharacterModel, function(user) {
 					authenticate(req, user.username, user.password, function(success) {
 						if (success) {
 							req.flash('success', 'Your account has been successfully created.');

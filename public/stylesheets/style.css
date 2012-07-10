@@ -11,6 +11,7 @@
 	display: block;
 	text-align: center;
 }
+.right { float: right; }
 
 .ui-header .ui-btn {
 	font-size: 20px;
@@ -41,6 +42,9 @@
 }
 
 a { text-decoration: none; }
+#chatroom a:hover { color: #ccc; }
+a:visited { color: inherit; }
+
 #nav a {
 	display: block;
 	float: right;
@@ -363,10 +367,13 @@ h2 {
 	text-align: center;
 }
 
+.me { color: #666; }
+
 #game div.avatar {
 	margin: 5px;
 	width: 65px;
 	height: 65px;
+	clear: both;
 }
 #game div.bars {
 	width: 40%;

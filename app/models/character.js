@@ -4,10 +4,10 @@ var mongoose 	= require('mongoose')
 
 
 var Character = module.exports = new Schema({
-		avatar						: { type: String, default: "default" }
+		avatar						: { type: String, default: "default.jpeg" }
 	, skill_points			: { type: Number, default: 10 }
-	, hitpoints					: { type: Number, default: 90 }
-	, manapoints				: { type: Number, default: 90 }
+	// , hitpoints					: { type: Number, default: 90 }
+	// , manapoints				: { type: Number, default: 90 }
 	,	experience				: { type: Number, default: 0 }
 	, strength 					: { type: Number, default: 10 }
 	, agility 					: { type: Number, default: 10 }
@@ -27,6 +27,10 @@ Character.virtual('spells')
 	.get(function() { return this._spells; });
 
 
+Character.virtual('nextLevel')
+	.get(function() { return 200 * (Math.pow(this.level + 1, 2)); });
+	
+
 Character.pre('init', function(next) {
 	console.log('Initializing character...');
 	next();
@@ -43,8 +47,3 @@ Character.pre('remove', function(next) {
 	console.log('Removing character...');
 	next();
 });
-
-Character.methods.getLevel = function(character) {
-	var base_xp = 100;
-	
-}
