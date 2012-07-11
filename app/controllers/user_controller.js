@@ -79,11 +79,11 @@ controller.rankings = function(req, res) {
 	.populate('_characters')
 	.run(function(error, users) {
 		if (error) console.error(error);
-
 		$.each(users, function(user) {
 			datas.push({
 					username: user.username
 				, experience: user.character.experience
+				, avatar: user.character.avatar
 			});
 		});
 

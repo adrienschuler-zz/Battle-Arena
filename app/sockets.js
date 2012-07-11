@@ -37,7 +37,8 @@ module.exports = function(_app, _io, sessionStore) {
 					current_user = { 
 						socketID: socket.id,
 						userID: session.user._id,
-						username: session.user.username
+						username: session.user.username,
+						avatar: session.character.avatar
 			};
 
 			var intervalID = setInterval(function() {
@@ -52,13 +53,17 @@ module.exports = function(_app, _io, sessionStore) {
 
 			socket.emit('welcome', current_user);
 
-			socket.broadcast.emit('userjoin', { username: session.user.username });
+			socket.broadcast.emit('userjoin', { 
+				username: session.user.username,
+				avatar: session.character.avatar
+			});
 
 			// message event
 			socket.on('message', function(msg) {
 				tchat.emit('message', { 
 					username: session.user.username, 
-					message: msg 
+					message: msg,
+					avatar: session.character.avatar
 				});
 			});
 
@@ -107,9 +112,6 @@ console.log(fighters);
 
 			// fight accepted
 			socket.on('fightaccepted', function(fighters) {
-console.log('fightaccepted');
-console.log(fighters);
-
 				var hash = 'u1=' + fighters[0].userID + '&u2=' + fighters[1].userID;
 
 				$.each(fighters, function(fighter) {
@@ -121,7 +123,6 @@ console.log(fighters);
 						.sockets[fighter.socketID]
 						.broadcast.to('/game');
 				});
-				
 			});
 
 			// fight refused
@@ -176,6 +177,14 @@ console.log(fighters);
 			socket.on('launchspell', function(spell) {
 				console.log(spell);
 				socket.broadcast.emit('attack', spell);
+			});
+
+			socket.on('play', function() {
+				socket.emit('play');
+			});
+
+			socket.on('wait', function() {
+				socket.emit('wait');
 			});
 	});
 };

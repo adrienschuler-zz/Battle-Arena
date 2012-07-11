@@ -37,15 +37,15 @@
 			div.row
 				
 				.bars
-					div(class='life progress')
-						div(class='bar', style='width: 100%')
-							=character.hitpoints()
-					div(class='mana progress')
-						div(class='bar', style='width: 100%')
-							=character.manapoints()
-					div(class='xp progress')
-						div(class='bar', style="width: #{character.experience}%")
-							=character.experience
+					div(class='progressbar')
+						div(class='bar')
+							span
+					div(class='progressbar')
+						div(class='bar color4')
+							span
+					div(class='progressbar')
+						div(class='bar color2')
+							span
 
 				.spells
 					- each spell, i in spells
@@ -57,52 +57,59 @@
 
 
 script
+	$(document).ready(function() {
 
-	var $skill_points = $('.stats p span')[0];
-	var $life = $('.life div');
-	var $mana = $('.mana div');
-	var tips = {
-		strength: '<b>Strength</b> increase the damages you deal.',
-		agility: '<b>Agility</b> increase the chances that you begin a fight. Also.',
-		stamina: '<b>Stamina</b> increase your total hitpoints.',
-		intellect: '<b>Intellect</b> increase your total manapoints.',
-	}
+		setTimeout(function() {
+			$('.bar').width('90.7%');
+		}, 200);
 
-	$(document).delegate('.confirm-popup', 'click', function() {
-		var $this = $(this);
-		var stat = $(this).data('stat');
-		var $stat = $('span[data-stat=' + stat + ']');
+		var $skill_points = $('.stats p span')[0];
+		var $life = $('.life div');
+		var $mana = $('.mana div');
+		var tips = {
+			strength: '<b>Strength</b> increase the damages you deal.',
+			agility: '<b>Agility</b> increase the chances that you begin a fight. Also.',
+			stamina: '<b>Stamina</b> increase your total hitpoints.',
+			intellect: '<b>Intellect</b> increase your total manapoints.'
+		};
 
-		$('<div>').simpledialog2({
-			mode: 'button',
-			headerText: 'Confirmation',
-			headerClose: true,
-			buttonPrompt: '<div style="padding:10px"><p>Improve your <b>' + stat + '</b> by one point ?</p><br><p><i>' + tips[stat] + '</i></p></div>',
-			buttons : {
-				'OK': {
-					click: function () { 
-						$.ajax({
-							url: '/character/upstat/' + stat,
-							type: 'POST'
-						}).done(function(success) {
-							if (success) {
-								$($stat).html(parseInt($($stat).html()) + 1);
-								$($skill_points).html($($skill_points).html() - 1);
-								if (stat == 'stamina') {
-									$($life).html(parseInt($($life).html()) + 5);
+		$(document).delegate('.confirm-popup', 'click', function() {
+			var $this = $(this);
+			var stat = $(this).data('stat');
+			var $stat = $('span[data-stat=' + stat + ']');
+
+			$('<div>').simpledialog2({
+				mode: 'button',
+				headerText: 'Confirmation',
+				headerClose: true,
+				buttonPrompt: '<div style="padding:10px"><p>Improve your <b>' + stat + '</b> by one point ?</p><br><p><i>' + tips[stat] + '</i></p></div>',
+				buttons : {
+					'OK': {
+						click: function () { 
+							$.ajax({
+								url: '/character/upstat/' + stat,
+								type: 'POST'
+							}).done(function(success) {
+								if (success) {
+									$($stat).html(parseInt($($stat).html()) + 1);
+									$($skill_points).html($($skill_points).html() - 1);
+									if (stat == 'stamina') {
+										$($life).html(parseInt($($life).html()) + 5);
+									}
+									if (stat == 'intellect') {
+										$($mana).html(parseInt($($mana).html()) + 5);
+									}
 								}
-								if (stat == 'intellect') {
-									$($mana).html(parseInt($($mana).html()) + 5);
-								}
-							}
-						});
+							});
+						}
+					},
+					'Cancel': { 
+						icon: "delete", 
+						theme: "c",
+						click: function() {}
 					}
-				},
-				'Cancel': { 
-					icon: "delete", 
-					theme: "c",
-					click: function() {}
 				}
-			}
+			});
 		});
+
 	});

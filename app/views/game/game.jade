@@ -12,12 +12,12 @@
 						div
 							div.level 1
 				.bars
-					div(class='life progress')
-						div(class='bar', style='width: 100%')
-							=opponent.character.hitpoints
-					div(class='mana progress')
-						div(class='bar', style='width: 100%')
-							=opponent.character.manapoints
+					div(class='progressbar')
+						div(class='bar')
+							span
+					div(class='progressbar')
+						div(class='bar color4')
+							span
 
 
 			#chatroom
@@ -35,12 +35,12 @@
 							div.level 1
 
 					.bars
-						div(class='life progress')
-							div(class='bar', style='width: 100%')
-								=character.hitpoints()
-						div(class='mana progress')
-							div(class='bar', style='width: 100%')
-								=character.manapoints()
+						div(class='progressbar')
+							div(class='bar')
+								span
+						div(class='progressbar')
+							div(class='bar color4')
+								span
 
 					.spells
 						- each spell, i in spells
