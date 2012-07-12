@@ -57,7 +57,10 @@ script(id='activeUsersTemplate', type='text/x-jquery-tmpl')
 	|	{{/if}}
 	|	</div>
 
-script
-	var username = "#{user.username}";
 
 script(src='/javascripts/tchat.js')
+script
+	var username = "#{user.username}";
+	$(function() {
+		new Tchat(username);
+	});
