@@ -5,6 +5,7 @@ exports.initialize = ->
 		thumbnail: "punch"
 		is_default: 1
 		damage: 5
+		mana_cost: 0
 	,
 		name: "Fireball"
 		_description: "Launch a devastating fireball, doing {damage} damages. Cost {mana_cost} mana."

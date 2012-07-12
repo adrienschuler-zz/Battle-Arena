@@ -1,6 +1,6 @@
 var Tchat = Class.extend({
-	init: function(player) {
-		this.player = player;
+	init: function(username) {
+		this.username = username;
 
 		// DOM elements
 		this.elements = {
@@ -25,7 +25,8 @@ var Tchat = Class.extend({
 	render: function(tmpl, data, target) {
 		if (_.isObject(data)) data.time = now();
 		if (!target) target = this.elements.tchat;
-		tmpl.tmpl(data).appendTo(target);
+		this.templates[tmpl].tmpl(data).appendTo(target);
+		this.updateScrollbar();
 	},
 
 	bindEvents: function() {
@@ -37,28 +38,26 @@ var Tchat = Class.extend({
 
 	initSocketIO: function() {
 		var self = this;
-		
 		this.socket = io.connect().of('/tchat')
 
 			.on('connect', function() {
-				self.socket.emit('join', self.player);
+				self.socket.emit('join', self.username);
 			})
 
 			.on('welcome', function(data) {
-				self.render(self.templates.welcome, data);
+				self.render('welcome', data);
 			})
 
 			.on('userjoin', function(data) {
-				self.render(self.templates.join, data);
+				self.render('join', data);
 			})
 
 			.on('disconnect', function(data) {
-				self.render(self.templates.disconnect, data);
+				self.render('disconnect', data);
 			})
 
 			.on('message', function(data) {
-				self.render(self.templates.message, data);
-				self.updateScrollbar();
+				self.render('message', data);
 			})
 
 			.on('updateusers', function(data) {
@@ -66,7 +65,7 @@ var Tchat = Class.extend({
 					user.me = user.username === username ? 1 : 0;
 				});
 				self.elements.side.html('');
-				self.render(self.templates.users, data, self.elements.side);
+				self.render('users', data, self.elements.side);
 			})
 
 			.on('opponentsavailable', function(opponent) {
@@ -79,6 +78,7 @@ var Tchat = Class.extend({
 
 			.on('fightproposition', function(fighters) {
 				$('<div>').simpledialog2({
+					animate: false,
 					mode: 'button',
 					headerText: 'Confirmation',
 					buttonPrompt: '<div style="padding:10px;"><p>' + fighters[0].username + ' wants to fight against you !</p></div>',

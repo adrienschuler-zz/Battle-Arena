@@ -8,26 +8,10 @@ function now() {
 	return '[' + h + ':' + m + ']';
 }
 
-function render(tmpl, target, data) {
-	if (_.isObject(data)) data.time = now();
-	tmpl.tmpl(data).appendTo(target);
-}
-
-$(function() {
-	// $(window).bind('orientationchange', function(e) {
-	// 	console.log('orientation: ' + e.orientation);
-	// });
-
-	$.extend($.mobile, { // overriding jQuery Mobile defaults
-		ajaxEnabled: false
-	});
-
-});
-
-
 function findSpellById(spells, id) {
 	for (var i = 0, l = spells.length - 1; i < l; i++) {
 		if (spells[i]["_id"] === id) {
+			if (!spells[i].description) getSpellDescription(spells[i]);
 			return spells[i];
 		}
 	}
@@ -47,3 +31,13 @@ function getSpellDescription(spell) {
 		spell.description = new_desc;
 		delete spell._description;
 }
+
+$(function() {
+	// $(window).bind('orientationchange', function(e) {
+	// 	console.log('orientation: ' + e.orientation);
+	// });
+
+	$.extend($.mobile, { // overriding jQuery Mobile defaults
+		ajaxEnabled: false
+	});
+});

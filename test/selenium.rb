@@ -20,12 +20,12 @@ class BattleArenaTest < Test::Unit::TestCase
 	end
 
 	def test_test
-		login(@firefox, 'firefox', 'test')
 		login(@chrome, 'chrome', 'test')
+		login(@firefox, 'firefox', 'test')
 		sleep 1
-		@firefox.find_element(:class, 'nav-search').click
+		@chrome.find_element(:class, 'nav-search').click
 		sleep 1
-		@chrome.find_element(:xpath, '/html/body/div/div[3]/div[2]/div[2]/a/span/span').click
+		@firefox.find_element(:xpath, '/html/body/div/div[3]/div[2]/div[2]/a/span/span').click
 	end
 
 	def resize_window(driver, side)

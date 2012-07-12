@@ -215,6 +215,10 @@ div.bars div {
 div.spells {
 	width: 50%;
 	float: right;
+	-webkit-transition: opacity 0.7s ease;
+	-moz-transition: opacity 0.7s ease;
+	-o-transition: opacity 0.7s ease;
+	transition: opacity 0.7s ease;
 }
 div.spells img {
 	box-shadow: 2px 2px 2px #aaa;
@@ -225,7 +229,11 @@ div.spells div {
 	float: left;
 	margin: 1px 5px;
 }
-
+.spell.disabled {
+	-moz-opacity: 0.6;
+	opacity: .60;
+	filter: alpha(opacity=60);
+}
 .red {
 	color: red;
 }

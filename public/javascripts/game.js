@@ -1,121 +1,245 @@
-function disable_spells(bool) {
-	$('.spells').data('disabled', bool);
-}
+var Game = Class.extend({
+	init: function(player, spells) {
+		var bars = $('.bar');
+	
+		this.elements = {
+			tchat: $('.tchat-container'),
+			spells: $('.spell'),
+			bars: bars,
+			opponent_life_bar: bars.get(0),
+			opponent_mana_bar: bars.get(1),
+			life_bar: bars.get(2),
+			mana_bar: bars.get(3)
+		};
 
-function wait(username) {
-	disable_spells(true);
-	$('<div>').simpledialog2();
-	$('.ui-simpledialog-container').remove();
-	$.mobile.showPageLoadingMsg('a', 'Waiting for ' + username + ' turn...', true);
-	// render(srvMsgTmpl, tchat_container);
-}
+		this.templates = {
+			welcome: $('#welcomeTemplate'),
+			play: $('#playTemplate'),
+			wait: $('#waitTemplate'),
+			attack: $('#attackTemplate'),
+			heal: $('#healTemplate')
+		};
 
-function play() {
-	disable_spells(false);
-	$('.ui-simpledialog-screen').remove();
-	$.mobile.hidePageLoadingMsg();
-	// render(playTmpl, tchat_container);
-}
+		this.player = player;
+		this.player.hitpoints_left = this.player.hitpoints;
+		this.player.manapoints_left = this.player.manapoints;
+		this.spells = spells;
+		this.opponent = null;
 
-$(function() {
+		this.initSocketIO();
+		this.bindEvents();
+	},
 
-	setTimeout(function() {
-		$('.bar').width('90.7%');
-	}, 200);
+	render: function(tmpl, data, target) {
+		if (_.isObject(data)) data.time = now();
+		if (!target) target = this.elements.tchat;
+		this.templates[tmpl].tmpl(data).appendTo(target);
+		this.updateScrollbar();
+	},
 
-	var tchat_container = $('.tchat-container');
+	bindEvents: function() {
+		this.initializeBars();
+		this.launchSpell();
+	},
 
-	var mana_bar = $('#me .bar')[1];
-	var life_bar = $('#me .bar')[0];
+	initSocketIO: function() {
+		var self = this;
+		this.socket = io.connect().of('/game')
+			
+			.on('connect', function() {
+				self.socket.emit('join', self.player);
+			})
 
-	var opponent_life_bar = $('#opponent .bar')[0];
-	var opponent_mana_bar = $('#opponent .bar')[1];
+			.on('joinsuccess', function(fighters) {
+				self.opponent = fighters[0].username === self.player.username ? fighters[1] : fighters[0];
+				self.opponent.hitpoints_left = self.opponent.hitpoints;
+				self.opponent.manapoints_left = self.opponent.manapoints;
+				self.render('welcome', { username: self.opponent.username, time: now() });
+			})
 
-	var welcomeTmpl = $('#welcomeTemplate');
-	var playTmpl = $('#playTemplate');
+			.on('wait', function() {
+				self.render('wait', { username: self.opponent.username });
+				self.wait(self.opponent.username);
+			})
 
-	var opponent = null;
+			.on('play', function() {
+				self.render('play', { time: now() });
+				self.play();
+			})
 
-	var socket = io
-	.connect()
-	.of('/game')
-	.on('connect', function() {
-		socket.emit('join', player);
-	})
+			.on('attack', function(spell) {
+				self.attackedBarsAnimation(spell);
+			});
+	},
 
-	.on('joinsuccess', function(fighters) {
-		opponent = fighters[0].username === player.username ? fighters[1] : fighters[0];
-		render(welcomeTmpl, tchat_container, opponent.username);
-	})
-
-	.on('wait', function() {
-		wait(opponent.username);
-	})
-
-	.on('play', function() {
-		play();
-	})
-
-	.on('attack', function(spell) {
-
-		// check mana left
-		// disable if not enough
-
-		// attacked side
-		if (spell.damage) {
-			// check death
-
-			$(life_bar).width((parseFloat(life_bar.style.width) - (spell.damage * 100 / player.hitpoints)) + '%');
-			$(opponent_mana_bar).width((parseFloat(opponent_mana_bar.style.width) - (spell.mana_cost * 100 / opponent.manapoints)) + '%');
-		}
-
-		if (spell.heal) {
-
-		}
-
-		socket.emit('play');
-		play();
-	});
-
-
-	$('.spell').bind('click', function() {
-		console.log($(this).data('disabled'));
-		if ($(this).data('disabled')) return;
-		var spell = findSpellById(spells, $($(this)).data('spell-id'));
-		if (!spell.description) getSpellDescription(spell);
-
-		$('<div>').simpledialog2({
+	launchSpell: function() {
+		var self = this;
+		$('.spell').bind('click', function() {
+			if ($(this).hasClass('disabled')) return;
+			var spell = findSpellById(self.spells, $($(this)).data('spell-id'));
+			$('<div>').simpledialog2({
+				animate: false,
 				mode: 'button',
 				headerText: spell.name,
 				buttonPrompt: '<div style="padding:10px;"><center><img src="/images/spells/'+spell.thumbnail+'.png"><p>'+spell.description+'</p></center></div>',
 				buttons : {
 					'Launch !': {
 						click: function() {
-							disable_spells(true);
-							socket.emit('launchspell', spell);
-
-							// attacker side
-							if (spell.damage) {
-								$(opponent_life_bar).width((parseFloat(opponent_life_bar.style.width) - (spell.damage * 100 / opponent.hitpoints)) + '%');
-								$(mana_bar).width((parseFloat(mana_bar.style.width) - (spell.mana_cost * 100 / player.manapoints)) + '%');
-							}
-
-							if (spell.heal) {
-
-							}
-
-							wait(opponent.username);
-							socket.emit('wait');
+							self.attackerBarsAnimation(spell);
+							self.checkManaLeft();
 						}
 					},
-					'Cancel': { 
-						icon: "delete", 
-						theme: "c",
-						click: function() {}
-					}
+					'Cancel': { icon: "delete", theme: "c", click: function() {} }
 				}
 			});
+		});
+	},
+	
+	initializeBars: function() {
+		var self = this;
+		setTimeout(function() {
+			self.elements.bars.width('90.7%');
+		}, 200);
+	},
 
-	});
+	// disable_spells: function(bool) {
+	// 	$('.spells').data('disabled', bool);
+	// },
+
+	wait: function(username) {
+		// this.disable_spells(true);
+		// $('<div>').simpledialog2();
+		// $('.ui-simpledialog-container').remove();
+		$.mobile.showPageLoadingMsg('a', 'Waiting for ' + username + ' turn...', true);
+		// render(srvMsgTmpl, tchat_container);
+	},
+
+	play: function() {
+		// this.disable_spells(false);
+		$('.ui-simpledialog-screen').remove();
+		$.mobile.hidePageLoadingMsg();
+		// render(playTmpl, tchat_container);
+	},
+	
+	decreaseBar: function(bar, amount, total) {
+		$(this.elements[bar])
+			.width(
+				(parseFloat(this.elements[bar].style.width) - (amount * 100 / total)) + '%'
+			);
+	},
+
+	increaseBar: function(bar, amount, total) {
+		$(this.elements[bar])
+			.width(
+				(parseFloat(this.elements[bar].style.width) + (amount * 100 / total)) + '%'
+			);
+	},
+
+	attackerBarsAnimation: function(spell) {
+		// this.disable_spells(true);
+		this.socket.emit('launchspell', spell);
+
+		if (spell.damage) {
+			this.render('attack', { me: true, opponent: this.opponent.username, spell: spell.name, damages: spell.damage });
+			this.opponent.hitpoints_left -= spell.damage;
+			this.player.manapoints_left -= spell.mana_cost;
+			this.decreaseBar('opponent_life_bar', spell.damage, this.opponent.hitpoints);
+			this.decreaseBar('mana_bar', spell.mana_cost, this.player.manapoints);
+			
+			if (this.opponent.hitpoints_left <= 0) {
+				return this.win();
+			}
+		}
+
+		if (spell.heal) {
+			this.render('heal', { me: true, spell: spell.name, heal: spell.heal });
+			this.player.hitpoints_left += spell.heal;
+			this.player.manapoints_left -= spell.mana_cost;
+			this.increaseBar('life_bar', spell.heal, this.player.hitpoints);
+			this.decreaseBar('mana_bar', spell.mana_cost, this.player.manapoints);
+		}
+
+		this.wait(this.opponent.username);
+		this.socket.emit('wait');
+	},
+
+	attackedBarsAnimation: function(spell) {
+		// $.mobile.sdCurrentDialog.close();
+		$.mobile.hidePageLoadingMsg();
+
+		if (spell.damage) {
+			this.render('attack', { me: false, opponent: this.opponent.username, spell: spell.name, damages: spell.damage });
+			this.player.hitpoints_left -= spell.damage;
+			this.opponent.manapoints_left -= spell.mana_cost;
+			this.decreaseBar('life_bar', spell.damage, this.player.hitpoints);
+			this.decreaseBar('opponent_mana_bar', spell.mana_cost, this.opponent.manapoints);
+
+			if (this.player.hitpoints_left <= 0) {
+				return this.loose();
+			}
+		}
+
+		if (spell.heal) {
+			this.render('heal', { me: false, spell: spell.name, heal: spell.heal, opponent: this.opponent.username });
+			this.opponent.hitpoints_left += spell.heal;
+			this.opponent.manapoints_left -= spell.mana_cost;
+			this.increaseBar('opponent_life_bar', spell.heal, this.opponent.hitpoints);
+			this.decreaseBar('opponent_mana_bar', spell.mana_cost, this.opponent.manapoints);
+		}
+
+		this.socket.emit('play');
+		this.play();
+	},
+
+	win: function() {
+		var self = this;
+		$('<div>').simpledialog2({
+			animate: false,
+			mode: 'button',
+			headerText: 'Victory !',
+			buttonPrompt: '<div style="padding:10px;"><center><p>You defeat ' + self.opponent.username + ' !</p></center></div>',
+			buttons : {
+				'Ok !': {
+					click: function() {
+						
+					}
+				}
+			}
+		});
+	},
+
+	loose: function() {
+		var self = this;
+		$('<div>').simpledialog2({
+			animate: false,
+			mode: 'button',
+			headerText: 'Defeat !',
+			buttonPrompt: '<div style="padding:10px;"><center><p>You have been defeated by ' + self.opponent.username + ' !</p></center></div>',
+			buttons : {
+				'Ok :(': {
+					click: function() {
+						
+					}
+				}
+			}
+		});
+	},
+
+	checkManaLeft: function() {
+		var self = this;
+		$.each(this.elements.spells, function(key, spell) {
+			if (self.player.manapoints_left < $(spell).data('mana-cost')) {
+				$(spell).addClass('disabled');
+			} else {
+				$(spell).removeClass('disabled');
+			}
+		});
+	},
+
+	updateScrollbar: function() {
+		this.elements.tchat.animate({ 
+			scrollTop: 99999
+		}, 200);
+	},
 
 });
