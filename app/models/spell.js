@@ -8,6 +8,8 @@ var Spell = module.exports = new Schema({
 	,	_description 		: { type: String, default: "default description" }
 	,	thumbnail 			: { type: String, default: "1" }
 	,	is_default 			: { type: Boolean }
+	, requirement			: { type: Number, default: "1" }
+	, skill_points		: { type: Number }
 	, damage					: { type: Number }
 	, heal						: { type: Number }
 	, accuracy				: { type: Number, default: 5 }

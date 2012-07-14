@@ -31,11 +31,12 @@ exports.initialize = ->
 		name: "Replenish health"
 		_description: "Heal yourself overtime for {heal} hitpoints per turn during {round_duration} turns. Cost {mana_cost} mana."
 		thumbnail: "replenish_health"
-		is_default: 1
+		requirement: 3
+		skill_points: 4
 		heal: 15
 		mana_cost: 40
 		round_duration: 3
-	,
+	# ,
 	# 	name: "Transfuse stamina"
 	# 	_description: "Decrease your opponent stamina by {attributes[0].stats[0].value} and inscrease your own stamina by {attributes[1].stats[0].value}. Cost {mana_cost} mana."
 	# 	thumbnail: "transfuse_stamina"
@@ -64,9 +65,26 @@ exports.initialize = ->
 		mana_cost: 20
 	,
 		name: "Wind"
-		_description: "Deal {damage} damages to your opponent."
+		_description: "Deal {damage} damages to your opponent. Cost {mana_cost} mana."
 		thumbnail: "wind"
+		is_default: 1
 		damage: 10
 		mana_cost: 10
+	,
+		name: "Knifes"
+		_description: "Deal {damage} damages to your opponent. Cost {mana_cost} mana."
+		thumbnail: "knifes"
+		damage: 30
+		mana_cost: 20
+		requirement: 2
+		skill_points: 2
+	,
+		name: "Meteor"
+		_description: "Deal {damage} damages to your opponent. Cost {mana_cost} mana."
+		thumbnail: "meteor"
+		damage: 50
+		mana_cost: 60
+		requirement: 3
+		skill_points: 5
 	]
 	spells
