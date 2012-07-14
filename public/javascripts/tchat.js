@@ -2,14 +2,21 @@ var Tchat = Class.extend({
 	init: function(username) {
 		this.username = username;
 
-		// DOM elements
+		this.initElements();
+		this.initTemplates();
+		this.initSocketIO();
+		this.bindEvents();
+	},
+
+	initElements: function() {
 		this.elements = {
 			tchat: $('.tchat-container'),
 			input: $('#tchat-input'),
 			side: $('.tchat-side')
 		};
+	},
 
-		// jQuery templates
+	initTemplates: function() {
 		this.templates = {
 			welcome: $('#welcomeTemplate'),
 			join: $('#userJoinTemplate'),
@@ -17,9 +24,6 @@ var Tchat = Class.extend({
 			disconnect: $('#disconnectTemplate'),
 			users: $('#activeUsersTemplate')
 		};
-
-		this.initSocketIO();
-		this.bindEvents();
 	},
 
 	render: function(tmpl, data, target) {
@@ -73,6 +77,7 @@ var Tchat = Class.extend({
 			})
 
 			.on('redirect', function(hash) {
+				self.socket.disconnect();
 				$(document).attr('location', '/game?' + hash);
 			})
 

@@ -47,3 +47,45 @@ controller.upstat = function(req, res) {
 		res.json(false);
 	}
 };
+
+
+// POST
+controller.gainExperience = function(req, res) {
+	var character = req.session.character;
+	var c = new CharacterModel();
+
+	var opponentLevel = req.body.opponentLevel;
+	var xp = c.gainExperience(character.level, opponentLevel);
+	var new_xp = character.experience + xp;
+	var levelup = false;
+	var nextLevel = c.nextLevel(character.level);
+	var update = {};
+	var response = {
+		gain: xp,
+		levelup: levelup
+	};
+
+	if (new_xp >= nextLevel) {
+		var level = character.level + 1;
+		update.level = level;
+		character.level = level;
+		
+		update.experience = new_xp - nextLevel;
+		character.experience = new_xp - nextLevel;
+		
+		update.skill_points = character.skill_points + 10;
+		character.skill_points = character.skill_points + 10;
+
+		response.levelup = true;
+		response.level = level;
+	} else {
+		update.experience = new_xp;
+		character.experience = new_xp;
+	}
+
+	CharacterModel
+		.update({ _id: character._id }, update, null, function(error, success) {
+			if (error) console.error(error);
+			res.json(response);
+	});
+};

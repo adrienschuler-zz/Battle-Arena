@@ -54,6 +54,10 @@ module.exports = function(app, sessionStore) {
 						return 50 + (character.intellect * 5);
 					};
 
+					character.nextLevel = function() {
+						return 200 * (Math.pow(character.level + 1, 2));
+					};
+
 					return character;
 				}
 				,	spells: function(req, res) {

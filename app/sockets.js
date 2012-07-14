@@ -134,33 +134,32 @@ console.log(fighters);
 		});
 
 
-	var fighters = [],
-			game_turn = 0,
-			player_turn = 0;
-
+	var fighters = [], 
+			rooms = [];
 
 	var game = io
 		.of('/game')
 		.on('connection', function(socket) {
-
 			var hs = socket.handshake,	
 					session = hs.session;
 
-
-			socket.on('join', function(fighter) {
+			socket.on('join', function(room, fighter) {
+				if (!rooms[room] || rooms[room].fighters.length > 1) {
+					rooms[room] = {};
+					rooms[room].fighters = [];
+				}
 				fighter.socketID = socket.id;
-				fighters.push(fighter);
+				rooms[room].fighters.push(fighter);
 
-				if (fighters.length === 2) {
-					console.log(fighters);
-					game.emit('joinsuccess', fighters);
+				if (rooms[room].fighters.length === 2) {
+					game.emit('joinsuccess', rooms[room].fighters);
 
 					io.of('/game')
-						.sockets[fighters[0].socketID]
+						.sockets[rooms[room].fighters[0].socketID]
 						.emit('play');
 
 					io.of('/game')
-						.sockets[fighters[1].socketID]
+						.sockets[rooms[room].fighters[1].socketID]
 						.emit('wait');
 
 					// $.each(fighters, function(f) {

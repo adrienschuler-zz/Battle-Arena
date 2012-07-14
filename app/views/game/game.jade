@@ -7,8 +7,6 @@
 						=opponent.username
 					div.avatar
 						img(src="/images/avatars/#{opponent.character.avatar}", width='65', height='65')
-						div
-							div.level 1
 				.bars
 					div(class='progressbar')
 						div(class='bar')
@@ -24,8 +22,6 @@
 						=user.username
 					div.avatar
 						img(src="/images/avatars/#{character.avatar}", width='65', height='65')
-						div
-							div.level 1
 					.bars
 						div(class='progressbar')
 							div(class='bar')
@@ -41,63 +37,14 @@
 								a(href='#', data-spell-id='#{spell._id}', data-mana-cost='#{spell.mana_cost}', class='spell')
 									img(src='/images/spells/#{spell.thumbnail}.png')
 
-script(id='welcomeTemplate', type='text/x-jquery-tmpl')
-	| <div>
-	| 	<span class="time">${time}</span> 
-	| 	<span class="srv-msg">User</span> 
-	| 	<span class="username">${username}</span> 
-	|		<span class="srv-msg">joined the game.</span>
-	| </div>
-
-script(id='playTemplate', type='text/x-jquery-tmpl')
-	| <div>
-	| 	<span class="time">${time}</span> 
-	|		<span class="srv-msg">This is your turn.</span>
-	| </div>
-
-script(id='waitTemplate', type='text/x-jquery-tmpl')
-	| <div>
-	| 	<span class="time">${time}</span> 
-	|		<span class="srv-msg">Waiting for ${username} turn...</span>
-	| </div>
-
-script(id='attackTemplate', type='text/x-jquery-tmpl')
-	| <div>
-	| 	<span class="time">${time}</span> 
-	|	{{if me}}
-	|		<span class="srv-msg">You launched the spell "${spell}", dealing <span class="red">${damages}</span> damages to <span class="username">${opponent}</span>.</span>
-	| {{else}}
-	|		<span class="username">${opponent}</span> 
-	|		<span class="srv-msg">launched the spell "${spell}", dealing you <span class="red">${damages}</span> damages.</span>
-	| {{/if}}
-	| </div>
-
-script(id='healTemplate', type='text/x-jquery-tmpl')
-	| <div>
-	| 	<span class="time">${time}</span> 
-	|	{{if me}}
-	|		<span class="srv-msg">You launched the spell "${spell}", healing you for <span class="green">${heal}</span> hitpoints.</span>
-	| {{else}}
-	|		<span class="username">${opponent}</span> 
-	|		<span class="srv-msg">launched the spell "${spell}", healing him for <span class="green">${heal}</span> hitpoints.</span>
-	| {{/if}}
-	| </div>
-
+include ../templates/game
 
 script(src='/javascripts/game.js')
 script 
-	var player = {
-		username: "#{user.username}",
-		strength: "#{character.strength}",
-		agility: "#{character.agility}",
-		stamina: "#{character.stamina}",
-		intellect: "#{character.intellect}",
-		accuracy: "#{character.accuracy}",
-		armor: "#{character.armor}",
-		hitpoints: "#{character.hitpoints()}",
-		manapoints: "#{character.manapoints()}"
-	};
-	var spells = !{JSON.stringify(spells)};
+	var player = !{JSON.stringify(character)};
+	player.username = "#{user.username}";
+	player.hitpoints = "#{character.hitpoints()}";
+	player.manapoints = "#{character.manapoints()}";
 	$(function() {
-		new Game(player, spells);
+		new Game(player);
 	});

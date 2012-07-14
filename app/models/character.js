@@ -8,6 +8,7 @@ var Character = module.exports = new Schema({
 	, skill_points			: { type: Number, default: 10 }
 	// , hitpoints					: { type: Number, default: 90 }
 	// , manapoints				: { type: Number, default: 90 }
+	, level 						: { type: Number, default: 1 }
 	,	experience				: { type: Number, default: 0 }
 	, strength 					: { type: Number, default: 10 }
 	, agility 					: { type: Number, default: 10 }
@@ -25,10 +26,6 @@ var Character = module.exports = new Schema({
 
 Character.virtual('spells')
 	.get(function() { return this._spells; });
-
-
-Character.virtual('nextLevel')
-	.get(function() { return 200 * (Math.pow(this.level + 1, 2)); });
 	
 
 Character.pre('init', function(next) {
@@ -47,3 +44,19 @@ Character.pre('remove', function(next) {
 	console.log('Removing character...');
 	next();
 });
+
+Character.methods.gainExperience = function(myLvl, opponentLvl) {
+	var base = 25 * (Math.pow(myLvl + 1, 2));
+	if (myLvl > opponentLvl) {
+		console.log("base / opponentLvl = %s", base / opponentLvl);
+		return base / opponentLvl;
+	} else if (myLvl < opponentLvl) {
+		console.log("base * opponentLvl = %s", base * opponentLvl);
+		return base * opponentLvl;
+	}
+	return base;
+};
+
+Character.methods.nextLevel = function(level) {
+	return 200 * (Math.pow(level + 1, 2));
+};

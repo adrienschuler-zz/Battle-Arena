@@ -6,7 +6,7 @@ function checkAuthentication(req, res, next) {
 	if (req.session.user) {
 		next();
 	} else {
-		res.redirect('/user/login');
+		res.redirect('/login');
 	}
 }
 
@@ -21,12 +21,12 @@ module.exports = function(app) {
 	app.get('/', [checkAuthentication], game.index);
 	
 	// User
-	app.get('/user/login', user.login);
-	app.get('/user/signup', user.signup);
-	app.get('/user/logout', user.logout);
-	app.get('/user/profile', [checkAuthentication], user.profile);
-	app.get('/user/rankings', [checkAuthentication], user.rankings);
-	app.get('/user/spells/:id?', [checkAuthentication], user.spells);
+	app.get('/login', user.login);
+	app.get('/signup', user.signup);
+	app.get('/logout', user.logout);
+	app.get('/profile', [checkAuthentication], user.profile);
+	app.get('/rankings', [checkAuthentication], user.rankings);
+	app.get('/spells/:id?', [checkAuthentication], user.spells);
 	
 	app.post('/user/create', user.create);
 	app.post('/user/authenticate', user.authenticate);
@@ -37,4 +37,5 @@ module.exports = function(app) {
 
 	// Character
 	app.post('/character/upstat/:stat?', [checkAuthentication], character.upstat);
+	app.post('/character/gainExperience', [checkAuthentication], character.gainExperience);
 };

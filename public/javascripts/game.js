@@ -1,7 +1,19 @@
 var Game = Class.extend({
-	init: function(player, spells) {
+	init: function(player) {	
+		this.opponent = null;
+		this.player = player;
+		this.spells = player._spells;
+		this.player.hitpoints_left = this.player.hitpoints;
+		this.player.manapoints_left = this.player.manapoints;
+
+		this.initElements();
+		this.initTemplates();
+		this.initSocketIO();
+		this.bindEvents();
+	},
+
+	initElements: function() {
 		var bars = $('.bar');
-	
 		this.elements = {
 			tchat: $('.tchat-container'),
 			spells: $('.spell'),
@@ -11,29 +23,29 @@ var Game = Class.extend({
 			life_bar: bars.get(2),
 			mana_bar: bars.get(3)
 		};
+	},
 
+	initTemplates: function() {
 		this.templates = {
 			welcome: $('#welcomeTemplate'),
 			play: $('#playTemplate'),
 			wait: $('#waitTemplate'),
 			attack: $('#attackTemplate'),
-			heal: $('#healTemplate')
+			heal: $('#healTemplate'),
+			win: $('#winTemplate')
 		};
-
-		this.player = player;
-		this.player.hitpoints_left = this.player.hitpoints;
-		this.player.manapoints_left = this.player.manapoints;
-		this.spells = spells;
-		this.opponent = null;
-
-		this.initSocketIO();
-		this.bindEvents();
 	},
 
 	render: function(tmpl, data, target) {
 		if (_.isObject(data)) data.time = now();
 		if (!target) target = this.elements.tchat;
-		this.templates[tmpl].tmpl(data).appendTo(target);
+		var result = this.templates[tmpl].tmpl(data);
+
+		if (target === 'popup') {
+			return result[0].innerHTML;
+		}
+
+		result.appendTo(target);
 		this.updateScrollbar();
 	},
 
@@ -47,7 +59,7 @@ var Game = Class.extend({
 		this.socket = io.connect().of('/game')
 			
 			.on('connect', function() {
-				self.socket.emit('join', self.player);
+				self.socket.emit('join', location.search, self.player);
 			})
 
 			.on('joinsuccess', function(fighters) {
@@ -63,7 +75,7 @@ var Game = Class.extend({
 			})
 
 			.on('play', function() {
-				self.render('play', { time: now() });
+				self.render('play', {});
 				self.play();
 			})
 
@@ -111,10 +123,13 @@ var Game = Class.extend({
 		// $('<div>').simpledialog2();
 		// $('.ui-simpledialog-container').remove();
 		$.mobile.showPageLoadingMsg('a', 'Waiting for ' + username + ' turn...', true);
+		this.disableSpells(true);
 		// render(srvMsgTmpl, tchat_container);
 	},
 
 	play: function() {
+		this.disableSpells(false);
+		this.checkManaLeft();
 		// this.disable_spells(false);
 		$('.ui-simpledialog-screen').remove();
 		$.mobile.hidePageLoadingMsg();
@@ -147,7 +162,7 @@ var Game = Class.extend({
 			this.decreaseBar('mana_bar', spell.mana_cost, this.player.manapoints);
 			
 			if (this.opponent.hitpoints_left <= 0) {
-				return this.win();
+				return this.gainExperience();
 			}
 		}
 
@@ -191,17 +206,31 @@ var Game = Class.extend({
 		this.play();
 	},
 
-	win: function() {
+	gainExperience: function(callback) {
 		var self = this;
+		$.ajax({
+			url: '/character/gainExperience/',
+			type: 'POST',
+			data: { opponentLevel: self.opponent.level }
+		}).done(function(rewards) {
+			console.log(rewards);
+			self.win(rewards);
+		});
+	},
+
+	win: function(rewards) {
+		var self = this;
+		rewards.opponent = self.opponent.username;
 		$('<div>').simpledialog2({
 			animate: false,
 			mode: 'button',
 			headerText: 'Victory !',
-			buttonPrompt: '<div style="padding:10px;"><center><p>You defeat ' + self.opponent.username + ' !</p></center></div>',
+			buttonPrompt: self.render('win', rewards, 'popup'),
 			buttons : {
 				'Ok !': {
 					click: function() {
-						
+						self.socket.disconnect();
+						$(document).attr('location', '/profile');
 					}
 				}
 			}
@@ -214,11 +243,12 @@ var Game = Class.extend({
 			animate: false,
 			mode: 'button',
 			headerText: 'Defeat !',
-			buttonPrompt: '<div style="padding:10px;"><center><p>You have been defeated by ' + self.opponent.username + ' !</p></center></div>',
+			buttonPrompt: '<div style="padding:10px;"><center><img src="/images/game/icons/death.png"><p>You have been defeated by ' + self.opponent.username + ' !</p></center></div>',
 			buttons : {
 				'Ok :(': {
 					click: function() {
-						
+						self.socket.disconnect();
+						$(document).attr('location', '/');
 					}
 				}
 			}
@@ -234,6 +264,14 @@ var Game = Class.extend({
 				$(spell).removeClass('disabled');
 			}
 		});
+	},
+
+	disableSpells: function(bool) {
+		if (bool) {
+			this.elements.spells.addClass('disabled');
+		} else {
+			this.elements.spells.removeClass('disabled');
+		}
 	},
 
 	updateScrollbar: function() {

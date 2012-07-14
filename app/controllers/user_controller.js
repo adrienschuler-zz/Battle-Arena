@@ -58,7 +58,7 @@ controller.spells = function(req, res) {
 			if (error) console.log(error);
 			if (!s) {
 				req.flash('error', "An error occured while retrieving this spell.");
-				res.redirect('/user/profile');
+				res.redirect('/profile');
 			} else {
 				res.render('user/spells', {
 						title: 'BATTLE ARENA - Spells'
@@ -103,7 +103,7 @@ controller.create = function(req, res) {
 			if (error || user_data) {
 				console.error(error);
 				req.flash('error', 'This username is not availabe.');
-				res.redirect('/user/signup');
+				res.redirect('/signup');
 			} else {
 				User.create(req.body.user, UserModel, SpellModel, CharacterModel, function(user) {
 					authenticate(req, user.username, user.password, function(success) {
@@ -112,7 +112,7 @@ controller.create = function(req, res) {
 							res.redirect('/tchat');
 						} else {
 							req.flash('error', 'An error occurred during the authentication process, retry later.');
-							res.redirect('/user/signup');
+							res.redirect('/signup');
 						}
 					});
 				});
@@ -120,7 +120,7 @@ controller.create = function(req, res) {
 		});
 	} else {
 		req.flash('error', 'Fill the required fields...');
-		res.redirect('/user/signup');
+		res.redirect('/signup');
 	}
 };
 
@@ -134,12 +134,12 @@ controller.authenticate = function(req, res) {
 				res.redirect('/tchat');
 			} else {
 				req.flash('error', 'User not found.');
-				res.redirect('/user/login');
+				res.redirect('login');
 			}
 		});
 	} else {
 		req.flash('error', 'Fill the required fields...');
-		res.redirect('/user/login');
+		res.redirect('/login');
 	}
 };
 

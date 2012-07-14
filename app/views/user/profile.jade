@@ -1,4 +1,4 @@
-#wrapper(data-role='page', data-url='/user/profile', class='')
+#wrapper(data-role='page', data-url='/profile', class='')
 	include ../partials/header
 
 	#content(data-role='content')
@@ -10,12 +10,12 @@
 				div.avatar
 					img(src="/images/avatars/#{character.avatar}")
 					div
-						div.level 1
+						div.level= character.level
 
 				.stats
 					p
 						span= character.skill_points
-						span skill points left.
+						span skill points left
 					ul
 						li 
 							a(href='', title='Augmenter cette caractéristique', data-stat='strength', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
@@ -52,15 +52,24 @@
 						- if (i == 3)
 							span.break
 						div
-							a(href='/user/spells/#{spell._id}')
+							a(href='/spells/#{spell._id}')
 								img(src='/images/spells/#{spell.thumbnail}.png')
 
 
 script
 	$(document).ready(function() {
+		var bars = $('.bar');
+		var character = !{JSON.stringify(character)};
+		var nextLevel = "#{character.nextLevel()}";
+
+		$(bars.get(2))
+			.width(
+				(90.7 - ((nextLevel - character.experience) * 90.7 / nextLevel)) + '%'
+			);
 
 		setTimeout(function() {
-			$('.bar').width('90.7%');
+			$(bars.get(0)).width('90.7%');
+			$(bars.get(1)).width('90.7%');
 		}, 200);
 
 		var $skill_points = $('.stats p span')[0];
@@ -80,6 +89,7 @@ script
 
 			$('<div>').simpledialog2({
 				mode: 'button',
+				animate: false,
 				headerText: 'Confirmation',
 				headerClose: true,
 				buttonPrompt: '<div style="padding:10px"><p>Improve your <b>' + stat + '</b> by one point ?</p><br><p><i>' + tips[stat] + '</i></p></div>',
