@@ -46,9 +46,15 @@ controller.game = function(req, res) {
 	.populate('_characters')
 	.run(function(error, opponent) {
 		if (error || !opponent) console.error(error);
-		res.render('game/game', {
-			title: 'BATTLE ARENA',
-			opponent: opponent
+
+		SpellModel.find({}, function(error, spells) {
+			if (error) console.error(error);
+
+			res.render('game/game', {
+				title: 'BATTLE ARENA',
+				opponent: opponent,
+				all_spells: spells
+			});
 		});
 	});
 };

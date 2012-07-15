@@ -52,7 +52,6 @@ controller.profile = function(req, res) {
 
 // GET
 controller.spells = function(req, res) {
-	console.log(req.params.id);
 	SpellModel
 		.find(function(error, s) {
 			if (error) console.log(error);
@@ -167,15 +166,17 @@ function authenticate(req, username, password, callback) {
 			CharacterModel.findOne({
 				_id: user_data.character
 			})
-			.populate('_spells')
+			.populate('_spells_equipped')
 			.run(function(error, character_data) {
 				if (error) {
 					console.error(error);
 					return callback(false);
 				}
+
 				req.session.user = user_data;
+				req.session.spells = character_data._spells_equipped;
+				// character_data._spells_equipped.splice(0, character_data._spells_equipped.length + 1);
 				req.session.character = character_data;
-				req.session.spells = character_data._spells;
 				return callback(true);
 			});
 		}

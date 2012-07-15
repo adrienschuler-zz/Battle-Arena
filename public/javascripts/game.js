@@ -1,10 +1,12 @@
 var Game = Class.extend({
-	init: function(player) {	
+	init: function(player, spells) {	
 		this.opponent = null;
 		this.player = player;
-		this.spells = player._spells;
+		this.spells = spells;
 		this.player.hitpoints_left = this.player.hitpoints;
 		this.player.manapoints_left = this.player.manapoints;
+
+		$.mobile.showPageLoadingMsg();
 
 		this.initElements();
 		this.initTemplates();
@@ -59,10 +61,14 @@ var Game = Class.extend({
 		this.socket = io.connect().of('/game')
 			
 			.on('connect', function() {
-				self.socket.emit('join', location.search, self.player);
+				var opponent = self.player;
+				console.log(opponent);
+				console.log(self.player);
+				self.socket.emit('join', location.search, opponent);
 			})
 
 			.on('joinsuccess', function(fighters) {
+				$.mobile.hidePageLoadingMsg();
 				self.opponent = fighters[0].username === self.player.username ? fighters[1] : fighters[0];
 				self.opponent.hitpoints_left = self.opponent.hitpoints;
 				self.opponent.manapoints_left = self.opponent.manapoints;
@@ -79,8 +85,10 @@ var Game = Class.extend({
 				self.play();
 			})
 
-			.on('attack', function(spell) {
-				self.attackedBarsAnimation(spell);
+			.on('attack', function(spellID) {
+				console.log('spellID = %s', spellID);
+				console.log(self.findSpellById(spellID));
+				self.attackedBarsAnimation(self.findSpellById(spellID));
 			});
 	},
 
@@ -88,7 +96,7 @@ var Game = Class.extend({
 		var self = this;
 		$('.spell').bind('click', function() {
 			if ($(this).hasClass('disabled')) return;
-			var spell = findSpellById(self.spells, $($(this)).data('spell-id'));
+			var spell = self.findSpellById($($(this)).data('spell-id'));
 			$('<div>').simpledialog2({
 				animate: false,
 				mode: 'button',
@@ -114,26 +122,16 @@ var Game = Class.extend({
 		}, 200);
 	},
 
-	// disable_spells: function(bool) {
-	// 	$('.spells').data('disabled', bool);
-	// },
-
 	wait: function(username) {
-		// this.disable_spells(true);
-		// $('<div>').simpledialog2();
-		// $('.ui-simpledialog-container').remove();
 		$.mobile.showPageLoadingMsg('a', 'Waiting for ' + username + ' turn...', true);
 		this.disableSpells(true);
-		// render(srvMsgTmpl, tchat_container);
 	},
 
 	play: function() {
 		this.disableSpells(false);
 		this.checkManaLeft();
-		// this.disable_spells(false);
 		$('.ui-simpledialog-screen').remove();
 		$.mobile.hidePageLoadingMsg();
-		// render(playTmpl, tchat_container);
 	},
 	
 	decreaseBar: function(bar, amount, total) {
@@ -151,8 +149,8 @@ var Game = Class.extend({
 	},
 
 	attackerBarsAnimation: function(spell) {
-		// this.disable_spells(true);
-		this.socket.emit('launchspell', spell);
+		// todo: send spellID ONLY
+		this.socket.emit('launchspell', spell._id);
 
 		if (spell.damage) {
 			this.render('attack', { me: true, opponent: this.opponent.username, spell: spell.name, damages: spell.damage });
@@ -279,5 +277,37 @@ var Game = Class.extend({
 			scrollTop: 99999
 		}, 200);
 	},
+
+	findSpellById: function(id) {
+		console.log(id);
+		for (var i = 0, l = spells.length - 1; i < l; i++) {
+			var spell = this.spells[i];
+			console.log(spell);
+			if (spell["_id"] === id) {
+				if (!spell.description) this.getSpellDescription(spell);
+				delete spell.is_default;
+				return spell;
+			}
+		}
+	},
+
+ getSpellDescription: function(spell) {
+		var new_desc 	= spell._description
+			, matches 	= new_desc.match(/\{((.*?))\}/g);
+		$.each(matches, function(key, match) {
+			var match = match.replace(/{|}/g, '');
+			if (spell[match]) {
+				new_desc = new_desc
+					.replace(match, spell[match])
+					.replace(/{|}/g, '');
+			}
+		});
+		spell.description = new_desc;
+		delete spell._description;
+	},
+
+	regenerateMana: function() {
+		
+	}
 
 });

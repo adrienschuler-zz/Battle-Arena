@@ -71,6 +71,27 @@ exports.initialize = ->
 		damage: 10
 		mana_cost: 10
 	,
+		name: "Scream"
+		_description: "Deal {damage} damages to your opponent. Cost {mana_cost} mana."
+		thumbnail: "scream"
+		damage: 15
+		mana_cost: 10
+		skill_points: 2
+	,
+		name: "Blast"
+		_description: "Deal {damage} damages to your opponent. Cost {mana_cost} mana."
+		thumbnail: "blast"
+		damage: 45
+		mana_cost: 35
+		skill_points: 8
+	,
+		name: "Thunder"
+		_description: "Deal {damage} damages to your opponent. Cost {mana_cost} mana."
+		thumbnail: "thunder"
+		damage: 30
+		mana_cost: 15
+		skill_points: 5
+	,
 		name: "Knifes"
 		_description: "Deal {damage} damages to your opponent. Cost {mana_cost} mana."
 		thumbnail: "knifes"

@@ -42,9 +42,13 @@ include ../templates/game
 script(src='/javascripts/game.js')
 script 
 	var player = !{JSON.stringify(character)};
+	var spells = !{JSON.stringify(all_spells)};
+	console.log(spells);
 	player.username = "#{user.username}";
 	player.hitpoints = "#{character.hitpoints()}";
 	player.manapoints = "#{character.manapoints()}";
+	delete this.player._spells_equipped;
+	delete this.player._spells_available;
 	$(function() {
-		new Game(player);
+		new Game(player, spells);
 	});

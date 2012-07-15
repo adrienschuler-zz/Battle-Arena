@@ -90,12 +90,6 @@ a:visited { color: inherit; }
 	font-family: 'Lobster Two';
 }
 
-html.no-touch div.ui-btn,
-html.no-touch input.ui-input-text {
-	width: 300px;
-	margin: 0 auto;
-}
-
 #chatroom {
 	width: 100%;
 	height: 300px;
@@ -235,13 +229,13 @@ div.spells div {
 	filter: alpha(opacity=60);
 }
 .red {
-	color: red;
+	color: #F20D0D;
 }
 .yellow {
-	color: yellow;
+	color: #E8AB30;
 }
-.brown {
-	color: brown;
+.green {
+	color: #0B8E0B;
 }
 .blue {
 	color: blue;
@@ -501,4 +495,16 @@ h2 {
 	-moz-opacity: 0.7;
 	opacity: .70;
 	filter: alpha(opacity=70);
+}
+
+@media screen and (min-width: 675px) {
+	div.ui-btn,
+	input.ui-input-text {
+		width: 300px;
+		margin: 0 auto;
+	}
+
+	#chatroom {
+		width: 80%;
+	}
 }

@@ -28,7 +28,7 @@
 						li
 							a(href='', title='Augmenter cette caractéristique', data-stat='stamina', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
 							span(data-stat='stamina')= character.stamina
-							span(class='brown') Stamina
+							span(class='green') Stamina
 						li
 							a(href='', title='Augmenter cette caractéristique', data-stat='intellect', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
 							span(data-stat='intellect')= character.intellect
@@ -58,6 +58,7 @@
 
 script
 	$(document).ready(function() {
+		console.log(!{JSON.stringify(spells)});
 		var bars = $('.bar');
 		var character = !{JSON.stringify(character)};
 		var nextLevel = "#{character.nextLevel()}";
@@ -76,10 +77,10 @@ script
 		var $life = $('.life div');
 		var $mana = $('.mana div');
 		var tips = {
-			strength: '<b>Strength</b> increase the damages you deal.',
-			agility: '<b>Agility</b> increase the chances that you begin a fight. Also.',
-			stamina: '<b>Stamina</b> increase your total hitpoints.',
-			intellect: '<b>Intellect</b> increase your total manapoints.'
+			strength: '<b class="red">Strength</b> increase the damages you deal.',
+			agility: '<b class="yellow">Agility</b> increase the chances that you begin a fight.',
+			stamina: '<b class="green">Stamina</b> increase your total hitpoints.',
+			intellect: '<b class="blue">Intellect</b> increase your total manapoints.'
 		};
 
 		$(document).delegate('.confirm-popup', 'click', function() {
@@ -88,11 +89,9 @@ script
 			var $stat = $('span[data-stat=' + stat + ']');
 
 			$('<div>').simpledialog2({
-				mode: 'button',
-				animate: false,
+				mode: 'button', animate: false, headerClose: true,
 				headerText: 'Confirmation',
-				headerClose: true,
-				buttonPrompt: '<div style="padding:10px"><p>Improve your <b>' + stat + '</b> by one point ?</p><br><p><i>' + tips[stat] + '</i></p></div>',
+				buttonPrompt: '<div style="padding:10px"><center><p>Improve your <b>' + stat + '</b> by one point ?</p><br><p><i>' + tips[stat] + '</i></p></center></div>',
 				buttons : {
 					'OK': {
 						click: function () { 
@@ -113,11 +112,7 @@ script
 							});
 						}
 					},
-					'Cancel': { 
-						icon: "delete", 
-						theme: "c",
-						click: function() {}
-					}
+					'Cancel': { icon: "delete", theme: "c", click: function() {} }
 				}
 			});
 		});

@@ -89,3 +89,79 @@ controller.gainExperience = function(req, res) {
 			res.json(response);
 	});
 };
+
+// POST
+controller.switchSpell = function(req, res) {
+	var from = req.body.from;
+	var to = req.body.to;
+	
+	switchSpell(req, res, from, to, function() {
+		res.json(true);
+	});
+};
+
+// POST
+controller.learnSpell = function(req, res) {
+	var from = req.body.from;
+	var to = req.body.to;
+	var skill_points = req.body.skill_points;
+
+	// TODO character.skill_points --
+
+	switchSpell(req, res, from, to, function() { res.json(true); }, skill_points);
+	
+};
+
+
+function switchSpell(req, res, from, to, callback, skill_points) {
+	// ugly 2 updates queries, mongodb issue, can't push/pull at the same time...
+	// TODO: non blocking IO
+	var update1 = {
+		$pull: {
+			_spells_equipped: from,
+			_spells_available: to
+		}
+	};
+	var update2 = {
+		$push: {
+			_spells_available: from,
+			_spells_equipped: to
+		}
+	};
+
+	if (skill_points) {
+		console.log(skill_points);
+		update1.$inc = {
+			skill_points: -skill_points
+		};
+	}
+
+	console.log(update1);
+
+	CharacterModel.update({ _id: req.session.character._id }, update1, null, function(error, success) {
+		if (error) console.error(error);
+
+		CharacterModel.update({ _id: req.session.character._id }, update2, null, function(error, success) {
+			if (error) console.error(error);
+
+			SpellModel.findById(to, function(error, spell) {
+				if (error) console.error(error);
+
+				replaceByID(req.session.character._spells_equipped, from, spell);
+				replaceByID(req.session.spells, from, spell);
+
+				if (skill_points) req.session.character.skill_points -= skill_points;
+				req.session.character._spells_available.push(from);
+				callback();
+			});
+		});
+	});
+}
+
+function replaceByID(array, id, value) {
+	$.each(array, function(s, key) {
+		if (s._id === id) {
+			array[key] = value;
+		}
+	});
+}

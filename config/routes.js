@@ -38,4 +38,6 @@ module.exports = function(app) {
 	// Character
 	app.post('/character/upstat/:stat?', [checkAuthentication], character.upstat);
 	app.post('/character/gainExperience', [checkAuthentication], character.gainExperience);
+	app.post('/character/switchSpell', [checkAuthentication], character.switchSpell);
+	app.post('/character/learnSpell', [checkAuthentication], character.learnSpell);
 };

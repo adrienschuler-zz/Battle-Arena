@@ -12,13 +12,13 @@ var Spell = module.exports = new Schema({
 	, skill_points		: { type: Number }
 	, damage					: { type: Number }
 	, heal						: { type: Number }
-	, accuracy				: { type: Number, default: 5 }
+	// , accuracy				: { type: Number, default: 5 }
 	,	round_of_effect	: { type: Number, default: 0 }
 	, round_duration 	: { type: Number, default: 0 }
 	, mana_cost 			: { type: Number, default: 0 }
 	// , effects 				: [{}]
-	, created 				: { type: Date, default: Date.now }
-	, updated 				: { type: Date, default: Date.now }
+	// , created 				: { type: Date, default: Date.now }
+	// , updated 				: { type: Date, default: Date.now }
 });
 
 

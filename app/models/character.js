@@ -14,18 +14,20 @@ var Character = module.exports = new Schema({
 	, agility 					: { type: Number, default: 10 }
 	, stamina						: { type: Number, default: 10 }
 	, intellect					: { type: Number, default: 10 }
-	, accuracy					: { type: Number, default: 10 }
-	, armor							: { type: Number, default: 10 }
-	,	_spells 					: [{ type: Schema.ObjectId, ref: 'Spell' }]
+	// , accuracy					: { type: Number, default: 10 }
+	// , armor							: { type: Number, default: 10 }
+	// ,	_spells 					: [{ type: Schema.ObjectId, ref: 'Spell' }]
 	,	_spells_equipped	: [{ type: Schema.ObjectId, ref: 'Spell' }]
 	,	_spells_available	: [{ type: Schema.ObjectId, ref: 'Spell' }]
-	, created 					: { type: Date, default: Date.now }
-	, updated 					: { type: Date, default: Date.now } 
+	// , created 					: { type: Date, default: Date.now }
+	// , updated 					: { type: Date, default: Date.now } 
 });
 
 
 Character.virtual('spells')
-	.get(function() { return this._spells; });
+	.get(function() { 
+		return this._spells_equipped;
+	});
 	
 
 Character.pre('init', function(next) {
