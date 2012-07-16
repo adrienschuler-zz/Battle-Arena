@@ -309,8 +309,11 @@ h2 {
 	height: 65px;
 	clear: both;
 }
+#game #opponent div.avatar {
+	margin-left: 20px;
+}
 #game div.bars {
-	width: 40%;
+	width: 35%;
 	margin-right: 5%;
 }
 #game div.spells {

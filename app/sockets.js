@@ -102,8 +102,6 @@ module.exports = function(_app, _io, sessionStore) {
 					
 				fighters.push(available[0]);
 
-console.log(fighters);
-
 				this.emit('opponentsavailable', available[0]);
 				io.of('/tchat')
 					.sockets[available[0].socketID]

@@ -40,4 +40,5 @@ module.exports = function(app) {
 	app.post('/character/gainExperience', [checkAuthentication], character.gainExperience);
 	app.post('/character/switchSpell', [checkAuthentication], character.switchSpell);
 	app.post('/character/learnSpell', [checkAuthentication], character.learnSpell);
+	app.post('/character/loose', [checkAuthentication], character.loose);
 };

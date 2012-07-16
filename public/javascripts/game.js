@@ -239,6 +239,9 @@
 
 		loose: function() {
 			var self = this;
+
+			$.ajax({ url: '/character/loose/', type: 'POST' });
+
 			$('<div>').simpledialog2({
 				animate: false,
 				mode: 'button',
@@ -292,7 +295,7 @@
 			}
 		},
 
-	 getSpellDescription: function(spell) {
+		getSpellDescription: function(spell) {
 			var new_desc 	= spell._description
 				, matches 	= new_desc.match(/\{((.*?))\}/g);
 			$.each(matches, function(key, match) {

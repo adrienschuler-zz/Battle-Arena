@@ -10,6 +10,15 @@ style
 		min-height: 0;
 		padding-left: 70px;
 	}
+	.ui-li-thumb {
+		margin-left: -60px;
+	}
+	.ui-li-heading {
+		margin-left: -50px;
+		}
+	.ui-li-desc {
+		margin-left: -50px;
+	}
 
 #wrapper(data-role='page', data-url='/spells', class='')
 	include ../partials/header
@@ -24,14 +33,14 @@ style
 					img(src="/images/spells/#{spell.thumbnail}.png")
 					p= spell.description
 
-		ul(data-role='listview', data-inset='true', class='ui-listview ui-listview-inset ui-corner-all ui-shadow')
+		ul(data-role='listview', data-inset='true', class='ui-listview')
 			- each spell in all_spells
 				- if (spell._id != current_id)
-					li(data-corners='false', data-shadow='false', data-iconshadow='true', data-wrapperels='div', data-icon='false', data-iconpos='right', data-theme='c', class='ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-li-has-thumb ui-corner-top ui-btn-up-c')
-						div(class='ui-btn-inner ui-li ui-li-has-alt ui-corner-top')
+					li(data-corners='false', data-theme='c', class='ui-btn ui-li')
+						div(class='ui-btn-inner ui-li')
 							div(class='ui-btn-text')
 								a(href='#', class='ui-link-inherit spell', title='Switch with this spell', data-spell-id='#{spell.id}', data-requirement='#{spell.requirement}', data-cost='#{spell.skill_points}', data-name='#{spell.name}')
-									img(src='/images/spells/#{spell.thumbnail}.png', class='ui-li-thumb ui-corner-tl', width='60', height='60')
+									img(src='/images/spells/#{spell.thumbnail}.png', width='60', height='60')
 									h3(class='ui-li-heading')= spell.name
 									p(class='ui-li-desc')= spell.description
 						

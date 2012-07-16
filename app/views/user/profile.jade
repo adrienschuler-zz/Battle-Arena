@@ -1,3 +1,8 @@
+style
+	div.bars {
+		width: 35%;
+	}
+
 #wrapper(data-role='page', data-url='/profile', class='')
 	include ../partials/header
 
@@ -5,6 +10,11 @@
 		h2= user.username
 
 		#profile
+			div.row
+				h4 Victories: #{character.wins || 0} 
+				h4 Defeats: #{character.looses || 0}
+				br
+
 			div.row
 
 				div.avatar
@@ -58,7 +68,7 @@
 
 script
 	$(document).ready(function() {
-		console.log(!{JSON.stringify(spells)});
+		if ($('html.mobile-device').length) { $('.break').remove(); }
 		var bars = $('.bar');
 		var character = !{JSON.stringify(character)};
 		var nextLevel = "#{character.nextLevel()}";

@@ -75,13 +75,22 @@ controller.rankings = function(req, res) {
 	UserModel.find({
 		is_active: 1
 	})
-	.populate('_characters')
+	.populate(
+		'_characters', 
+		['experience', 'level', 'avatar'],
+		null,
+		{ sort: [['experience', -1]] }
+	)
 	.run(function(error, users) {
 		if (error) console.error(error);
+
+		console.log(users);
+
 		$.each(users, function(user) {
 			datas.push({
 					username: user.username
 				, experience: user.character.experience
+				, level: user.character.level || 1
 				, avatar: user.character.avatar
 			});
 		});

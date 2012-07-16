@@ -59,7 +59,7 @@ controller.gainExperience = function(req, res) {
 	var new_xp = character.experience + xp;
 	var levelup = false;
 	var nextLevel = c.nextLevel(character.level);
-	var update = {};
+	var update = { $inc: { wins: 1 } };
 	var response = {
 		gain: xp,
 		levelup: levelup
@@ -112,6 +112,15 @@ controller.learnSpell = function(req, res) {
 	
 };
 
+controller.loose = function(req, res) {
+	console.log('LOOSE');
+	var update = { $inc: { looses: 1 } };
+	CharacterModel.update({ _id: req.session.character._id }, update, null, function(error, success) {
+		if (error) console.error(error);
+		console.log('CharacterModel.update');
+		console.log(success);
+	});
+};
 
 function switchSpell(req, res, from, to, callback, skill_points) {
 	// ugly 2 updates queries, mongodb issue, can't push/pull at the same time...
@@ -135,9 +144,7 @@ function switchSpell(req, res, from, to, callback, skill_points) {
 			skill_points: -skill_points
 		};
 	}
-
-	console.log(update1);
-
+	
 	CharacterModel.update({ _id: req.session.character._id }, update1, null, function(error, success) {
 		if (error) console.error(error);
 
