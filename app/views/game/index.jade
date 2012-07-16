@@ -14,12 +14,8 @@
 			.right
 				div(class='tchat-side ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
 
+	include ../templates/tchat
 
-include ../templates/tchat
-
-script(src='/javascripts/tchat.js')
 script
 	var username = "#{user.username}";
-	$(function() {
-		new Tchat(username);
-	});
+	$(function() { new BA.Tchat(username); });

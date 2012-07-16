@@ -38,14 +38,10 @@ style
 script
 	$(function() {
 		var character = !{JSON.stringify(character)};
-		console.log(character);
 		var equipped = $.map(character._spells_equipped, function(o) { return o._id; });
 		var available = $.map(character._spells_available, function(o) { return o; });
 		var current_spell = $('#content div h3').get(0).innerHTML
 		var current_spell_id = !{JSON.stringify(current_id)};
-
-		console.log(equipped);
-		console.log(available);
 
 		$('.spell').each(function(key, value) {
 			var $this = $(this);
@@ -53,7 +49,6 @@ script
 			var id = $this.data('spell-id');
 			var requirement = $(this).data('requirement');
 			var cost = $this.data('cost');
-			console.log(id);
 
 			if ($.inArray(id, equipped) !== -1) {
 				found = true;
@@ -63,13 +58,7 @@ script
 			}
 			if ($.inArray(id, available) !== -1) {
 				found = true;
-				console.log(value);
-				console.log($this);
 				$this.data('available', true);
-				// you have afforded this spell
-
-				// todo: switch
-
 				return;
 			}
 
@@ -97,12 +86,11 @@ script
 			var name = $this.data('name');
 			var cost = $this.data('cost');
 			var id = $this.data('spell-id');
-			console.log(id);
 
 			// set img
 
 			if (available) {
-				var content = '<div style="padding:10px"><center><p>Switch ' + current_spell + ' with ' + name + ' ?</p></center></div>';
+				var content = '<div style="padding:10px"><center><p>Switch <b>' + current_spell + '</b> with <b>' + name + '</b> ?</p><p><img src="/images/spells/'+current_spell.toLowerCase()+'.png"></p><p><=></p><p><img src="/images/spells/'+name.toLowerCase()+'.png"></p></center></div>';
 			}	else {
 				var content = '<div style="padding:10px"><center><p>Learn <b>' + name + '</b> for ' + cost + ' skill points ?</p></center></div>';
 			}		
@@ -125,7 +113,6 @@ script
 				}
 			});
 
-
 			return false;
 		});
 
@@ -137,7 +124,6 @@ script
 			type: 'POST',
 			data: { from: from, to: to, skill_points: skill_points }
 		}).done(function(success) {
-			console.log(success);
 			$(document).attr('location', '/profile');
 		});
 	}
@@ -148,7 +134,6 @@ script
 			type: 'POST',
 			data: { from: from, to: to }
 		}).done(function(success) {
-			console.log(success);
 			$(document).attr('location', '/profile');
 		});
 	}

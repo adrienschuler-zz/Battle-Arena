@@ -11,60 +11,40 @@ module.exports = function(grunt) {
 				'* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;' +
 				' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */'
 		},
-		lint: {
-			files: [
-				'grunt.js', 
-				'lib/**/*.js', 
-				'tests/**/*.js',
-				'config/**/*.js',
-				'app/**/*.js'
-			]
-		},
 		concat: {
 			dist: {
-				src: ['<banner:meta.banner>', '<file_strip_banner:lib/<%= pkg.name %>.js>'],
-				dest: 'dist/<%= pkg.name %>.js'
+				src: ['<banner:meta.banner>', '<file_strip_banner:lib/<%= pkg.name %>.js>',
+					'public/javascripts/jquery-1.7.2.min.js',
+					'public/javascripts/jquery.mobile-1.1.0.min.js',
+					'public/javascripts/jquery.tmpl.min.js',
+					'public/javascripts/jquery.mobile.simpledialog2.min.js',
+					'public/javascripts/underscore.min.js',
+					'public/javascripts/socket.io.min.js',
+					'public/javascripts/inheritance.js',
+					'public/javascripts/client.js',
+					'public/javascripts/tchat.js',
+					'public/javascripts/game.js',
+				],
+				dest: 'public/javascripts/<%= pkg.name %>.js'
 			}
 		},
 		min: {
 			dist: {
 				src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-				dest: 'dist/<%= pkg.name %>.min.js'
+				dest: 'public/javascripts/<%= pkg.name %>.min.js',
+				separator: ';'
 			}
 		},
-		watch: {
-			files: '<config:lint.files>',
-			tasks: 'lint qunit'
-		},
-		jshint: {
-			options: {
-				curly: false,
-				eqeqeq: false,
-				immed: false,
-				latedef: false,
-				newcap: false,
-				noarg: false,
-				sub: false,
-				undef: false,
-				boss: false,
-				eqnull: false,
-				browser: false,
-				laxcomma: true
-			},
-			globals: {
-				jQuery: true
-			}
-		},
-		uglify: {},
-		mocha: {
-			index: ['specs/index.html']
-		},
+		uglify: {
+    	// mangle: {toplevel: true},
+    },
+		watch: {},
 	});
 
 	// mocha module
-	grunt.loadNpmTasks('grunt-mocha');
+	// grunt.loadNpmTasks('grunt-mocha');
 	
 	// Default task.
-	grunt.registerTask('default', 'mocha concat min');
+	grunt.registerTask('default', 'concat min');
 
 };

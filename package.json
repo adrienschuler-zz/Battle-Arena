@@ -1,6 +1,10 @@
 {
 		"name": "battle-arena"
-	, "version": "0.0.1"
+	, "version": "0.1.0"
+	, "author": {
+		"name": "Adrien Schuler"
+	}
+	, "homepage": "http://esgi-battle-arena.herokuapp.com"
 	, "private": true
 	, "engines": {
 			"node": "0.6.18"

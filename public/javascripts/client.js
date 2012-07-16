@@ -1,4 +1,3 @@
-
 function now() {
 	var d = new Date(), 
 			h = d.getHours(), 
@@ -12,6 +11,12 @@ $(function() {
 	// $(window).bind('orientationchange', function(e) {
 	// 	console.log('orientation: ' + e.orientation);
 	// });
+
+	if (/Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent)) {
+		$('html').addClass('mobile-device');
+	} else {
+		$('html').addClass('desktop-device');
+	}
 
 	$.extend($.mobile, { // overriding jQuery Mobile defaults
 		ajaxEnabled: false

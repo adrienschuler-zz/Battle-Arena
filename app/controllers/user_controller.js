@@ -133,7 +133,7 @@ controller.authenticate = function(req, res) {
 				res.redirect('/tchat');
 			} else {
 				req.flash('error', 'User not found.');
-				res.redirect('login');
+				res.redirect('/login');
 			}
 		});
 	} else {
