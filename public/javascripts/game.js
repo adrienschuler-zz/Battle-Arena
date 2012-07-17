@@ -144,62 +144,6 @@
 			}
 		},
 
-		attackerBarsAnimation: function(spell) {
-			var self = this;
-			this.socket.emit('launchspell', self.id, spell._id);
-
-			if (spell.damage) {
-				this.render('attack', { me: true, opponent: this.opponent.username, spell: spell.name, damages: spell.damage });
-				this.opponent.hitpoints_left -= spell.damage;
-				this.player.manapoints_left -= spell.mana_cost;
-				this.animateBar({bar: 'opponent_life_bar', amount: spell.damage, total: this.opponent.hitpoints, operator: 'dec'});
-				this.animateBar({bar: 'mana_bar', amount: spell.mana_cost, total: this.player.manapoints, operator: 'dec'});
-				
-				if (this.opponent.hitpoints_left <= 0) {
-					return this.gainExperience();
-				}
-			}
-
-			if (spell.heal) {
-				this.render('heal', { me: true, spell: spell.name, heal: spell.heal });
-				this.player.hitpoints_left += spell.heal;
-				this.player.manapoints_left -= spell.mana_cost;
-				this.animateBar({bar: 'life_bar', amount: spell.heal, total: this.player.hitpoints, operator: 'inc'});
-				this.animateBar({bar: 'mana_bar', amount: spell.mana_cost, total: this.player.manapoints, operator: 'dec'});
-			}
-
-			this.wait(this.opponent.username);
-			this.socket.emit('wait');
-		},
-
-		attackedBarsAnimation: function(spell) {
-			var self = this;
-			$.mobile.hidePageLoadingMsg();
-
-			if (spell.damage) {
-				this.render('attack', { me: false, opponent: this.opponent.username, spell: spell.name, damages: spell.damage });
-				this.player.hitpoints_left -= spell.damage;
-				this.opponent.manapoints_left -= spell.mana_cost;
-				this.animateBar({bar: 'life_bar', amount: spell.damage, total: this.player.hitpoints, operator: 'dec'});
-				this.animateBar({bar: 'opponent_mana_bar', amount: spell.mana_cost, total: this.opponent.manapoints, operator: 'dec'});
-
-				if (this.player.hitpoints_left <= 0) {
-					return this.loose();
-				}
-			}
-
-			if (spell.heal) {
-				this.render('heal', { me: false, spell: spell.name, heal: spell.heal, opponent: this.opponent.username });
-				this.opponent.hitpoints_left += spell.heal;
-				this.opponent.manapoints_left -= spell.mana_cost;
-				this.animateBar({bar: 'opponent_life_bar', amount: spell.heal, total: this.opponent.hitpoints, operator: 'inc'});
-				this.animateBar({bar: 'opponent_mana_bar', amount: spell.mana_cost, total: this.opponent.manapoints, operator: 'dec'});
-			}
-
-			this.socket.emit('play');
-			this.play();
-		},
-
 		barsAnimations: function(spell, attacker) {
 			if (attacker) {
 				this.socket.emit('launchspell', this.id, spell._id);
