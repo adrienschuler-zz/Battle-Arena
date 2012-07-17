@@ -141,23 +141,29 @@ console.log(fighters);
 			var hs = socket.handshake,	
 					session = hs.session;
 
-			socket.on('join', function(room, fighter) {
-				if (!rooms[room] || rooms[room].fighters.length > 1) {
-					rooms[room] = {};
-					rooms[room].fighters = [];
+			socket.on('join', function(id, fighter) {
+				if (!rooms[id] || rooms[id].fighters.length > 1) {
+					rooms[id] = {};
+					rooms[id].fighters = [];
 				}
+				var fighters = rooms[id].fighters;
 				fighter.socketID = socket.id;
-				rooms[room].fighters.push(fighter);
+				fighters.push(fighter);
 
-				if (rooms[room].fighters.length === 2) {
-					game.emit('joinsuccess', rooms[room].fighters);
+				if (fighters.length === 2) {
+
+					$.each(fighters, function(f) {
+						io.of('/game')
+						.sockets[f.socketID]
+						.emit('joinsuccess', fighters);
+					});
 
 					io.of('/game')
-						.sockets[rooms[room].fighters[0].socketID]
+						.sockets[fighters[0].socketID]
 						.emit('play');
 
 					io.of('/game')
-						.sockets[rooms[room].fighters[1].socketID]
+						.sockets[fighters[1].socketID]
 						.emit('wait');
 
 					// $.each(fighters, function(f) {
@@ -171,17 +177,24 @@ console.log(fighters);
 				}
 			});
 
-			socket.on('launchspell', function(spell) {
-				console.log(spell);
-				socket.broadcast.emit('attack', spell);
+			socket.on('launchspell', function(id, spell) {
+				var fighters = rooms[id].fighters;
+				var opponentSocketID = fighters[0].socketID === socket.id ? fighters[1].socketID : fighters[0].socketID;
+				io.of('/game')
+					.sockets[opponentSocketID]
+					.emit('attack', spell);
 			});
 
 			socket.on('play', function() {
-				socket.emit('play');
+				io.of('/game')
+					.sockets[socket.id]
+					.emit('play');
 			});
 
 			socket.on('wait', function() {
-				socket.emit('wait');
+				io.of('/game')
+					.sockets[socket.id]
+					.emit('wait');
 			});
 	});
 };

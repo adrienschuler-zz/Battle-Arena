@@ -2,6 +2,7 @@
 	BA.Game = Class.extend({
 		init: function(player, spells) {	
 			this.opponent = null;
+			this.id = location.search;
 			this.player = player;
 			this.spells = spells;
 			this.player.hitpoints_left = this.player.hitpoints;
@@ -65,7 +66,7 @@
 					var opponent = self.player;
 					console.log(opponent);
 					console.log(self.player);
-					self.socket.emit('join', location.search, opponent);
+					self.socket.emit('join', self.id, opponent);
 				})
 
 				.on('joinsuccess', function(fighters) {
@@ -151,8 +152,9 @@
 		},
 
 		attackerBarsAnimation: function(spell) {
+			var self = this;
 			// todo: send spellID ONLY
-			this.socket.emit('launchspell', spell._id);
+			this.socket.emit('launchspell', self.id, spell._id);
 
 			if (spell.damage) {
 				this.render('attack', { me: true, opponent: this.opponent.username, spell: spell.name, damages: spell.damage });
@@ -179,6 +181,7 @@
 		},
 
 		attackedBarsAnimation: function(spell) {
+			var self = this;
 			// $.mobile.sdCurrentDialog.close();
 			$.mobile.hidePageLoadingMsg();
 
