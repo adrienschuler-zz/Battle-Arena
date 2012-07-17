@@ -12,6 +12,7 @@
 	text-align: center;
 }
 .right { float: right; }
+.left { float: left; }
 
 .ui-header .ui-btn {
 	font-size: 20px;

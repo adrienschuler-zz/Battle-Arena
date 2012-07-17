@@ -49,12 +49,14 @@ style
 				.bars
 					div(class='progressbar')
 						div(class='bar')
+							div(class='life', style='text-align:center;color:white;')= character.hitpoints()
 							span
 					div(class='progressbar')
 						div(class='bar color4')
+							div(class='mana', style='text-align:center;color:white;')= character.manapoints()
 							span
 					div(class='progressbar')
-						div(class='bar color2')
+						div(class='bar color2', style='text-align:center;color:white;')= character.experience
 							span
 
 				.spells
@@ -84,8 +86,8 @@ script
 		}, 200);
 
 		var $skill_points = $('.stats p span')[0];
-		var $life = $('.life div');
-		var $mana = $('.mana div');
+		var $life = $('.life');
+		var $mana = $('.mana');
 		var tips = {
 			strength: '<b class="red">Strength</b> increase the damages you deal.',
 			agility: '<b class="yellow">Agility</b> increase the chances that you begin a fight.',

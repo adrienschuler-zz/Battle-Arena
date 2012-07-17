@@ -59,7 +59,8 @@ controller.gainExperience = function(req, res) {
 	var new_xp = character.experience + xp;
 	var levelup = false;
 	var nextLevel = c.nextLevel(character.level);
-	var update = { $inc: { wins: 1 } };
+	var update = { $inc: { wins: 1, total_experience: xp } };
+	character.wins += 1;
 	var response = {
 		gain: xp,
 		levelup: levelup
@@ -92,33 +93,23 @@ controller.gainExperience = function(req, res) {
 
 // POST
 controller.switchSpell = function(req, res) {
-	var from = req.body.from;
-	var to = req.body.to;
-	
-	switchSpell(req, res, from, to, function() {
+	switchSpell(req, res, req.body.from, req.body.to, function() {
 		res.json(true);
 	});
 };
 
 // POST
 controller.learnSpell = function(req, res) {
-	var from = req.body.from;
-	var to = req.body.to;
-	var skill_points = req.body.skill_points;
-
-	// TODO character.skill_points --
-
-	switchSpell(req, res, from, to, function() { res.json(true); }, skill_points);
-	
+	switchSpell(req, res, req.body.from, req.body.to, function() { res.json(true); }, req.body.skill_points);
 };
 
+// POST
 controller.loose = function(req, res) {
-	console.log('LOOSE');
+	req.session.character.looses += 1;
 	var update = { $inc: { looses: 1 } };
 	CharacterModel.update({ _id: req.session.character._id }, update, null, function(error, success) {
 		if (error) console.error(error);
-		console.log('CharacterModel.update');
-		console.log(success);
+		res.json(true);
 	});
 };
 
@@ -139,7 +130,6 @@ function switchSpell(req, res, from, to, callback, skill_points) {
 	};
 
 	if (skill_points) {
-		console.log(skill_points);
 		update1.$inc = {
 			skill_points: -skill_points
 		};

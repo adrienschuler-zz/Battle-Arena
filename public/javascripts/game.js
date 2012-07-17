@@ -64,8 +64,6 @@
 				
 				.on('connect', function() {
 					var opponent = self.player;
-					console.log(opponent);
-					console.log(self.player);
 					self.socket.emit('join', self.id, opponent);
 				})
 
@@ -79,7 +77,7 @@
 
 				.on('wait', function() {
 					self.render('wait', { username: self.opponent.username });
-					self.wait(self.opponent.username);
+					self.wait();
 				})
 
 				.on('play', function() {
@@ -88,9 +86,8 @@
 				})
 
 				.on('attack', function(spellID) {
-					console.log('spellID = %s', spellID);
-					console.log(self.findSpellById(spellID));
-					self.attackedBarsAnimation(self.findSpellById(spellID));
+					// self.attackedBarsAnimation(self.findSpellById(spellID));
+					self.barsAnimations(self.findSpellById(spellID), false);
 				});
 		},
 
@@ -107,7 +104,8 @@
 					buttons : {
 						'Launch !': {
 							click: function() {
-								self.attackerBarsAnimation(spell);
+								// self.attackerBarsAnimation(spell);
+								self.barsAnimations(spell, true);
 								self.checkManaLeft();
 							}
 						},
@@ -125,8 +123,8 @@
 			}, 200);
 		},
 
-		wait: function(username) {
-			$.mobile.showPageLoadingMsg('a', 'Waiting for ' + username + ' turn...', true);
+		wait: function() {
+			$.mobile.showPageLoadingMsg('a', 'Waiting for ' + this.opponent.username + ' turn...', true);
 			this.disableSpells(true);
 		},
 
@@ -137,31 +135,25 @@
 			$.mobile.hidePageLoadingMsg();
 		},
 		
-		decreaseBar: function(bar, amount, total) {
-			$(this.elements[bar])
-				.width(
-					(parseFloat(this.elements[bar].style.width) - (amount * 100 / total)) + '%'
-				);
-		},
-
-		increaseBar: function(bar, amount, total) {
-			$(this.elements[bar])
-				.width(
-					(parseFloat(this.elements[bar].style.width) + (amount * 100 / total)) + '%'
-				);
+		animateBar: function(options) {
+			var bar = this.elements[options.bar];
+			if (options.operator === 'inc') {
+				$(bar).width((parseFloat(bar.style.width) + (options.amount * 100 / options.total)) + '%');
+			} else {
+				$(bar).width((parseFloat(bar.style.width) - (options.amount * 100 / options.total)) + '%');
+			}
 		},
 
 		attackerBarsAnimation: function(spell) {
 			var self = this;
-			// todo: send spellID ONLY
 			this.socket.emit('launchspell', self.id, spell._id);
 
 			if (spell.damage) {
 				this.render('attack', { me: true, opponent: this.opponent.username, spell: spell.name, damages: spell.damage });
 				this.opponent.hitpoints_left -= spell.damage;
 				this.player.manapoints_left -= spell.mana_cost;
-				this.decreaseBar('opponent_life_bar', spell.damage, this.opponent.hitpoints);
-				this.decreaseBar('mana_bar', spell.mana_cost, this.player.manapoints);
+				this.animateBar({bar: 'opponent_life_bar', amount: spell.damage, total: this.opponent.hitpoints, operator: 'dec'});
+				this.animateBar({bar: 'mana_bar', amount: spell.mana_cost, total: this.player.manapoints, operator: 'dec'});
 				
 				if (this.opponent.hitpoints_left <= 0) {
 					return this.gainExperience();
@@ -172,8 +164,8 @@
 				this.render('heal', { me: true, spell: spell.name, heal: spell.heal });
 				this.player.hitpoints_left += spell.heal;
 				this.player.manapoints_left -= spell.mana_cost;
-				this.increaseBar('life_bar', spell.heal, this.player.hitpoints);
-				this.decreaseBar('mana_bar', spell.mana_cost, this.player.manapoints);
+				this.animateBar({bar: 'life_bar', amount: spell.heal, total: this.player.hitpoints, operator: 'inc'});
+				this.animateBar({bar: 'mana_bar', amount: spell.mana_cost, total: this.player.manapoints, operator: 'dec'});
 			}
 
 			this.wait(this.opponent.username);
@@ -182,15 +174,14 @@
 
 		attackedBarsAnimation: function(spell) {
 			var self = this;
-			// $.mobile.sdCurrentDialog.close();
 			$.mobile.hidePageLoadingMsg();
 
 			if (spell.damage) {
 				this.render('attack', { me: false, opponent: this.opponent.username, spell: spell.name, damages: spell.damage });
 				this.player.hitpoints_left -= spell.damage;
 				this.opponent.manapoints_left -= spell.mana_cost;
-				this.decreaseBar('life_bar', spell.damage, this.player.hitpoints);
-				this.decreaseBar('opponent_mana_bar', spell.mana_cost, this.opponent.manapoints);
+				this.animateBar({bar: 'life_bar', amount: spell.damage, total: this.player.hitpoints, operator: 'dec'});
+				this.animateBar({bar: 'opponent_mana_bar', amount: spell.mana_cost, total: this.opponent.manapoints, operator: 'dec'});
 
 				if (this.player.hitpoints_left <= 0) {
 					return this.loose();
@@ -201,12 +192,90 @@
 				this.render('heal', { me: false, spell: spell.name, heal: spell.heal, opponent: this.opponent.username });
 				this.opponent.hitpoints_left += spell.heal;
 				this.opponent.manapoints_left -= spell.mana_cost;
-				this.increaseBar('opponent_life_bar', spell.heal, this.opponent.hitpoints);
-				this.decreaseBar('opponent_mana_bar', spell.mana_cost, this.opponent.manapoints);
+				this.animateBar({bar: 'opponent_life_bar', amount: spell.heal, total: this.opponent.hitpoints, operator: 'inc'});
+				this.animateBar({bar: 'opponent_mana_bar', amount: spell.mana_cost, total: this.opponent.manapoints, operator: 'dec'});
 			}
 
 			this.socket.emit('play');
 			this.play();
+		},
+
+		barsAnimations: function(spell, attacker) {
+			if (attacker) {
+				this.socket.emit('launchspell', this.id, spell._id);
+			} else {
+				$.mobile.hidePageLoadingMsg();
+			}
+
+			if (spell.damage) {
+				this.render('attack', { me: attacker ? true : false, opponent: this.opponent.username, spell: spell.name, damages: spell.damage });
+
+				if (attacker) {
+					this.opponent.hitpoints_left -= spell.damage;
+					this.player.manapoints_left -= spell.mana_cost;
+				} else {
+					this.player.hitpoints_left -= spell.damage;
+					this.opponent.manapoints_left -= spell.mana_cost;
+				}
+
+				this.animateBar({
+					bar: attacker ? 'opponent_life_bar' : 'life_bar', 
+					total: attacker ? this.opponent.hitpoints : this.player.hitpoints, 
+					amount: spell.damage, 
+					operator: 'dec'
+				});
+
+				this.animateBar({
+					bar: attacker ? 'mana_bar' : 'opponent_mana_bar', 
+					total: attacker ? this.player.manapoints : this.opponent.manapoints, 
+					amount: spell.mana_cost, 
+					operator: 'dec'
+				});
+
+				if (attacker) {
+					if (this.opponent.hitpoints_left <= 0) {
+						return this.gainExperience();
+					}
+				} else {
+					if (this.player.hitpoints_left <= 0) {
+						return this.loose();
+					}
+				}
+			}
+
+			if (spell.heal) {
+				this.render('heal', { me: attacker ? true : false, spell: spell.name, heal: spell.heal, opponent: this.opponent.username });
+
+				if (attacker) {
+					this.player.hitpoints_left += spell.heal;
+					this.player.manapoints_left -= spell.mana_cost;
+				} else {
+					this.opponent.hitpoints_left += spell.heal;
+					this.opponent.manapoints_left -= spell.mana_cost;
+				}
+
+				this.animateBar({
+					bar: attacker ? 'life_bar' : 'opponent_life_bar', 
+					total: attacker ? this.player.hitpoints : this.opponent.hitpoints, 
+					amount: spell.heal, 
+					operator: 'inc'
+				});
+
+				this.animateBar({
+					bar: attacker ? 'mana_bar' : 'opponent_mana_bar', 
+					total: attacker ? this.player.manapoints : this.opponent.manapoints, 
+					amount: spell.mana_cost, 
+					operator: 'dec'
+				});
+			}
+
+			if (attacker) {
+				this.wait(this.opponent.username);
+				this.socket.emit('wait');
+			} else {
+				this.socket.emit('play');
+				this.play();
+			}
 		},
 
 		gainExperience: function(callback) {
@@ -216,7 +285,6 @@
 				type: 'POST',
 				data: { opponentLevel: self.opponent.level }
 			}).done(function(rewards) {
-				console.log(rewards);
 				self.win(rewards);
 			});
 		},
@@ -289,7 +357,6 @@
 		findSpellById: function(id) {
 			for (var i = 0, l = spells.length - 1; i < l; i++) {
 				var spell = this.spells[i];
-				console.log(spell);
 				if (spell["_id"] === id) {
 					if (!spell.description) this.getSpellDescription(spell);
 					delete spell.is_default;
@@ -313,7 +380,26 @@
 			delete spell._description;
 		},
 
-		regenerateMana: function() {}
+		regenerateMana: function() {},
+
+		// initTimer: function() {
+		// 	this.elements.timer.html(20);
+		// },
+
+		// timeout: function() {
+		// 	var self = this;
+		// 	console.log('timeout function call');
+		// 	setTimeout(function() {
+
+		// 		var seconds = parseInt(self.elements.timer.html());
+		// 		if (seconds === 0) {
+		// 			self.socket.emit('timeout', self.id);
+		// 		} else {
+		// 			self.elements.timer.html(seconds - 1);
+		// 			timeout();
+		// 		}
+		// 	}, 1000);
+		// }
 
 	});
 })(window.BA = window.BA || {});

@@ -72,15 +72,8 @@ controller.spells = function(req, res) {
 // GET
 controller.rankings = function(req, res) {
 	var datas = [];
-	UserModel.find({
-		is_active: 1
-	})
-	.populate(
-		'_characters', 
-		['experience', 'level', 'avatar'],
-		null,
-		{ sort: [['experience', -1]] }
-	)
+	UserModel.find({ is_active: 1}, ['username', '_characters'])
+	.populate('_characters', ['total_experience', 'level', 'avatar', 'wins', 'looses'])
 	.run(function(error, users) {
 		if (error) console.error(error);
 
@@ -89,11 +82,15 @@ controller.rankings = function(req, res) {
 		$.each(users, function(user) {
 			datas.push({
 					username: user.username
-				, experience: user.character.experience
+				, total_experience: user.character.total_experience
 				, level: user.character.level || 1
 				, avatar: user.character.avatar
+				, victories: user.character.wins || 0
+				, defeats: user.character.looses || 0
 			});
 		});
+
+		datas = bubbleSort(datas, 'total_experience');
 
 		res.render('user/rankings', { 
 				title: 'BATTLE ARENA - Rankings'
@@ -190,4 +187,23 @@ function authenticate(req, username, password, callback) {
 			});
 		}
 	});
+}
+
+function swap(items, firstIndex, secondIndex) {
+	var temp = items[firstIndex];
+	items[firstIndex] = items[secondIndex];
+	items[secondIndex] = temp;
+}
+
+function bubbleSort(items, key) {
+	var len = items.length,
+		i, j, stop;
+	for (i = 0; i < len; i++) {
+		for (j = 0, stop = len - 1; j < stop; j++) {
+			if (items[j][key] < items[j + 1][key]) {
+				swap(items, j, j + 1);
+			}
+		}
+	}
+	return items;
 }

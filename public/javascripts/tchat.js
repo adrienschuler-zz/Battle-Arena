@@ -97,11 +97,15 @@
 								icon: "delete", 
 								theme: "c",
 								click: function() {
-									self.socket.emit('fightrefused', fighters);
+									self.socket.emit('fightrefused', fighters[0].socketID);
 								}
 							}
 						}
 					});
+				})
+
+				.on ('fightrefused', function() {
+					$.mobile.hidePageLoadingMsg();
 				});
 		},
 

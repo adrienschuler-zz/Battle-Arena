@@ -124,9 +124,10 @@ module.exports = function(_app, _io, sessionStore) {
 			});
 
 			// fight refused
-			socket.on('fightrefused', function(fighters) {
-console.log('fightrefused');
-console.log(fighters);
+			socket.on('fightrefused', function(id) {
+				io.of('/tchat')
+					.sockets[id]
+					.emit('fightrefused');
 			});
 
 		});
@@ -158,43 +159,38 @@ console.log(fighters);
 						.emit('joinsuccess', fighters);
 					});
 
-					io.of('/game')
-						.sockets[fighters[0].socketID]
-						.emit('play');
-
-					io.of('/game')
-						.sockets[fighters[1].socketID]
-						.emit('wait');
-
-					// $.each(fighters, function(f) {
-					// 	console.log(f);
-					// 	console.log(f.agility);
-					// 	if (f.agility > first) {
-					// 		first = f;
-					// 	}
-					// });
-
+					if (fighters[0].agility > fighters[1].agility) {
+						io.of('/game').sockets[fighters[0].socketID].emit('play');
+						io.of('/game').sockets[fighters[1].socketID].emit('wait');
+					} else {
+						io.of('/game').sockets[fighters[1].socketID].emit('play');
+						io.of('/game').sockets[fighters[0].socketID].emit('wait');
+					}
 				}
 			});
 
 			socket.on('launchspell', function(id, spell) {
-				var fighters = rooms[id].fighters;
-				var opponentSocketID = fighters[0].socketID === socket.id ? fighters[1].socketID : fighters[0].socketID;
-				io.of('/game')
-					.sockets[opponentSocketID]
-					.emit('attack', spell);
+				var opponentSocketID = getOpponentSocketID(rooms[id], socket.id);
+				io.of('/game').sockets[opponentSocketID].emit('attack', spell);
 			});
 
 			socket.on('play', function() {
-				io.of('/game')
-					.sockets[socket.id]
-					.emit('play');
+				io.of('/game').sockets[socket.id].emit('play');
 			});
 
 			socket.on('wait', function() {
-				io.of('/game')
-					.sockets[socket.id]
-					.emit('wait');
+				io.of('/game').sockets[socket.id].emit('wait');
 			});
+
+			// socket.on('timeout', function(id) {
+			// 	var opponentSocketID = getOpponentSocketID(rooms[id], socket.id);
+			// 	io.of('/game').sockets[socket.id].emit('wait');
+			// 	io.of('/game').sockets[opponentSocketID].emit('play');
+			// });
 	});
 };
+
+function getOpponentSocketID(room, socketID) {
+	var fighters = room.fighters;
+	return fighters[0].socketID === socketID ? fighters[1].socketID : fighters[0].socketID;
+}

@@ -10,10 +10,13 @@ var Character = module.exports = new Schema({
 	// , manapoints				: { type: Number, default: 90 }
 	, level 						: { type: Number, default: 1 }
 	,	experience				: { type: Number, default: 0 }
+	,	total_experience	: { type: Number, default: 0 }
 	, strength 					: { type: Number, default: 10 }
 	, agility 					: { type: Number, default: 10 }
 	, stamina						: { type: Number, default: 10 }
 	, intellect					: { type: Number, default: 10 }
+	, wins							: { type: Number, default: 0 }
+	, looses						: { type: Number, default: 0 }
 	// , accuracy					: { type: Number, default: 10 }
 	// , armor							: { type: Number, default: 10 }
 	// ,	_spells 					: [{ type: Schema.ObjectId, ref: 'Spell' }]
