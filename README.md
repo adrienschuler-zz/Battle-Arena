@@ -105,6 +105,10 @@ $ ruby test/selenium.rb
 ```
 
 
+## Credits
+	- [Thanks to Lorc for game icons.](http://www.reddit.com/r/IndieGaming/comments/ifmie/i_made_700_rpg_icons_free_for_use_for_your_game/)
+
+
 ## License 
 
 (The MIT License)
