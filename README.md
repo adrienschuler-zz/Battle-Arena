@@ -101,12 +101,12 @@ java -jar selenium-server-standalone-2.24.1.jar
 Run Selenium test suite :
 
 ```bash
-$ ruby test/selenium.rb
+$ ruby Battle-Arena/test/selenium.rb
 ```
 
 
 ## Credits
-	- [Thanks to Lorc for game icons.](http://www.reddit.com/r/IndieGaming/comments/ifmie/i_made_700_rpg_icons_free_for_use_for_your_game/)
+	Thanks to [Lorc](http://www.reddit.com/r/IndieGaming/comments/ifmie/i_made_700_rpg_icons_free_for_use_for_your_game/) for these free awesome game icons.
 
 
 ## License 
