@@ -33,7 +33,7 @@ $ node -v
 > v0.6.18
 ```
 
-Check npm install 
+Check npm install :
 
 ```bash
 $ npm -h
@@ -41,8 +41,20 @@ $ npm -h
 
 Should output npm help.
 
-	npm dependencies:
-		express express-expose express-messages jade connect mongoose redis redis-url connect-redis socket.io underscore
+- Redis 
+
+```bash
+$ sudo wget http://redis.googlecode.com/files/redis-2.4.15.tar.gz
+$ sudo tar xvzf redis-2.4.15.tar.gz
+$ cd redis-2.4.15
+$ sudo make
+```
+
+Launch Redis server :
+
+```bash
+$ ./src/redis-server 
+```
 
 - Checkout project
 
@@ -59,7 +71,7 @@ $ sudo npm install
 $ node index.js
 ```
 
-Go to [http://localhost:5000/](http://localhost:5000/)
+Go to [http://localhost:5000/](http://localhost:3000/) !
 
 ## Running tests
 
