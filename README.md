@@ -13,9 +13,11 @@
 > Author:
   [@adrienschuler](https://twitter.com/#!/adrienschuler)
 
-## Installation (UNIX)
+## Installation (Ubuntu)
 
-- Node.js
+(Tested on Ubuntu  10.04 & 11.10)
+
+### Node.js
 
 ```bash
 $ sudo wget http://nodejs.org/dist/v0.6.18/node-v0.6.18.tar.gz
@@ -41,7 +43,14 @@ $ npm -h
 
 Should output npm help.
 
-- Redis 
+### MongoDB
+
+```bash
+ $ sudo apt-get install mongodb
+ $ sudo npm install mongoose -g
+ ```
+
+### Redis 
 
 ```bash
 $ sudo wget http://redis.googlecode.com/files/redis-2.4.15.tar.gz
@@ -50,13 +59,13 @@ $ cd redis-2.4.15
 $ sudo make
 ```
 
-Launch Redis server :
+Launch Redis server daemon :
 
 ```bash
 $ ./src/redis-server 
 ```
 
-- Checkout project
+### Checkout Battle-Arena
 
 Requires [Git](http://git-scm.com)
 
@@ -71,7 +80,7 @@ $ sudo npm install
 $ node index.js
 ```
 
-Go to [http://localhost:5000/](http://localhost:3000/) !
+Go to [http://localhost:3000/](http://localhost:3000/) !
 
 ## Running tests
 
@@ -94,7 +103,6 @@ Run Selenium test suite :
 ```bash
 $ ruby test/selenium.rb
 ```
-
 
 
 ## License 
