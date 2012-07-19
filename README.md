@@ -76,7 +76,24 @@ $ sudo apt-get install git-core
 ```bash
 $ sudo git clone https://github.com/adrienschuler/Battle-Arena.git
 $ cd Battle-Arena
+
+Install NPM dependencies
+
+```bash
 $ sudo npm install
+```
+
+Import database
+
+```bash
+$ mongoimport -d battle_arena -c users --file db/users.json
+$ mongoimport -d battle_arena -c characters --file db/characters.json
+$ mongoimport -d battle_arena -c spells --file db/spells.json
+```
+
+Launch Battle Arena
+
+```bash
 $ node index.js
 ```
 
@@ -84,7 +101,7 @@ Go to [http://localhost:3000/](http://localhost:3000/) !
 
 ## Running tests
 
-- Selenium
+### Selenium
 
 Download Selenium server :
 
