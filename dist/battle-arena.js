@@ -349,8 +349,6 @@ var Game = Class.extend({
 			
 			.on('connect', function() {
 				var opponent = self.player;
-				console.log(opponent);
-				console.log(self.player);
 				self.socket.emit('join', location.search, opponent);
 			})
 

@@ -77,8 +77,6 @@ controller.rankings = function(req, res) {
 	.run(function(error, users) {
 		if (error) console.error(error);
 
-		console.log(users);
-
 		$.each(users, function(user) {
 			datas.push({
 					username: user.username

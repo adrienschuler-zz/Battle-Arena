@@ -29,7 +29,6 @@ module.exports = function(app) {
 	//  Load 500 page
 	
 	app.error(function(err, req, res) {
-		console.log(err);
 		res.render('500', {
 			title: '500 - BATTLE ARENA' 
 		});

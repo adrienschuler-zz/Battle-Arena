@@ -8,7 +8,7 @@ exports.initialize = ->
 		mana_cost: 0
 	,
 		name: "Fireball"
-		_description: "Launch a devastating fireball, doing {damage} damages. Cost {mana_cost} mana."
+		_description: "Launch a devastating fireball, doing {damage} damages.<br> Cost {mana_cost} mana."
 		thumbnail: "fireball"
 		is_default: 1
 		damage: 20
@@ -28,14 +28,14 @@ exports.initialize = ->
 		heal: 15
 		mana_cost: 20
 	,
-		name: "Replenish health"
-		_description: "Heal yourself overtime for {heal} hitpoints per turn during {round_duration} turns. Cost {mana_cost} mana."
-		thumbnail: "replenish_health"
-		requirement: 3
-		skill_points: 4
-		heal: 15
-		mana_cost: 40
-		round_duration: 3
+		# name: "Replenish health"
+		# _description: "Heal yourself overtime for {heal} hitpoints per turn during {round_duration} turns. Cost {mana_cost} mana."
+		# thumbnail: "replenish_health"
+		# requirement: 3
+		# skill_points: 4
+		# heal: 15
+		# mana_cost: 40
+		# round_duration: 3
 	# ,
 	# 	name: "Transfuse stamina"
 	# 	_description: "Decrease your opponent stamina by {attributes[0].stats[0].value} and inscrease your own stamina by {attributes[1].stats[0].value}. Cost {mana_cost} mana."
@@ -57,12 +57,11 @@ exports.initialize = ->
 	# 	]
 	# ,
 		name: "Poison"
-		_description: "Deal {damage} damages to your opponent during {round_duration} turns."
+		_description: "Deal {damage} damages to your opponent. Cost {mana_cost} mana."
 		thumbnail: "poison"
 		is_default: 1
-		damage: 5
-		round_duration: 3
-		mana_cost: 20
+		damage: 10
+		mana_cost: 5
 	,
 		name: "Wind"
 		_description: "Deal {damage} damages to your opponent. Cost {mana_cost} mana."

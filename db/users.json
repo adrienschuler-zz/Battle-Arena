@@ -1,0 +1,4 @@
+{ "email" : "", "username" : "chrome", "password_hash" : "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "_id" : { "$oid" : "50075e83859ed5d02800000a" }, "_characters" : [ { "$oid" : "50075e83859ed5d02800000b" } ], "is_active" : true }
+{ "email" : "", "username" : "firefox", "password_hash" : "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "_id" : { "$oid" : "50075f45c33fdd0029000012" }, "_characters" : [ { "$oid" : "50075f45c33fdd0029000013" } ], "is_active" : true }
+{ "email" : "", "username" : "iphone", "password_hash" : "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "_id" : { "$oid" : "50075f4ec33fdd0029000023" }, "_characters" : [ { "$oid" : "50075f4ec33fdd0029000024" } ], "is_active" : true }
+{ "email" : "", "username" : "ipad", "password_hash" : "a94a8fe5ccb19ba61c4c0873d391e987982fbbd3", "_id" : { "$oid" : "50075f55c33fdd0029000034" }, "_characters" : [ { "$oid" : "50075f55c33fdd0029000035" } ], "is_active" : true }

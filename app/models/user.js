@@ -62,8 +62,6 @@ User.methods.create = function(_user, UserModel, SpellModel, CharacterModel, cal
 	var character = new CharacterModel();
 	var spell = new SpellModel();
 
-console.log(user);
-
 	if ($.isObject(user)) {
 
 		spell.getDefaults(SpellModel, function(default_spells) {
