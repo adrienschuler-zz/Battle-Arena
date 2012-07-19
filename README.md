@@ -76,6 +76,7 @@ $ sudo apt-get install git-core
 ```bash
 $ sudo git clone https://github.com/adrienschuler/Battle-Arena.git
 $ cd Battle-Arena
+```
 
 Install NPM dependencies
 
