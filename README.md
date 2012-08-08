@@ -57,6 +57,7 @@ $ sudo wget http://redis.googlecode.com/files/redis-2.4.15.tar.gz
 $ sudo tar xvzf redis-2.4.15.tar.gz
 $ cd redis-2.4.15
 $ sudo make
+$ sudo make install
 ```
 
 Launch Redis server daemon :
