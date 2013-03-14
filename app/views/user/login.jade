@@ -1,21 +1,21 @@
 #wrapper(data-role='page', data-url='/login')
-	#header(data-role='header')
-		a(href='/', data-direction='reverse') BATTLE ARENA
-	
-	#content(data-role='content')
-		h2 Login
+  #header(data-role='header')
+    a(href='/', data-direction='reverse') BATTLE ARENA
 
-		!=messages()
+  #content(data-role='content')
+    h2 Login
 
-		form(action='/user/authenticate', method='post', id='login')
-			input(type='text', name='user[username]', placeholder='Username', class='username', id='username', autocapitalize="off")
-			br
-			input(type='password', name='user[password]', placeholder='Password', id='password')
-			br
-			input(type='submit', name='submit', value='Log in', class='submit')
+    !=messages()
 
-		br
-		a(href='/signup', class='center') Signup
-	
-	#footer(data-role='footer', data-position='fixed')
-		p Footer
+    form(action='/user/authenticate', method='post', id='login')
+      input(type='text', name='user[username]', placeholder='Username', class='username', id='username', autocapitalize="off")
+      br
+      input(type='password', name='user[password]', placeholder='Password', id='password')
+      br
+      input(type='submit', name='submit', value='Log in', class='submit')
+
+    br
+    a(href='/signup', class='center') Signup
+
+  #footer(data-role='footer', data-position='fixed')
+    p Footer

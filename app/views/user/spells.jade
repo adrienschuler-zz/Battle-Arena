@@ -1,148 +1,148 @@
 style
-	.ui-li .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li {
-		padding: .5em 5px .5em 5px;
-		display: block;
-	}
-	.ui-li-has-alt .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-alt {
-		padding-right: 0;
-	}
-	.ui-li-has-thumb .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-thumb {
-		min-height: 0;
-		padding-left: 70px;
-	}
-	.ui-li-thumb {
-		margin-left: -60px;
-	}
-	.ui-li-heading {
-		margin-left: -50px;
-		}
-	.ui-li-desc {
-		margin-left: -50px;
-	}
+  .ui-li .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li {
+    padding: .5em 5px .5em 5px;
+    display: block;
+  }
+  .ui-li-has-alt .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-alt {
+    padding-right: 0;
+  }
+  .ui-li-has-thumb .ui-btn-inner a.ui-link-inherit, .ui-li-static.ui-li-has-thumb {
+    min-height: 0;
+    padding-left: 70px;
+  }
+  .ui-li-thumb {
+    margin-left: -60px;
+  }
+  .ui-li-heading {
+    margin-left: -50px;
+    }
+  .ui-li-desc {
+    margin-left: -50px;
+  }
 
 #wrapper(data-role='page', data-url='/spells', class='')
-	include ../partials/header
+  include ../partials/header
 
-	#content(data-role='content', class='spells-page')
-		h2 Spells
+  #content(data-role='content', class='spells-page')
+    h2 Spells
 
-		- each spell in all_spells
-			- if (spell._id == current_id)
-				div
-					h3= spell.name
-					img(src="/images/spells/#{spell.thumbnail}.png")
-					p= spell.description
+    - each spell in all_spells
+      - if (spell._id == current_id)
+        div
+          h3= spell.name
+          img(src="/images/spells/#{spell.thumbnail}.png")
+          p= spell.description
 
-		ul(data-role='listview', data-inset='true', class='ui-listview')
-			- each spell in all_spells
-				- if (spell._id != current_id)
-					li(data-corners='false', data-theme='c', class='ui-btn ui-li')
-						div(class='ui-btn-inner ui-li')
-							div(class='ui-btn-text')
-								a(href='#', class='ui-link-inherit spell', title='Switch with this spell', data-spell-id='#{spell.id}', data-requirement='#{spell.requirement}', data-cost='#{spell.skill_points}', data-name='#{spell.name}')
-									img(src='/images/spells/#{spell.thumbnail}.png', width='60', height='60')
-									h3(class='ui-li-heading')= spell.name
-									p(class='ui-li-desc')= spell.description
-						
+    ul(data-role='listview', data-inset='true', class='ui-listview')
+      - each spell in all_spells
+        - if (spell._id != current_id)
+          li(data-corners='false', data-theme='c', class='ui-btn ui-li')
+            div(class='ui-btn-inner ui-li')
+              div(class='ui-btn-text')
+                a(href='#', class='ui-link-inherit spell', title='Switch with this spell', data-spell-id='#{spell.id}', data-requirement='#{spell.requirement}', data-cost='#{spell.skill_points}', data-name='#{spell.name}')
+                  img(src='/images/spells/#{spell.thumbnail}.png', width='60', height='60')
+                  h3(class='ui-li-heading')= spell.name
+                  p(class='ui-li-desc')= spell.description
+
 script
-	$(function() {
-		var character = !{JSON.stringify(character)};
-		var equipped = $.map(character._spells_equipped, function(o) { return o._id; });
-		var available = $.map(character._spells_available, function(o) { return o; });
-		var current_spell = $('#content div h3').get(0).innerHTML
-		var current_spell_id = !{JSON.stringify(current_id)};
+  $(function() {
+    var character = !{JSON.stringify(character)};
+    var equipped = $.map(character._spells_equipped, function(o) { return o._id; });
+    var available = $.map(character._spells_available, function(o) { return o; });
+    var current_spell = $('#content div h3').get(0).innerHTML
+    var current_spell_id = !{JSON.stringify(current_id)};
 
-		$('.spell').each(function(key, value) {
-			var $this = $(this);
-			var found = false;
-			var id = $this.data('spell-id');
-			var requirement = $(this).data('requirement');
-			var cost = $this.data('cost');
+    $('.spell').each(function(key, value) {
+      var $this = $(this);
+      var found = false;
+      var id = $this.data('spell-id');
+      var requirement = $(this).data('requirement');
+      var cost = $this.data('cost');
 
-			if ($.inArray(id, equipped) !== -1) {
-				found = true;
-				$this.addClass('disabled');
-				$('<p>Already equipped.</p>').appendTo($this);
-				return;
-			}
-			if ($.inArray(id, available) !== -1) {
-				found = true;
-				$this.data('available', true);
-				return;
-			}
+      if ($.inArray(id, equipped) !== -1) {
+        found = true;
+        $this.addClass('disabled');
+        $('<p>Already equipped.</p>').appendTo($this);
+        return;
+      }
+      if ($.inArray(id, available) !== -1) {
+        found = true;
+        $this.data('available', true);
+        return;
+      }
 
-			if (requirement && character.level < requirement) {
-				$this.addClass('disabled');
-				$('<p class="red">Require level ' + requirement + '</p>').appendTo($this);
-			} else {
-				var desc;
-				if (character.skill_points >= cost) {
-					desc = '<p class="green">Learn this spell for ' + cost + ' skill points.</p>';
-				} else {
-					$this.addClass('disabled');
-					desc = '<p class="red">Require ' + cost + ' skill points.</p>';
-				}
-				$(desc).appendTo($this);
-				$this.data('available', false);
-			}
+      if (requirement && character.level < requirement) {
+        $this.addClass('disabled');
+        $('<p class="red">Require level ' + requirement + '</p>').appendTo($this);
+      } else {
+        var desc;
+        if (character.skill_points >= cost) {
+          desc = '<p class="green">Learn this spell for ' + cost + ' skill points.</p>';
+        } else {
+          $this.addClass('disabled');
+          desc = '<p class="red">Require ' + cost + ' skill points.</p>';
+        }
+        $(desc).appendTo($this);
+        $this.data('available', false);
+      }
 
-		});
+    });
 
-		$('.spell').bind('click', function() {
-			var $this = $(this);
-			if ($this.hasClass('disabled')) return false;
-			var available = $this.data('available');
-			var name = $this.data('name');
-			var cost = $this.data('cost');
-			var id = $this.data('spell-id');
+    $('.spell').bind('click', function() {
+      var $this = $(this);
+      if ($this.hasClass('disabled')) return false;
+      var available = $this.data('available');
+      var name = $this.data('name');
+      var cost = $this.data('cost');
+      var id = $this.data('spell-id');
 
-			// set img
+      // set img
 
-			if (available) {
-				var content = '<div style="padding:10px"><center><p>Switch <b>' + current_spell + '</b> with <b>' + name + '</b> ?</p><p><img src="/images/spells/'+current_spell.toLowerCase()+'.png"></p><p><=></p><p><img src="/images/spells/'+name.toLowerCase()+'.png"></p></center></div>';
-			}	else {
-				var content = '<div style="padding:10px"><center><p>Learn <b>' + name + '</b> for ' + cost + ' skill points ?</p></center></div>';
-			}		
+      if (available) {
+        var content = '<div style="padding:10px"><center><p>Switch <b>' + current_spell + '</b> with <b>' + name + '</b> ?</p><p><img src="/images/spells/'+current_spell.toLowerCase()+'.png"></p><p><=></p><p><img src="/images/spells/'+name.toLowerCase()+'.png"></p></center></div>';
+      } else {
+        var content = '<div style="padding:10px"><center><p>Learn <b>' + name + '</b> for ' + cost + ' skill points ?</p></center></div>';
+      }
 
-			$('<div>').simpledialog2({
-				mode: 'button', animate: false, headerClose: true,
-				headerText: 'Confirmation',
-				buttonPrompt: content,
-				buttons : {
-					'OK': {
-						click: function () { 
-							if (available) {
-								switchSpell(current_spell_id, id);
-							} else {
-								learnSpell(current_spell_id, id, cost);
-							}
-						}
-					},
-					'Cancel': { icon: "delete", theme: "c", click: function() {} }
-				}
-			});
+      $('<div>').simpledialog2({
+        mode: 'button', animate: false, headerClose: true,
+        headerText: 'Confirmation',
+        buttonPrompt: content,
+        buttons : {
+          'OK': {
+            click: function () {
+              if (available) {
+                switchSpell(current_spell_id, id);
+              } else {
+                learnSpell(current_spell_id, id, cost);
+              }
+            }
+          },
+          'Cancel': { icon: "delete", theme: "c", click: function() {} }
+        }
+      });
 
-			return false;
-		});
+      return false;
+    });
 
-	});
+  });
 
-	function learnSpell(from, to, skill_points) {
-		$.ajax({
-			url: '/character/learnSpell/',
-			type: 'POST',
-			data: { from: from, to: to, skill_points: skill_points }
-		}).done(function(success) {
-			$(document).attr('location', '/profile');
-		});
-	}
+  function learnSpell(from, to, skill_points) {
+    $.ajax({
+      url: '/character/learnSpell/',
+      type: 'POST',
+      data: { from: from, to: to, skill_points: skill_points }
+    }).done(function(success) {
+      $(document).attr('location', '/profile');
+    });
+  }
 
-	function switchSpell(from, to) {
-		$.ajax({
-			url: '/character/switchSpell/',
-			type: 'POST',
-			data: { from: from, to: to }
-		}).done(function(success) {
-			$(document).attr('location', '/profile');
-		});
-	}
+  function switchSpell(from, to) {
+    $.ajax({
+      url: '/character/switchSpell/',
+      type: 'POST',
+      data: { from: from, to: to }
+    }).done(function(success) {
+      $(document).attr('location', '/profile');
+    });
+  }

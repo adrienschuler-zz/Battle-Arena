@@ -1,20 +1,20 @@
 #wrapper(data-role='page', data-url='/rankings', class='')
-	include ../partials/header
+  include ../partials/header
 
-	#content(data-role='content', class='rankings-page')
-		h2 Rankings
+  #content(data-role='content', class='rankings-page')
+    h2 Rankings
 
-		h3= datas.length + " Users"
+    h3= datas.length + " Users"
 
-		ul(data-role='listview', data-inset='true', class='ui-listview ui-listview-inset ui-corner-all ui-shadow')
-		- each u, i in datas
-			li(data-corners='false', data-shadow='false', data-iconshadow='true', data-wrapperels='div', data-icon='false', data-iconpos='right', data-theme='c', class='ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-li-has-thumb ui-corner-top ui-btn-up-c')
-				div(class='ui-btn-inner ui-li ui-li-has-alt ui-corner-top')
-					div(class='ui-btn-text')
-						a(href='#', class='ui-link-inherit')
-							img(src='/images/avatars/#{u.avatar}', class='ui-li-thumb ui-corner-tl', width='80', height='80')
-							h3(class='ui-li-heading')= u.username
-							p(class='ui-li-desc') Level #{u.level}
-							p(class='ui-li-desc') Experience: #{u.total_experience}
-							p(class='ui-li-desc') Victories: #{u.victories}
-							p(class='ui-li-desc') Defeats: #{u.defeats}
+    ul(data-role='listview', data-inset='true', class='ui-listview ui-listview-inset ui-corner-all ui-shadow')
+    - each u, i in datas
+      li(data-corners='false', data-shadow='false', data-iconshadow='true', data-wrapperels='div', data-icon='false', data-iconpos='right', data-theme='c', class='ui-btn ui-btn-icon-right ui-li ui-li-has-alt ui-li-has-thumb ui-corner-top ui-btn-up-c')
+        div(class='ui-btn-inner ui-li ui-li-has-alt ui-corner-top')
+          div(class='ui-btn-text')
+            a(href='#', class='ui-link-inherit')
+              img(src='/images/avatars/#{u.avatar}', class='ui-li-thumb ui-corner-tl', width='80', height='80')
+              h3(class='ui-li-heading')= u.username
+              p(class='ui-li-desc') Level #{u.level}
+              p(class='ui-li-desc') Experience: #{u.total_experience}
+              p(class='ui-li-desc') Victories: #{u.victories}
+              p(class='ui-li-desc') Defeats: #{u.defeats}

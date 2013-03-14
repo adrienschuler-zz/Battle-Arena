@@ -1,26 +1,26 @@
 {
-		"name": "battle-arena"
-	, "version": "0.1.0"
-	, "author": {
-		"name": "Adrien Schuler"
-	}
-	, "homepage": "http://esgi-battle-arena.herokuapp.com"
-	, "private": true
-	, "engines": {
-			"node": "0.6.18"
-		, "npm":	"1.1.9"
-	}
-	, "dependencies": {
-			"express":					"2.5.8"
-		,	"express-expose":		"0.2.2"
-		, "express-messages":	"0.0.2"
-		, "jade":							"0.26.3"
-		, "connect":					"2.2.2"
-		, "mongoose":					"2.5.14"
-		, "redis":						"0.7.2"
-		, "redis-url": 				"0.1.0"
-		, "connect-redis":		"1.4.0"
-		, "socket.io":				"0.9.6"
-		, "underscore":				"1.3.3"
-	}
+    "name": "battle-arena"
+  , "version": "0.1.0"
+  , "author": {
+    "name": "Adrien Schuler"
+  }
+  , "homepage": "http://esgi-battle-arena.herokuapp.com"
+  , "private": true
+  , "engines": {
+      "node": "0.6.18"
+    , "npm":  "1.1.9"
+  }
+  , "dependencies": {
+      "express":          "2.5.8"
+    , "express-expose":   "0.2.2"
+    , "express-messages": "0.0.2"
+    , "jade":             "0.26.3"
+    , "connect":          "2.2.2"
+    , "mongoose":         "2.5.14"
+    , "redis":            "0.7.2"
+    , "redis-url":        "0.1.0"
+    , "connect-redis":    "1.4.0"
+    , "socket.io":        "0.9.6"
+    , "underscore":       "1.3.3"
+  }
 }

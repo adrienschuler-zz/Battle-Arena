@@ -1,50 +1,50 @@
 #wrapper(data-role='page', data-url='/game', class='')
-	#content(data-role='content')
-		#game
-			#opponent
-				div
-					div(class='right')
-						=opponent.username
-					div.avatar
-						img(src="/images/avatars/#{opponent.character.avatar}", width='65', height='65')
-				.bars
-					div(class='progressbar')
-						div(class='bar')
-							span
-					div(class='progressbar')
-						div(class='bar color4')
-							span
-			#chatroom
-				div(class='tchat-container ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
-			#me 
-				div.row
-					div
-					div.avatar
-						img(src="/images/avatars/#{character.avatar}", width='65', height='65')
-						=user.username
-					.bars
-						div(class='progressbar')
-							div(class='bar')
-								span
-						div(class='progressbar')
-							div(class='bar color4')
-								span
-					.spells
-						- each spell, i in spells
-							- if (i == 3)
-								span.break
-							div
-								a(href='#', data-spell-id='#{spell._id}', data-mana-cost='#{spell.mana_cost}', class='spell')
-									img(src='/images/spells/#{spell.thumbnail}.png')
+  #content(data-role='content')
+    #game
+      #opponent
+        div
+          div(class='right')
+            =opponent.username
+          div.avatar
+            img(src="/images/avatars/#{opponent.character.avatar}", width='65', height='65')
+        .bars
+          div(class='progressbar')
+            div(class='bar')
+              span
+          div(class='progressbar')
+            div(class='bar color4')
+              span
+      #chatroom
+        div(class='tchat-container ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
+      #me
+        div.row
+          div
+          div.avatar
+            img(src="/images/avatars/#{character.avatar}", width='65', height='65')
+            =user.username
+          .bars
+            div(class='progressbar')
+              div(class='bar')
+                span
+            div(class='progressbar')
+              div(class='bar color4')
+                span
+          .spells
+            - each spell, i in spells
+              - if (i == 3)
+                span.break
+              div
+                a(href='#', data-spell-id='#{spell._id}', data-mana-cost='#{spell.mana_cost}', class='spell')
+                  img(src='/images/spells/#{spell.thumbnail}.png')
 
 include ../templates/game
 
-script 
-	var player = !{JSON.stringify(character)};
-	var spells = !{JSON.stringify(all_spells)};
-	player.username = "#{user.username}";
-	player.hitpoints = "#{character.hitpoints()}";
-	player.manapoints = "#{character.manapoints()}";
-	delete player._spells_equipped;
-	delete player._spells_available;
-	$(function() { new BA.Game(player, spells); });
+script
+  var player = !{JSON.stringify(character)};
+  var spells = !{JSON.stringify(all_spells)};
+  player.username = "#{user.username}";
+  player.hitpoints = "#{character.hitpoints()}";
+  player.manapoints = "#{character.manapoints()}";
+  delete player._spells_equipped;
+  delete player._spells_available;
+  $(function() { new BA.Game(player, spells); });

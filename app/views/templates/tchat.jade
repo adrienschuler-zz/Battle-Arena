@@ -1,42 +1,42 @@
 script(id='welcomeTemplate', type='text/x-jquery-tmpl')
-	| <div>
-	| 	<span class="time">${time}</span> 
-	| 	<span class="srv-msg">Welcome</span> 
-	| 	<span class="username">${username}</span> !
-	| </div>
+  | <div>
+  |   <span class="time">${time}</span>
+  |   <span class="srv-msg">Welcome</span>
+  |   <span class="username">${username}</span> !
+  | </div>
 
 script(id='userJoinTemplate', type='text/x-jquery-tmpl')
-	| <div>
-	| 	<span class="time">${time}</span> 
-	| 	<img src="/images/avatars/${avatar}" width="20" height="20">
-	| 	<span class="username">${username}</span> 
-	| 	<span class="srv-msg">entered the chat.</span>
-	| </div>
+  | <div>
+  |   <span class="time">${time}</span>
+  |   <img src="/images/avatars/${avatar}" width="20" height="20">
+  |   <span class="username">${username}</span>
+  |   <span class="srv-msg">entered the chat.</span>
+  | </div>
 
 script(id='messageTemplate', type='text/x-jquery-tmpl')
-	|	<div>
-	| 	<span class="time">${time}</span> 
-	| 	<img src="/images/avatars/${avatar}" width="20" height="20">
-	| 	<span class="username">${username}</span> :
-	| 	<span>${message}</span>
-	| </div>
+  | <div>
+  |   <span class="time">${time}</span>
+  |   <img src="/images/avatars/${avatar}" width="20" height="20">
+  |   <span class="username">${username}</span> :
+  |   <span>${message}</span>
+  | </div>
 
 script(id='disconnectTemplate', type='text/x-jquery-tmpl')
-	| <div>
-	| 	<span class="time">${time}</span>
-	| 	<span class="username">${username}</span> 
-	| 	<span class="srv-msg">disconnected.</span>
-	| </div>
+  | <div>
+  |   <span class="time">${time}</span>
+  |   <span class="username">${username}</span>
+  |   <span class="srv-msg">disconnected.</span>
+  | </div>
 
 script(id='activeUsersTemplate', type='text/x-jquery-tmpl')
-	| <div>
-	|	{{if me}}
-	| 	<span class="me">
-	| 		<img src="/images/avatars/${avatar}" width="20" height="20"> ${username}
-	|		</span>
-	| {{else}}
-	|		<a href="#" data-socket-id="${socketId}">
-	| 		<img src="/images/avatars/${avatar}" width="20" height="20"> ${username}
-	| 	</a>
-	|	{{/if}}
-	|	</div>
+  | <div>
+  | {{if me}}
+  |   <span class="me">
+  |     <img src="/images/avatars/${avatar}" width="20" height="20"> ${username}
+  |   </span>
+  | {{else}}
+  |   <a href="#" data-socket-id="${socketId}">
+  |     <img src="/images/avatars/${avatar}" width="20" height="20"> ${username}
+  |   </a>
+  | {{/if}}
+  | </div>

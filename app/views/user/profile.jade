@@ -1,132 +1,132 @@
 style
-	div.bars {
-		width: 35%;
-	}
+  div.bars {
+    width: 35%;
+  }
 
 #wrapper(data-role='page', data-url='/profile', class='')
-	include ../partials/header
+  include ../partials/header
 
-	#content(data-role='content')
-		h2= user.username
+  #content(data-role='content')
+    h2= user.username
 
-		#profile
-			div.row
-				h4 Victories: #{character.wins || 0} 
-				h4 Defeats: #{character.looses || 0}
-				br
+    #profile
+      div.row
+        h4 Victories: #{character.wins || 0}
+        h4 Defeats: #{character.looses || 0}
+        br
 
-			div.row
+      div.row
 
-				div.avatar
-					img(src="/images/avatars/#{character.avatar}")
-					div
-						div.level= character.level
+        div.avatar
+          img(src="/images/avatars/#{character.avatar}")
+          div
+            div.level= character.level
 
-				.stats
-					p
-						span= character.skill_points
-						span skill points left
-					ul
-						li 
-							a(href='', title='Augmenter cette caractéristique', data-stat='strength', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
-							span(data-stat='strength')= character.strength
-							span(class='red') Strength
-						li
-							a(href='', title='Augmenter cette caractéristique', data-stat='agility', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
-							span(data-stat='agility')= character.agility
-							span(class='yellow') Agility
-						li
-							a(href='', title='Augmenter cette caractéristique', data-stat='stamina', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
-							span(data-stat='stamina')= character.stamina
-							span(class='green') Stamina
-						li
-							a(href='', title='Augmenter cette caractéristique', data-stat='intellect', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
-							span(data-stat='intellect')= character.intellect
-							span(class='blue') Intellect
-			
-			div.row
-				
-				.bars
-					div(class='progressbar')
-						div(class='bar')
-							div(class='life', style='text-align:center;color:white;')= character.hitpoints()
-							span
-					div(class='progressbar')
-						div(class='bar color4')
-							div(class='mana', style='text-align:center;color:white;')= character.manapoints()
-							span
-					div(class='progressbar')
-						div(class='bar color2', style='text-align:center;color:white;')= character.experience
-							span
+        .stats
+          p
+            span= character.skill_points
+            span skill points left
+          ul
+            li
+              a(href='', title='Augmenter cette caractéristique', data-stat='strength', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
+              span(data-stat='strength')= character.strength
+              span(class='red') Strength
+            li
+              a(href='', title='Augmenter cette caractéristique', data-stat='agility', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
+              span(data-stat='agility')= character.agility
+              span(class='yellow') Agility
+            li
+              a(href='', title='Augmenter cette caractéristique', data-stat='stamina', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
+              span(data-stat='stamina')= character.stamina
+              span(class='green') Stamina
+            li
+              a(href='', title='Augmenter cette caractéristique', data-stat='intellect', class='plus-stat confirm-popup')= character.skill_points > 0 ? '+' : ''
+              span(data-stat='intellect')= character.intellect
+              span(class='blue') Intellect
 
-				.spells
-					- each spell, i in spells
-						- if (i == 3)
-							span.break
-						div
-							a(href='/spells/#{spell._id}')
-								img(src='/images/spells/#{spell.thumbnail}.png')
+      div.row
+
+        .bars
+          div(class='progressbar')
+            div(class='bar')
+              div(class='life', style='text-align:center;color:white;')= character.hitpoints()
+              span
+          div(class='progressbar')
+            div(class='bar color4')
+              div(class='mana', style='text-align:center;color:white;')= character.manapoints()
+              span
+          div(class='progressbar')
+            div(class='bar color2', style='text-align:center;color:white;')= character.experience
+              span
+
+        .spells
+          - each spell, i in spells
+            - if (i == 3)
+              span.break
+            div
+              a(href='/spells/#{spell._id}')
+                img(src='/images/spells/#{spell.thumbnail}.png')
 
 
 script
-	$(document).ready(function() {
-		if ($('html.mobile-device').length) { $('.break').remove(); }
-		var bars = $('.bar');
-		var character = !{JSON.stringify(character)};
-		var nextLevel = "#{character.nextLevel()}";
+  $(document).ready(function() {
+    if ($('html.mobile-device').length) { $('.break').remove(); }
+    var bars = $('.bar');
+    var character = !{JSON.stringify(character)};
+    var nextLevel = "#{character.nextLevel()}";
 
-		$(bars.get(2))
-			.width(
-				(90.7 - ((nextLevel - character.experience) * 90.7 / nextLevel)) + '%'
-			);
+    $(bars.get(2))
+      .width(
+        (90.7 - ((nextLevel - character.experience) * 90.7 / nextLevel)) + '%'
+      );
 
-		setTimeout(function() {
-			$(bars.get(0)).width('90.7%');
-			$(bars.get(1)).width('90.7%');
-		}, 200);
+    setTimeout(function() {
+      $(bars.get(0)).width('90.7%');
+      $(bars.get(1)).width('90.7%');
+    }, 200);
 
-		var $skill_points = $('.stats p span')[0];
-		var $life = $('.life');
-		var $mana = $('.mana');
-		var tips = {
-			strength: '<b class="red">Strength</b> increase the damages you deal.',
-			agility: '<b class="yellow">Agility</b> increase the chances that you begin a fight.',
-			stamina: '<b class="green">Stamina</b> increase your total hitpoints.',
-			intellect: '<b class="blue">Intellect</b> increase your total manapoints.'
-		};
+    var $skill_points = $('.stats p span')[0];
+    var $life = $('.life');
+    var $mana = $('.mana');
+    var tips = {
+      strength: '<b class="red">Strength</b> increase the damages you deal.',
+      agility: '<b class="yellow">Agility</b> increase the chances that you begin a fight.',
+      stamina: '<b class="green">Stamina</b> increase your total hitpoints.',
+      intellect: '<b class="blue">Intellect</b> increase your total manapoints.'
+    };
 
-		$(document).delegate('.confirm-popup', 'click', function() {
-			var $this = $(this);
-			var stat = $(this).data('stat');
-			var $stat = $('span[data-stat=' + stat + ']');
+    $(document).delegate('.confirm-popup', 'click', function() {
+      var $this = $(this);
+      var stat = $(this).data('stat');
+      var $stat = $('span[data-stat=' + stat + ']');
 
-			$('<div>').simpledialog2({
-				mode: 'button', animate: false, headerClose: true,
-				headerText: 'Confirmation',
-				buttonPrompt: '<div style="padding:10px"><center><p>Improve your <b>' + stat + '</b> by one point ?</p><br><p><i>' + tips[stat] + '</i></p></center></div>',
-				buttons : {
-					'OK': {
-						click: function () { 
-							$.ajax({
-								url: '/character/upstat/' + stat,
-								type: 'POST'
-							}).done(function(success) {
-								if (success) {
-									$($stat).html(parseInt($($stat).html()) + 1);
-									$($skill_points).html($($skill_points).html() - 1);
-									if (stat == 'stamina') {
-										$($life).html(parseInt($($life).html()) + 5);
-									}
-									if (stat == 'intellect') {
-										$($mana).html(parseInt($($mana).html()) + 5);
-									}
-								}
-							});
-						}
-					},
-					'Cancel': { icon: "delete", theme: "c", click: function() {} }
-				}
-			});
-		});
+      $('<div>').simpledialog2({
+        mode: 'button', animate: false, headerClose: true,
+        headerText: 'Confirmation',
+        buttonPrompt: '<div style="padding:10px"><center><p>Improve your <b>' + stat + '</b> by one point ?</p><br><p><i>' + tips[stat] + '</i></p></center></div>',
+        buttons : {
+          'OK': {
+            click: function () {
+              $.ajax({
+                url: '/character/upstat/' + stat,
+                type: 'POST'
+              }).done(function(success) {
+                if (success) {
+                  $($stat).html(parseInt($($stat).html()) + 1);
+                  $($skill_points).html($($skill_points).html() - 1);
+                  if (stat == 'stamina') {
+                    $($life).html(parseInt($($life).html()) + 5);
+                  }
+                  if (stat == 'intellect') {
+                    $($mana).html(parseInt($($mana).html()) + 5);
+                  }
+                }
+              });
+            }
+          },
+          'Cancel': { icon: "delete", theme: "c", click: function() {} }
+        }
+      });
+    });
 
-	});
+  });

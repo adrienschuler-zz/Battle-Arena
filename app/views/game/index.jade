@@ -1,21 +1,21 @@
 #wrapper(data-role='page', data-url='/tchat', class='initialize game')
-	include ../partials/header
-						
-	#content(data-role='content')
-			
-		h2 Chatroom
+  include ../partials/header
 
-		!=messages()
+  #content(data-role='content')
 
-		#chatroom
-			.left
-				div(class='tchat-container ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
-				input(type='text', name='send', placeholder='Text', id='tchat-input')
-			.right
-				div(class='tchat-side ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
+    h2 Chatroom
 
-	include ../templates/tchat
+    !=messages()
+
+    #chatroom
+      .left
+        div(class='tchat-container ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
+        input(type='text', name='send', placeholder='Text', id='tchat-input')
+      .right
+        div(class='tchat-side ui-input-text ui-body-c ui-corner-all ui-shadow-inset')
+
+  include ../templates/tchat
 
 script
-	var username = "#{user.username}";
-	$(function() { new BA.Tchat(username); });
+  var username = "#{user.username}";
+  $(function() { new BA.Tchat(username); });
