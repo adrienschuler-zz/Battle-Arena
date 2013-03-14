@@ -1,0 +1,10 @@
+- CoffeeScript
+- Grunt, dist build, jshint
+- Drop features
+- Implement unit/functionnal/selenium tests
+- Upgrade stack/libs
+- Global refactor, core logic, websockets
+- Backbone client side integration
+- UI/UX
+- I18n
+- sample dump
