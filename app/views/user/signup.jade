@@ -1,3 +1,5 @@
+include ../layout
+
 #wrapper(data-role='page', data-url='/signup')
   #header(data-role='header')
     a(href='/', data-direction='reverse') BATTLE ARENA
@@ -5,7 +7,7 @@
   #content(data-role='content')
     h2 Signup
 
-    !=messages()
+    !=messages
 
     form(action='/user/create', method='post', id='signup')
       input(type='email', name='user[email]', placeholder='Email', id='email', autocapitalize="off")

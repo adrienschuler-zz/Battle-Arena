@@ -6,27 +6,27 @@ if (!process.env.NODE_ENV) process.env.NODE_ENV = 'local';
 
 require('./lib/exceptions');
 
-const express       = require('express')
-    , sio           = require('socket.io')
-    , expose        = require('express-expose')
+const app       = require('express')(),
+  server        = require('http').Server(app),
+  expose        = require('express-expose'),
+  session       = require('express-session'),
+  sharedsession = require('express-socket.io-session'),
 
-      // Redis
-    , redis         = process.env.REDISTOGO_URL
-      ? require('redis-url').connect(process.env.REDISTOGO_URL)
-      : require('redis').createClient()
+  io            = require('socket.io')(server),
 
-      // Redis store
-    , RedisStore    = require('connect-redis')(express)
-    , sessionStore  = new RedisStore({ client: redis })
+  redis         = process.env.REDISTOGO_URL
+    ? require('redis-url').connect(process.env.REDISTOGO_URL)
+    : require('redis').createClient()
 
-    , sockets       = require('./app/sockets')
-    , models        = require('./config/models')
-    , config        = require('./config/config')
-    , routes        = require('./config/routes')
-    , environments  = require('./config/environments')
-    , errors        = require('./config/errors')
-    , init          = require('./config/init')
-    , app           = express.createServer();
+  RedisStore    = require('connect-redis')(session),
+
+  sockets       = require('./app/sockets'),
+  models        = require('./config/models'),
+  config        = require('./config/config'),
+  routes        = require('./config/routes'),
+  environments  = require('./config/environments'),
+  // errors        = require('./config/errors'),
+  init          = require('./config/init');
 
 
 // Initialize Redis
@@ -36,40 +36,40 @@ init(redis);
 models();
 
 // Load Expressjs config
-config(app, sessionStore);
+config(app, redis, RedisStore, session);
 
 // Load Environmental Settings
 environments(app);
 
 // Attach socket.io server
-var io = sio.listen(app);
+io.attach(server);
 
-io.configure(function() {
-  io.set('transports', ['xhr-polling']); // Heroku socket.io restrictions to xhr-polling (WebSockets aren't supported yet)
-  io.set('polling duration', 10);
-  io.set('authorization', true); // necessary ?
-  // io.set('store', sessionStore);
-  io.set('log level', 3);
-  io.enable('browser client minification');
-  io.enable('browser client etag');
-  io.enable('browser client gzip');
-});
+// io.configure(function() {
+//   io.set('transports', ['xhr-polling']); // Heroku socket.io restrictions to xhr-polling (WebSockets aren't supported yet)
+//   io.set('polling duration', 10);
+//   io.set('authorization', true); // necessary ?
+//   // io.set('store', sessionStore);
+//   io.set('log level', 3);
+//   io.enable('browser client minification');
+//   io.enable('browser client etag');
+//   io.enable('browser client gzip');
+// });
 
 // Load routes config
 routes(app);
 
 // Load error routes + pages
-errors(app);
+// errors(app);
 
+sockets(app, io, session);
 // Socket IO
-sockets(app, io, sessionStore);
 
 // Run server
-app.listen(process.env.PORT || 3000);
+server.listen(process.env.PORT || 3000);
 
 console.log('\x1b[36mBattle Arena\x1b[90m v%s\x1b[0m running as \x1b[1m%s\x1b[0m on http://%s:%d',
   app.set('version'),
   app.set('env'),
   app.set('host'),
-  app.address().port
+  app.set('port')
 );

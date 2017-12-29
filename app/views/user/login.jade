@@ -1,3 +1,5 @@
+include ../layout
+
 #wrapper(data-role='page', data-url='/login')
   #header(data-role='header')
     a(href='/', data-direction='reverse') BATTLE ARENA
@@ -5,7 +7,8 @@
   #content(data-role='content')
     h2 Login
 
-    !=messages()
+    - if (messages.error)
+      span= messages.error
 
     form(action='/user/authenticate', method='post', id='login')
       input(type='text', name='user[username]', placeholder='Username', class='username', id='username', autocapitalize="off")

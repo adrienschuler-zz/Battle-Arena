@@ -1,14 +1,13 @@
-var connect     = require('connect')
-  , crypto      = require('crypto')
-  , $           = require('underscore')
-  , ParseCookie = connect.utils.parseCookie;
+var connect     = require('connect'),
+  crypto        = require('crypto'),
+  $             = require('underscore');
 
 
 module.exports = function(_app, _io, sessionStore) {
-  var app = _app
-    , io  = _io
-    , connected_users = []
-    , games = [];
+  var app = _app,
+    io    = _io,
+    connected_users = [],
+    games = [];
 
 
   io.set('authorization', function(hsData, accept) {

@@ -130,17 +130,21 @@ controller.create = function(req, res) {
 
 // POST
 controller.authenticate = function(req, res) {
+  console.debug('authenticate');
   var user = req.body.user;
   if (user && user.username && user.password) {
     authenticate(req, user.username, user.password, function(success) {
       if (success) {
         res.redirect('/tchat');
+        console.debug('authenticate success');
       } else {
+        console.debug('authenticate error not found');
         req.flash('error', 'User not found.');
         res.redirect('/login');
       }
     });
   } else {
+    console.debug('authenticate error fields');
     req.flash('error', 'Fill the required fields...');
     res.redirect('/login');
   }

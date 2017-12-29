@@ -1,3 +1,5 @@
+include ../layout
+
 #wrapper(data-role='page', data-url='/tchat', class='initialize game')
   include ../partials/header
 
@@ -5,7 +7,7 @@
 
     h2 Chatroom
 
-    !=messages()
+    !=messages
 
     #chatroom
       .left
