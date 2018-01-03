@@ -42,8 +42,9 @@
 
     initSocketIO: function() {
       var self = this;
-      this.socket = io.connect().of('/tchat')
+      this.socket = io();
 
+      this.socket
         .on('connect', function() {
           self.socket.emit('join', self.username);
         })

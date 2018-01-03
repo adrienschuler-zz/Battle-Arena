@@ -1,19 +1,19 @@
-var mongoose  = require('mongoose')
-  , crypto    = require('crypto')
-  , $         = require('underscore')
-  , Schema    = mongoose.Schema
-  , Spell     = require('./spell')
-  , Character = require('./character');
+var mongoose  = require('mongoose'),
+    crypto    = require('crypto'),
+    $         = require('underscore'),
+    Schema    = mongoose.Schema,
+    Spell     = require('./spell'),
+    Character = require('./character');
 
 
 var User = module.exports = new Schema({
-    is_active       : { type: Boolean, default: true }
-  , username        : { type: String }
-  , email           : { type: String }
-  , password_hash   : { type: String }
+    is_active       : { type: Boolean, default: true },
+    username        : { type: String },
+    email           : { type: String },
+    password_hash   : { type: String },
   // , ip_addresses   : { type: String }
-  // , devices          : { type: String }
-  , _characters       : [{ type: Schema.ObjectId, ref: 'Character' }]
+  // , devices          : { type: String },
+    _characters       : [{ type: Schema.ObjectId, ref: 'Character' }]
   // , created        : { type: Date, default: Date.now }
   // , updated        : { type: Date, default: Date.now }
 });

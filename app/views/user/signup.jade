@@ -7,7 +7,8 @@ include ../layout
   #content(data-role='content')
     h2 Signup
 
-    !=messages
+    - if (messages.error)
+      span= messages.error
 
     form(action='/user/create', method='post', id='signup')
       input(type='email', name='user[email]', placeholder='Email', id='email', autocapitalize="off")

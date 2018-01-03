@@ -1,53 +1,53 @@
-script(id='welcomeTemplate', type='text/x-jquery-tmpl')
-  | <div>
-  |   <span class="time">${time}</span>
-  |   <span class="srv-msg">User</span>
-  |   <span class="username">${username}</span>
-  |   <span class="srv-msg">joined the game.</span>
-  | </div>
+script(id='welcomeTemplate', type='text/x-jquery-tmpl').
+  <div>
+    <span class="time">${time}</span>
+    <span class="srv-msg">User</span>
+    <span class="username">${username}</span>
+    <span class="srv-msg">joined the game.</span>
+  </div>
 
-script(id='playTemplate', type='text/x-jquery-tmpl')
-  | <div>
-  |   <span class="time">${time}</span>
-  |   <span class="srv-msg">This is your turn.</span>
-  | </div>
+script(id='playTemplate', type='text/x-jquery-tmpl').
+  <div>
+    <span class="time">${time}</span>
+    <span class="srv-msg">This is your turn.</span>
+  </div>
 
-script(id='waitTemplate', type='text/x-jquery-tmpl')
-  | <div>
-  |   <span class="time">${time}</span>
-  |   <span class="srv-msg">Waiting for ${username} turn...</span>
-  | </div>
+script(id='waitTemplate', type='text/x-jquery-tmpl').
+  <div>
+    <span class="time">${time}</span>
+    <span class="srv-msg">Waiting for ${username} turn...</span>
+  </div>
 
-script(id='attackTemplate', type='text/x-jquery-tmpl')
-  | <div>
-  |   <span class="time">${time}</span>
-  | {{if me}}
-  |   <span class="srv-msg">You launched the spell "${spell}", dealing <span class="red">${damages}</span> damages to </span><span class="username">${opponent}</span>.
-  | {{else}}
-  |   <span class="username">${opponent}</span>
-  |   <span class="srv-msg">launched the spell "${spell}", dealing you <span class="red">${damages}</span> damages.</span>
-  | {{/if}}
-  | </div>
+script(id='attackTemplate', type='text/x-jquery-tmpl').
+  <div>
+    <span class="time">${time}</span>
+  {{if me}}
+    <span class="srv-msg">You launched the spell "${spell}", dealing <span class="red">${damages}</span> damages to </span><span class="username">${opponent}</span>.
+  {{else}}
+    <span class="username">${opponent}</span>
+    <span class="srv-msg">launched the spell "${spell}", dealing you <span class="red">${damages}</span> damages.</span>
+  {{/if}}
+  </div>
 
-script(id='healTemplate', type='text/x-jquery-tmpl')
-  | <div>
-  |   <span class="time">${time}</span>
-  | {{if me}}
-  |   <span class="srv-msg">You launched the spell "${spell}", healing you for <span class="green">${heal}</span> hitpoints.</span>
-  | {{else}}
-  |   <span class="username">${opponent}</span>
-  |   <span class="srv-msg">launched the spell "${spell}", healing him for <span class="green">${heal}</span> hitpoints.</span>
-  | {{/if}}
-  | </div>
+script(id='healTemplate', type='text/x-jquery-tmpl').
+  <div>
+    <span class="time">${time}</span>
+  {{if me}}
+    <span class="srv-msg">You launched the spell "${spell}", healing you for <span class="green">${heal}</span> hitpoints.</span>
+  {{else}}
+    <span class="username">${opponent}</span>
+    <span class="srv-msg">launched the spell "${spell}", healing him for <span class="green">${heal}</span> hitpoints.</span>
+  {{/if}}
+  </div>
 
-script(id='winTemplate', type='text/x-jquery-tmpl')
-  | <div style="padding:10px;">
-  |   <center>
-  |     <img src="/images/game/icons/win.png">
-  |     <p>You defeat <span class="username">${opponent}</span> !</p>
-  |     <p>You won ${gain} experience.</p>
-  |     {{if levelup}}
-  |       <p>You are now level ${level} !</p>
-  |     {{/if}}
-  |   </center>
-  | </div>
+script(id='winTemplate', type='text/x-jquery-tmpl').
+  <div style="padding:10px;">
+    <center>
+      <img src="/images/game/icons/win.png">
+      <p>You defeat <span class="username">${opponent}</span> !</p>
+      <p>You won ${gain} experience.</p>
+      {{if levelup}}
+        <p>You are now level ${level} !</p>
+      {{/if}}
+    </center>
+  </div>

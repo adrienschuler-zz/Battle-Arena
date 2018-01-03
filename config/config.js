@@ -5,13 +5,12 @@
 const express      = require('express'),
       mongoose     = require('mongoose'),
       bodyParser   = require('body-parser'),
-      cookieParser = require('cookie-parser'),
       morgan       = require('morgan'),
       errorhandler = require('errorhandler'),
       flash        = require('express-flash');
 
 
-module.exports = function(app, redis, RedisStore, session) {
+module.exports = function(app, cookieParser, passport, sessionStore, session) {
 
   // Setup DB Connection
   // var dblink = process.env.MONGOLAB_URI || 'mongodb://192.168.0.11/battle_arena';
@@ -24,19 +23,24 @@ module.exports = function(app, redis, RedisStore, session) {
     .use(cookieParser())
     .use(bodyParser.urlencoded({ extended: true }))
     .use(bodyParser.json())
-    .use(morgan('combined'))
+    .use(morgan('dev'))
     .use(flash())
+
     .use(errorhandler({
       dumpException: true,
       showStack: true
     }))
+
     .use(session({
       secret: '??????',
-      store: new RedisStore({ client: redis }),
+      store: sessionStore,
       proxy: true,
       resave: true,
       saveUninitialized: true
     }))
+
+    .use(passport.initialize())
+    .use(passport.session())
 
     // Helpers
     .use(function(req, res, next) {

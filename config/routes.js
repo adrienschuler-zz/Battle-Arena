@@ -13,9 +13,9 @@ function checkAuthentication(req, res, next) {
 module.exports = function(app) {
 
   // Controllers
-  var user      = require('../app/controllers/user_controller')(app)
-    , game      = require('../app/controllers/game_controller')(app)
-    , character = require('../app/controllers/character_controller')(app);
+  var user      = require('../app/controllers/user_controller')(app),
+      game      = require('../app/controllers/game_controller')(app),
+      character = require('../app/controllers/character_controller')(app);
 
   // Root
   app.get('/', [checkAuthentication], game.index);

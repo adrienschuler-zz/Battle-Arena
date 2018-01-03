@@ -2,16 +2,16 @@
  * User controller
  */
 
-var mongoose    = require('mongoose')
-  , $           = require('underscore')
-  , controller  = {}
-  , db
-  , UserModel
-  , CharacterModel
-  , SpellModel
-  , User
-  , Character
-  , Spell;
+var mongoose    = require('mongoose'),
+    $           = require('underscore'),
+    controller  = {},
+    db,
+    UserModel,
+    CharacterModel,
+    SpellModel,
+    User,
+    Character,
+    Spell;
 
 
 module.exports = function (_app) {
@@ -60,9 +60,9 @@ controller.spells = function(req, res) {
         res.redirect('/profile');
       } else {
         res.render('user/spells', {
-            title: 'BATTLE ARENA - Spells'
-          , all_spells: s
-          , current_id: req.params.id
+            title: 'BATTLE ARENA - Spells',
+            all_spells: s,
+            current_id: req.params.id
         });
       }
   });
@@ -74,25 +74,25 @@ controller.rankings = function(req, res) {
   var datas = [];
   UserModel.find({ is_active: 1}, ['username', '_characters'])
   .populate('_characters', ['total_experience', 'level', 'avatar', 'wins', 'looses'])
-  .run(function(error, users) {
+  .exec(function(error, users) {
     if (error) console.error(error);
 
     $.each(users, function(user) {
       datas.push({
-          username: user.username
-        , total_experience: user.character.total_experience
-        , level: user.character.level || 1
-        , avatar: user.character.avatar
-        , victories: user.character.wins || 0
-        , defeats: user.character.looses || 0
+          username: user.username,
+          total_experience: user.character.total_experience,
+          level: user.character.level || 1,
+          avatar: user.character.avatar,
+          victories: user.character.wins || 0,
+          defeats: user.character.looses || 0
       });
     });
 
     datas = bubbleSort(datas, 'total_experience');
 
     res.render('user/rankings', {
-        title: 'BATTLE ARENA - Rankings'
-      , datas: datas
+        title: 'BATTLE ARENA - Rankings',
+        datas: datas
     });
   });
 };
@@ -163,10 +163,10 @@ controller.logout = function(req, res) {
 // authenticate function
 function authenticate(req, username, password, callback) {
   UserModel.findOne({
-      username: username
-    , password_hash: User.encryptPassword(password)
+      username: username,
+      password_hash: User.encryptPassword(password)
   })
-  .run(function(error, user_data) {
+  .exec(function(error, user_data) {
     if (error || !user_data) {
       console.error(error);
       return callback(false);
@@ -175,7 +175,7 @@ function authenticate(req, username, password, callback) {
         _id: user_data.character
       })
       .populate('_spells_equipped')
-      .run(function(error, character_data) {
+      .exec(function(error, character_data) {
         if (error) {
           console.error(error);
           return callback(false);
